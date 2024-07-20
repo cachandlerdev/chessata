@@ -5,5 +5,7 @@ class ChessGameMode:
     def __init__(self):
         pass
     
-    
+
+    def is_three(self, n):
+        return n == 3
 
