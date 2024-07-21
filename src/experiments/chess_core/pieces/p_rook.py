@@ -2,6 +2,13 @@ from src.experiments.chess_core.pieces.p_base import BasePiece
 
 
 class RookPiece(BasePiece):
+    """A class representing a rook chess piece."""
+    
+    def __init__(self):
+        """Creates a rook object."""
+        super().__init__("+", [8])
+
+
     def get_valid_moves(self, start, board):
         # Check if the piece has moved
         # If not, it can move 2 spaces forward

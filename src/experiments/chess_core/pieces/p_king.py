@@ -2,6 +2,12 @@ from src.experiments.chess_core.pieces.p_base import BasePiece
 
 
 class KingPiece(BasePiece):
+    """A class representing a king chess piece."""
+    
+    def __init__(self):
+        """Creates a king object."""
+        super().__init__("+X", [1])
+
 
     def get_valid_moves(self, start, board):
 

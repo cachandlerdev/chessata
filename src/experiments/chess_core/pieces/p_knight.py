@@ -2,6 +2,13 @@ from src.experiments.chess_core.pieces.p_base import BasePiece
 
 
 class KnightPiece(BasePiece):
+    """A class representing a knight chess piece."""
+    
+    def __init__(self):
+        """Creates a knight object."""
+        super().__init__("L")
+
+
     def get_valid_moves(self, start, board):
 
         # Get all available L positions
