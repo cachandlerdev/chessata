@@ -81,11 +81,11 @@ class ChessGameMode:
         piece_num = self.get_piece_at_pos(board, start)
 
         try:
-            piece = BasePiece(piece_num)
+            piece = self.get_piece_object(piece_num)
         except ValueError:
             raise ValueError("Invalid piece number.")
 
-        valid_moves = piece.get_valid_moves(start)
+        valid_moves = piece.get_valid_moves(start, board)
         if end in valid_moves:
             # Generate new board   
             new_board = board
