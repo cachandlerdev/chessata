@@ -39,3 +39,20 @@ def get_board_pos_index(pos):
     row = 8 - int(pos[1])
     index = column + (8 * row)
     return index
+
+
+def is_piece_friendly(this_piece, other_piece):
+    """A helper function that compares the numerical value of the two pieces
+    to determine if the other piece is friendly."""
+    empty_squares = (this_piece == 0) or (other_piece == 0)
+    invalid_black = (this_piece < -6) or (other_piece < -6)
+    invalid_white = (this_piece > 6) or (other_piece > 6)
+
+    if empty_squares or invalid_black or invalid_white:
+        raise ValueError("Invalid piece number.")
+    else:
+        if this_piece > 0:
+            return other_piece > 0
+        else:
+            return other_piece < 0
+

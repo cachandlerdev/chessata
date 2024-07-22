@@ -1,4 +1,5 @@
 from src.experiments.chess_core.board_utils import *
+import pytest
 
 
 class TestBoardUtils:
@@ -102,3 +103,39 @@ class TestBoardUtils:
              2,  3,  4,  6,  5,  0,  3,  2,
             ]
         assert get_piece_at_pos(board, "f4") == 4
+
+
+    def test_is_piece_friendly1(self):
+        assert is_piece_friendly(1, 1) is True
+    
+    
+    def test_is_piece_friendly2(self):
+        assert is_piece_friendly(2, 5) is True
+    
+    
+    def test_is_piece_friendly3(self):
+        assert is_piece_friendly(3, -4) is False
+    
+    
+    def test_is_piece_friendly4(self):
+        assert is_piece_friendly(-2, 6) is False
+    
+    
+    def test_is_piece_friendly5(self):
+        with pytest.raises(ValueError, match="Invalid piece number."):
+            is_piece_friendly(0, 5)
+    
+    
+    def test_is_piece_friendly6(self):
+        with pytest.raises(ValueError, match="Invalid piece number."):
+            is_piece_friendly(-3, 0)
+    
+    
+    def test_is_piece_friendly7(self):
+        with pytest.raises(ValueError, match="Invalid piece number."):
+            is_piece_friendly(8, 2)
+    
+    
+    def test_is_piece_friendly8(self):
+        with pytest.raises(ValueError, match="Invalid piece number."):
+            is_piece_friendly(-7, 4)

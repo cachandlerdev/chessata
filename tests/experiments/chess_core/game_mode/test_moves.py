@@ -18,7 +18,7 @@ class TestChessMoves:
             ]
         empty_square = "d4"
         end = "d5"
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Invalid piece number."):
             mode.move_piece_at_pos(initial_board, empty_square, end)
         
 
@@ -34,7 +34,7 @@ class TestChessMoves:
              1,  1,  1,  1,  1,  1,  1,  1,
              2,  3,  4,  6,  5,  4,  3,  2,
             ]
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Start and end positions match."):
             mode.move_piece_at_pos(initial_board, "b7", "b7")
 
     
