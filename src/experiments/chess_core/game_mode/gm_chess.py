@@ -14,7 +14,8 @@ class ChessGameMode:
 
     
     def get_initial_board(self):
-        """Returns a 64-size int array that represents an 8x8 grid. Integers are used to keep track of piece types. White > 0, Black < 0.
+        """Returns a 64-size int array that represents an 8x8 grid. 
+        Integers are used to keep track of piece types. White > 0, Black < 0.
         Note that the top left and bottom corners are light, while the top right
         and bottom left corners are dark (visually)."""
         return [
@@ -31,9 +32,23 @@ class ChessGameMode:
 
     def move_piece_at_pos(self, board, start, end):
         """Generates a new board array based on the movement of a particular
-        piece on a given board from the start position to the end one if the 
-        move is valid for that kind of piece. Throws an exception if the 
-        start position has no piece, or if the move is invalid."""
+        piece on a given board from the start position to the end one if the
+        move is valid for that kind of piece. We check if moves are valid.
+
+        Args:
+            board (list): The current board state, represented by a 64 size int
+            array.
+            start (str): The current position of the piece. E.g. `b3`, `d6`
+            end (str): The final position of the piece.
+
+        Raises:
+            ValueError: If there is not a valid piece at `start`.
+            ValueError: If `start` and `end` point to the same piece.
+            ValueError: If this is an illegal move.
+
+        Returns:
+            list: The new board array after the move was made.
+        """
         piece_num = board_utils.get_piece_at_pos(board, start)
 
         try:
@@ -54,9 +69,8 @@ class ChessGameMode:
             end_index = board_utils.get_board_pos_index(end)
             new_board[end_index] = piece_num
             return new_board
-
         else:
-            raise ValueError("Invalid move.")
+            raise ValueError("Illegal move.")
     
 
     def get_piece_object(self, num):

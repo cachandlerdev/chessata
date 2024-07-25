@@ -30,7 +30,20 @@ class BasePiece:
     
     def get_valid_moves(self, start, board):
         """Returns a list of valid moves for this piece based on the specified
-        board and start position."""
+        board and start position.
+
+        Args:
+            start (str): The initial position for this piece. E.g. `a1`, `g4`.
+            board (list): A chess board. Represented by a size 64 int array
+            where white pieces are greater than 0, empty squares are 0, and 
+            black pieces are less than 0.
+
+        Raises:
+            ValueError: This will show if `start` does not have a valid piece.
+
+        Returns:
+            list: A list of valid positions like `b3`, `e6`, and `f2`.
+        """
         # TODO: Add king check based on movement
         
         this_piece = board_utils.get_piece_at_pos(board, start)
@@ -62,7 +75,6 @@ class BasePiece:
     
     def _get__movement_range(self, pos, board):
         """Gets the movement range of this particular piece."""
-        # TODO: Add special behavior for pawns on the PawnPiece class
         return self._movement_range[0]
 
     
@@ -302,10 +314,10 @@ class BasePiece:
     
     
     def does_move_collide(self, start, end, board):
-        """A helper method used on children to determine if the given move will 
-        collide with another piece. Returns 0 if it doesn't collide, 1 if it 
-        collides with an enemy, and 2 if it collides with a friendly. We use the 
-        attack type if the end position has an enemy piece.
+        """Checks whether the given move will collide with another piece. 
+        Returns 0 if it doesn't collide, 1 if it collides with an enemy, and 2 
+        if it collides with a friendly. We use the attack type if the end 
+        position has an enemy piece.
         Note: We assume that this move is possible."""
         if start == end:
             raise ValueError("Start and end positions match.")

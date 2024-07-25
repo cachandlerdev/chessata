@@ -21,6 +21,7 @@ class PawnPiece(BasePiece):
         # Check if it's blocked in front
 
         # Don't forget en passant rules
+        # https://www.chess.com/terms/en-passant
         
         # This is a special case where you might need to write a custom 
         # collision checker for attack rules.

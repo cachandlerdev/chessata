@@ -20,8 +20,10 @@ class KingPiece(BasePiece):
 
         # You will need to add king checking here and disable invalid moves
 
-        # Don't forget that weird move where the king and the rook swap places
+        # Don't forget that weird move where the king and the rook swap places (castling)
 
         # And make sure the swap is with friendly kings and friendly rooks (no sneaky black rook swapping with white king business)
+        
+        # NOTE: See castling rules. https://support.chess.com/en/articles/8557430-how-do-i-castle
 
         return super().get_valid_moves(start, board)
