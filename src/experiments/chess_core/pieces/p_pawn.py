@@ -27,17 +27,17 @@ class PawnPiece(BasePiece):
         return super().get_valid_moves(start, board)
     
     
-    def get_movement_range(self, pos, board):
+    def _get__movement_range(self, pos, board):
         this_piece = board_utils.get_piece_at_pos(board, pos)
         if this_piece > 0:
             # White
             if int(pos[1]) == 2:
-                return self.movement_range[1]
+                return self._movement_range[1]
             else:
-                return self.movement_range[0]
+                return self._movement_range[0]
         else:
             # Black
             if int(pos[1]) == 7:
-                return self.movement_range[1]
+                return self._movement_range[1]
             else:
-                return self.movement_range[0]
+                return self._movement_range[0]
