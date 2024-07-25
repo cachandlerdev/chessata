@@ -1,4 +1,5 @@
 from src.experiments.chess_core.pieces.p_base import BasePiece
+import src.experiments.chess_core.board_utils as board_utils
 
 
 class KingPiece(BasePiece):

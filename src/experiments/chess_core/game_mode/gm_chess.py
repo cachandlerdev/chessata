@@ -41,6 +41,9 @@ class ChessGameMode:
         except ValueError:
             raise ValueError("Invalid piece number.")
 
+        if start == end:
+            raise ValueError("Start and end positions match.")
+
         valid_moves = piece.get_valid_moves(start, board)
         if end in valid_moves:
             # Generate new board   

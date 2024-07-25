@@ -4,7 +4,7 @@ import src.experiments.chess_core.board_utils as board_utils
 class BasePiece:
     """The base class for all chess pieces."""
     
-    def __init__(self, movement_type="+XL|", movement_range=[8], attack_type=""):
+    def __init__(self, movement_type="+XL|V", movement_range=[8], attack_type=""):
         """Creates a new chess piece.
 
         Args:
@@ -32,8 +32,273 @@ class BasePiece:
         """Returns a list of valid moves for this piece based on the specified
         board and start position."""
         # TODO: Add king check based on movement
-        # TODO: Make sure pieces stay on the board (probably a helper function on this class that gets used by subclasses)
-        raise NotImplementedError("Handled by children.")
+        
+        this_piece = board_utils.get_piece_at_pos(board, start)
+        if this_piece == 0:
+            raise ValueError("Piece not found.")
+        
+        # Pawns can only move forward
+        if self.movement_type == "|":
+            forward_only = True
+        else:
+            forward_only = False
+
+        moves = []
+        for type in self.movement_type:
+            match type:
+                case "|":
+                    moves.extend(self.get_valid_vertical_moves(start, board, "|", forward_only))
+                case "+":
+                    moves.extend(self.get_valid_cross_moves(start, board))
+                case "X":
+                    moves.extend(self.get_valid_diagonal_moves(start, board))
+                case "V":
+                    moves.extend(self.get_valid_v_moves(start, board))
+                case _:
+                    moves.extend(self.get_valid_L_moves(start, board))
+
+        return moves
+    
+    
+    def get_movement_range(self, pos, board):
+        """Gets the movement range of this particular piece."""
+        # TODO: Add special behavior for pawns on the PawnPiece class
+        return self.movement_range[0]
+
+    
+    def get_valid_vertical_moves(self, start, board, move_type, forward_only):
+        """Returns a list of valid vertical move positions for this piece based
+        on the specified board and start position."""
+        moves = []
+        col = start[0]
+        row = int(start[1])
+        
+        this_piece = board_utils.get_piece_at_pos(board, start)
+        if forward_only:
+            if this_piece > 0:
+                # White
+                check_above = True
+                check_below = False
+            else:
+                # Black
+                check_above = False
+                check_below = True
+        else:
+            check_above = True
+            check_below = True
+
+        if check_above:
+            # Check squares above
+            max_range = min(row + self.get_movement_range(start, board) + 1, 9)
+            for i in range(row + 1, max_range):
+                square = f"{col}{i}"
+                found_collision = self.add_move_if_valid(start, square, board, moves, move_type)
+                if found_collision:
+                    break
+        
+        if check_below:
+            # Check square below
+            min_range = max(row - self.get_movement_range(start, board) - 1, 0)
+            for i in range(row - 1, min_range, -1):
+                square = f"{col}{i}"
+                found_collision = self.add_move_if_valid(start, square, board, moves, move_type)
+                if found_collision:
+                    break
+
+        return moves
+    
+    
+    def add_move_if_valid(self, start, end, board, moves, move_type):
+        """Checks whether this move can be added by looking for piece collision
+        and adds it if possible. Returns true if there was a collision."""
+        this_piece = board_utils.get_piece_at_pos(board, start)
+        square_piece = board_utils.get_piece_at_pos(board, end)
+        if square_piece != 0:
+            # Collision found
+            if not board_utils.is_piece_friendly(this_piece, square_piece):
+                if move_type in self.attack_type:
+                    moves.append(end)
+            return True
+        else:
+            # No collision
+            moves.append(end)
+            return False
+
+    
+    
+    def char_range(self, c1, c2, step=1):
+        """Generates the characters from `c1` to `c2`, inclusive."""
+        end = ord(c2) + (1 if step > 0 else -1)
+        for c in range(ord(c1), end, step):
+            yield chr(c)
+    
+    
+    def get_valid_cross_moves(self, start, board):
+        """Returns a list of valid horizontal and vertical move positions for
+        this piece based on the specified board and start position."""
+        moves = []
+        # Get vertical moves
+        moves.extend(self.get_valid_vertical_moves(start, board, "+", False))
+        
+        col = start[0]
+        row = int(start[1])
+
+        # Check squares left
+        min_range = max(chr(ord(col) - self.get_movement_range(start, board)), "a")
+        for c in self.char_range(chr(ord(col) - 1), min_range, -1):
+            square = f"{c}{row}"
+            found_collision = self.add_move_if_valid(start, square, board, moves, "+")
+            if found_collision:
+                break
+        
+        # Check squares right
+        max_range = min(chr(ord(col) + self.get_movement_range(start, board)), "h")
+        for c in self.char_range(chr(ord(col) + 1), max_range):
+            square = f"{c}{row}"
+            found_collision = self.add_move_if_valid(start, square, board, moves, "+")
+            if found_collision:
+                break
+
+        return moves
+
+    
+    def get_valid_diagonal_moves(self, start, board):
+        """Returns a list of valid diagonal move positions for this piece based
+        on the specified board and start position."""
+        moves = []
+        
+        top_left = self.get_diagonal_end(start, -1, 1, board)
+        self.get_diagonal_move_subset(start, top_left, board, moves)
+        
+        top_right = self.get_diagonal_end(start, 1, 1, board)
+        self.get_diagonal_move_subset(start, top_right, board, moves)
+        
+        bottom_left = self.get_diagonal_end(start, -1, -1, board)
+        self.get_diagonal_move_subset(start, bottom_left, board, moves)
+        
+        bottom_right = self.get_diagonal_end(start, 1, -1, board)
+        self.get_diagonal_move_subset(start, bottom_right, board, moves)
+        return moves
+
+    
+    def get_diagonal_move_subset(self, start, end, board, moves):
+        """Appends the valid diagonal move positions from the starting place in the 
+        direction of the end one to the moves list."""
+        if start[0] < end[0]:
+            h_step = 1
+        else:
+            h_step = -1
+        
+        if start[1] < end[1]:
+            v_step = 1
+        else:
+            v_step = -1
+
+        square = start
+
+        while (square[0] != end[0]) and (square[0] != end[1]):
+            col = chr(ord(square[0]) + h_step)
+            row = int(square[1]) + v_step
+            square = f"{col}{row}"
+            found_collision = self.add_move_if_valid(start, square, board, moves, "X")
+            if found_collision:
+                break
+        return moves
+
+
+    def get_diagonal_end(self, start, x, y, board):
+        """A helper function that gets the last chess square diagonally relative
+        to the start position. `x` and `y` specify the direction. E.g. Up-right 
+        is x=1, y=1, Up-left is x=-1, y=1, etc."""
+        if (abs(x) != 1) or (abs(y) != 1):
+            raise ValueError("Invalid direction.")
+
+        if not self.is_valid_pos(start):
+            raise ValueError("Invalid starting position.")
+        
+        square = start
+        prev_pos = square
+        
+        spaces_traversed = 0
+        while (square[0] >= "a" and square[0] <= "h") and (
+            int(square[1]) >= 1 and int(square[1]) <= 8
+            ):
+            prev_pos = square
+            col = chr(ord(square[0]) + x)
+            row = int(square[1]) + y
+            square = f"{col}{row}"
+
+            spaces_traversed += 1
+            if spaces_traversed > self.get_movement_range(start, board):
+                break
+        return prev_pos
+    
+
+    def get_valid_v_moves(self, start, board):
+        """Returns a list of valid pawn attack V moves."""
+        # TODO: Handle en passant moves on pawn class
+
+        moves = []
+        this_piece = board_utils.get_piece_at_pos(board, start)
+        
+        if this_piece > 0:
+            y = 1
+        else:
+            y = -1
+
+        left = f"{chr(ord(start[0]) - 1)}{int(start[1]) + y}"
+        right = f"{chr(ord(start[0]) + 1)}{int(start[1]) + y}"
+        check_moves = [left, right]
+        for move in check_moves:
+            if self.is_valid_pos(move):
+                other_piece = board_utils.get_piece_at_pos(board, move)
+                if other_piece != 0 and (
+                    not board_utils.is_piece_friendly(this_piece, other_piece)
+                    ):
+                    moves.append(move)
+        return moves
+                    
+    
+    def get_valid_L_moves(self, start, board):
+        """Returns a list of valid L move positions for this piece based on
+        the specified board and start position."""
+        this_piece = board_utils.get_piece_at_pos(board, start)
+        transforms = [(-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1), (1, -2), 
+                          (-1, -2), (-2, -1)]
+        valid_moves = []
+        
+        for transform in transforms:
+            try:
+                square = self.relative_to_absolute_pos(start, transform)
+                square_piece = board_utils.get_piece_at_pos(board, square)
+                if square_piece == 0:
+                    valid_moves.append(square)
+                else:
+                    if not board_utils.is_piece_friendly(this_piece, square_piece):
+                        valid_moves.append(square)
+            except ValueError:
+                # Skip this invalid move
+                continue
+            
+        return valid_moves
+    
+    
+    def relative_to_absolute_pos(self, start, transform):
+        """Transforms a relative position into an absolute one. 
+        Eg. `a3`, `(2, 1)` -> `c4`.
+        Throws a `ValueError` if the transform is invalid."""
+        if not self.is_valid_pos(start):
+            raise ValueError("Invalid starting position.")
+        
+        col = chr(ord(start[0]) + transform[0])
+        row = int(start[1]) + transform[1]
+        
+        square = f"{col}{row}"
+        
+        if not self.is_valid_pos(square):
+            raise ValueError("Invalid transformation.")
+        
+        return square
     
     
     def does_move_collide(self, start, end, board):
@@ -196,4 +461,13 @@ class BasePiece:
                 return 2
             else:
                 return 0
+            
+    
+    def is_valid_pos(self, pos):
+        """A helper function that returns whether a given position is in the
+        range a1 through h8."""
+        valid_col = (int(pos[1]) > 0) and (int(pos[1]) < 9)
+        valid_row = (pos[0] >= 'a') and (pos[0] <= 'h')
+        row_not_double_digits = (len(pos) == 2)
+        return valid_col and valid_row and row_not_double_digits
     
