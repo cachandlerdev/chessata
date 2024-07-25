@@ -339,7 +339,7 @@ class BasePiece:
         else:
             movement_rules = self._movement_type
         
-        _movement_type_used = self._get__movement_type_used(start, end, movement_rules)
+        _movement_type_used = self._get_movement_type_used(start, end, movement_rules)
 
         match _movement_type_used:
             case "|":
@@ -352,7 +352,7 @@ class BasePiece:
                 return self.__does_L_move_collide(this_piece, target_pos)
     
     
-    def _get__movement_type_used(self, start, end, movement_rules):
+    def _get_movement_type_used(self, start, end, movement_rules):
         """A helper function used to determine what kind of movement should be
         used to move from point A to point B, based on the provided movement 
         rules. Returns a movement type like '|', '+', etc."""

@@ -475,140 +475,140 @@ class TestBasePiece:
         
         # Movement type
         
-    def test_get_empty__movement_type(self):
+    def test_get_empty_movement_type(self):
         base = BasePiece()
         with pytest.raises(ValueError, match="No movement type specified."):
-            base._get__movement_type_used("a1", "b3", "")
+            base._get_movement_type_used("a1", "b3", "")
     
 
-    def test_get_only_one__movement_type1(self):
+    def test_get_only_one_movement_type1(self):
         base = BasePiece()
-        assert base._get__movement_type_used("a1", "a2", "|") == "|"
+        assert base._get_movement_type_used("a1", "a2", "|") == "|"
     
     
-    def test_get_only_one__movement_type2(self):
+    def test_get_only_one_movement_type2(self):
         base = BasePiece()
-        assert base._get__movement_type_used("c4", "d4", "+") == "+"
+        assert base._get_movement_type_used("c4", "d4", "+") == "+"
     
     
-    def test_get_only_one__movement_type3(self):
+    def test_get_only_one_movement_type3(self):
         base = BasePiece()
-        assert base._get__movement_type_used("e3", "f4", "X") == "X"
+        assert base._get_movement_type_used("e3", "f4", "X") == "X"
     
     
-    def test_get_only_one__movement_type4(self):
+    def test_get_only_one_movement_type4(self):
         base = BasePiece()
-        assert base._get__movement_type_used("e3", "f4", "V") == "V"
+        assert base._get_movement_type_used("e3", "f4", "V") == "V"
         
     
-    def test_get_L__movement_type(self):
+    def test_get_L_movement_type(self):
         base = BasePiece()
-        assert base._get__movement_type_used("b1", "c3", "L") == "L"
+        assert base._get_movement_type_used("b1", "c3", "L") == "L"
     
     # King movement
     
-    def test_get_king_horizontal__movement_type_left(self):
+    def test_get_king_horizontal_movement_type_left(self):
         base = BasePiece()
-        assert base._get__movement_type_used("e4", "d4", "+X") == "+"
+        assert base._get_movement_type_used("e4", "d4", "+X") == "+"
     
     
-    def test_get_king_horizontal__movement_type_up(self):
+    def test_get_king_horizontal_movement_type_up(self):
         base = BasePiece()
-        assert base._get__movement_type_used("c4", "c5", "+X") == "+"
+        assert base._get_movement_type_used("c4", "c5", "+X") == "+"
         
     
-    def test_get_king_horizontal__movement_type_right(self):
+    def test_get_king_horizontal_movement_type_right(self):
         base = BasePiece()
-        assert base._get__movement_type_used("g2", "h2", "+X") == "+"
+        assert base._get_movement_type_used("g2", "h2", "+X") == "+"
     
     
-    def test_get_king_horizontal__movement_type_down(self):
+    def test_get_king_horizontal_movement_type_down(self):
         base = BasePiece()
-        assert base._get__movement_type_used("b6", "b5", "+X") == "+"
+        assert base._get_movement_type_used("b6", "b5", "+X") == "+"
     
     
-    def test_get_king_diagonal__movement_type_up_left(self):
+    def test_get_king_diagonal_movement_type_up_left(self):
         base = BasePiece()
-        assert base._get__movement_type_used("e4", "d5", "+X") == "X"
+        assert base._get_movement_type_used("e4", "d5", "+X") == "X"
     
     
-    def test_get_king_diagonal__movement_type_up_right(self):
+    def test_get_king_diagonal_movement_type_up_right(self):
         base = BasePiece()
-        assert base._get__movement_type_used("a1", "b2", "+X") == "X"
+        assert base._get_movement_type_used("a1", "b2", "+X") == "X"
         
     
-    def test_get_king_diagonal__movement_type_down_left(self):
+    def test_get_king_diagonal_movement_type_down_left(self):
         base = BasePiece()
-        assert base._get__movement_type_used("g3", "f2", "+X") == "X"
+        assert base._get_movement_type_used("g3", "f2", "+X") == "X"
     
     
-    def test_get_king_diagonal__movement_type_down_right(self):
+    def test_get_king_diagonal_movement_type_down_right(self):
         base = BasePiece()
-        assert base._get__movement_type_used("f5", "g4", "+X") == "X"
+        assert base._get_movement_type_used("f5", "g4", "+X") == "X"
     
     # Queen movement
     
-    def test_get_queen_horizontal__movement_type_left(self):
+    def test_get_queen_horizontal_movement_type_left(self):
         base = BasePiece()
-        assert base._get__movement_type_used("h4", "b4", "+X") == "+"
+        assert base._get_movement_type_used("h4", "b4", "+X") == "+"
     
     
-    def test_get_queen_horizontal__movement_type_up(self):
+    def test_get_queen_horizontal_movement_type_up(self):
         base = BasePiece()
-        assert base._get__movement_type_used("c4", "c8", "+X") == "+"
+        assert base._get_movement_type_used("c4", "c8", "+X") == "+"
         
     
-    def test_get_queen_horizontal__movement_type_right(self):
+    def test_get_queen_horizontal_movement_type_right(self):
         base = BasePiece()
-        assert base._get__movement_type_used("a2", "h2", "+X") == "+"
+        assert base._get_movement_type_used("a2", "h2", "+X") == "+"
     
     
-    def test_get_queen_horizontal__movement_type_down(self):
+    def test_get_queen_horizontal_movement_type_down(self):
         base = BasePiece()
-        assert base._get__movement_type_used("b6", "b4", "+X") == "+"
+        assert base._get_movement_type_used("b6", "b4", "+X") == "+"
     
     
-    def test_get_queen_diagonal__movement_type_up_left(self):
+    def test_get_queen_diagonal_movement_type_up_left(self):
         base = BasePiece()
-        assert base._get__movement_type_used("e4", "c6", "+X") == "X"
+        assert base._get_movement_type_used("e4", "c6", "+X") == "X"
     
     
-    def test_get_queen_diagonal__movement_type_up_right(self):
+    def test_get_queen_diagonal_movement_type_up_right(self):
         base = BasePiece()
-        assert base._get__movement_type_used("a1", "d4", "+X") == "X"
+        assert base._get_movement_type_used("a1", "d4", "+X") == "X"
         
     
-    def test_get_queen_diagonal__movement_type_down_left(self):
+    def test_get_queen_diagonal_movement_type_down_left(self):
         base = BasePiece()
-        assert base._get__movement_type_used("g3", "e1", "+X") == "X"
+        assert base._get_movement_type_used("g3", "e1", "+X") == "X"
     
     
-    def test_get_queen_diagonal__movement_type_down_right(self):
+    def test_get_queen_diagonal_movement_type_down_right(self):
         base = BasePiece()
-        assert base._get__movement_type_used("b4", "e1", "+X") == "X"
+        assert base._get_movement_type_used("b4", "e1", "+X") == "X"
 
 
-    def test__is_valid_pos_1(self):
+    def test_is_valid_pos_1(self):
         base = BasePiece()
         assert base._is_valid_pos("a1") is True
         
     
-    def test__is_valid_pos_2(self):
+    def test_is_valid_pos_2(self):
         base = BasePiece()
         assert base._is_valid_pos("g4") is True
     
     
-    def test__is_valid_pos_3(self):
+    def test_is_valid_pos_3(self):
         base = BasePiece()
         assert base._is_valid_pos("z1") is False
     
     
-    def test__is_valid_pos_4(self):
+    def test_is_valid_pos_4(self):
         base = BasePiece()
         assert base._is_valid_pos("f0") is False
     
     
-    def test__is_valid_pos_5(self):
+    def test_is_valid_pos_5(self):
         base = BasePiece()
         assert base._is_valid_pos("d9") is False
         
@@ -743,7 +743,7 @@ class TestBasePiece:
         assert base._get_valid_cross_moves("f8", board) == expected
 
 
-    def test__get_valid_cross_moves_1(self):
+    def test_get_valid_cross_moves_1(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -759,7 +759,7 @@ class TestBasePiece:
         assert base._get_valid_cross_moves("d5", board) == expected
 
 
-    def test__get_valid_cross_moves_2(self):
+    def test_get_valid_cross_moves_2(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -775,7 +775,7 @@ class TestBasePiece:
         assert base._get_valid_cross_moves("g1", board) == expected
     
     
-    def test__get_valid_cross_moves_3(self):
+    def test_get_valid_cross_moves_3(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -791,7 +791,7 @@ class TestBasePiece:
         assert base._get_valid_cross_moves("a5", board) == expected
     
     
-    def test__get_valid_cross_moves_4(self):
+    def test_get_valid_cross_moves_4(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -807,7 +807,7 @@ class TestBasePiece:
         assert base._get_valid_cross_moves("h5", board) == expected
     
     
-    def test__get_valid_cross_moves_collision_1(self):
+    def test_get_valid_cross_moves_collision_1(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -823,7 +823,7 @@ class TestBasePiece:
         assert base._get_valid_cross_moves("b2", board) == expected
 
 
-    def test__get_valid_cross_moves_collision_2(self):
+    def test_get_valid_cross_moves_collision_2(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -839,7 +839,7 @@ class TestBasePiece:
         assert base._get_valid_cross_moves("d6", board) == expected
 
 
-    def test__get_valid_cross_moves_collision_3(self):
+    def test_get_valid_cross_moves_collision_3(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -855,7 +855,7 @@ class TestBasePiece:
         assert base._get_valid_cross_moves("f5", board) == expected
 
 
-    def test__get_valid_cross_moves_collision_4(self):
+    def test_get_valid_cross_moves_collision_4(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -871,7 +871,7 @@ class TestBasePiece:
         assert base._get_valid_cross_moves("a5", board) == expected
         
     
-    def test__get_valid_diagonal_moves_1(self):
+    def test_get_valid_diagonal_moves_1(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -887,7 +887,7 @@ class TestBasePiece:
         assert base._get_valid_diagonal_moves("d5", board) == expected
 
 
-    def test__get_valid_diagonal_moves_2(self):
+    def test_get_valid_diagonal_moves_2(self):
         base = BasePiece()
         board = [
              3,  0,  0,  0,  0,  0,  0,  0,
@@ -903,7 +903,7 @@ class TestBasePiece:
         assert base._get_valid_diagonal_moves("a8", board) == expected
         
         
-    def test__get_valid_diagonal_moves_3(self):
+    def test_get_valid_diagonal_moves_3(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  3,
@@ -919,7 +919,7 @@ class TestBasePiece:
         assert base._get_valid_diagonal_moves("h8", board) == expected
     
     
-    def test__get_valid_diagonal_moves_4(self):
+    def test_get_valid_diagonal_moves_4(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -935,7 +935,7 @@ class TestBasePiece:
         assert base._get_valid_diagonal_moves("a1", board) == expected
 
 
-    def test__get_valid_diagonal_moves_5(self):
+    def test_get_valid_diagonal_moves_5(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -951,7 +951,7 @@ class TestBasePiece:
         assert base._get_valid_diagonal_moves("h1", board) == expected
 
 
-    def test__get_valid_diagonal_moves_collision_1(self):
+    def test_get_valid_diagonal_moves_collision_1(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -967,7 +967,7 @@ class TestBasePiece:
         assert base._get_valid_diagonal_moves("h1", board) == expected
 
 
-    def test__get_valid_diagonal_moves_collision_2(self):
+    def test_get_valid_diagonal_moves_collision_2(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -983,7 +983,7 @@ class TestBasePiece:
         assert base._get_valid_diagonal_moves("a1", board) == expected
 
 
-    def test__get_valid_diagonal_moves_collision_3(self):
+    def test_get_valid_diagonal_moves_collision_3(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  3,
@@ -999,7 +999,7 @@ class TestBasePiece:
         assert base._get_valid_diagonal_moves("h8", board) == expected
 
 
-    def test__get_valid_diagonal_moves_collision_4(self):
+    def test_get_valid_diagonal_moves_collision_4(self):
         base = BasePiece()
         board = [
              3,  0,  0,  0,  0,  0,  0,  0,
@@ -1015,7 +1015,7 @@ class TestBasePiece:
         assert base._get_valid_diagonal_moves("a8", board) == expected
 
 
-    def test__get_valid_diagonal_moves_collision_5(self):
+    def test_get_valid_diagonal_moves_collision_5(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1031,7 +1031,7 @@ class TestBasePiece:
         assert base._get_valid_diagonal_moves("d5", board) == expected
 
 
-    def test__get_valid_diagonal_moves_collision_6(self):
+    def test_get_valid_diagonal_moves_collision_6(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1047,7 +1047,7 @@ class TestBasePiece:
         assert base._get_valid_diagonal_moves("d5", board) == expected
 
 
-    def test__get_diagonal_end_1(self):
+    def test_get_diagonal_end_1(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1062,7 +1062,7 @@ class TestBasePiece:
         assert base._get_diagonal_end("a1", 1, 1, board) == "h8"
     
     
-    def test__get_diagonal_end_2(self):
+    def test_get_diagonal_end_2(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1077,7 +1077,7 @@ class TestBasePiece:
         assert base._get_diagonal_end("a8", 1, -1, board) == "h1"
     
     
-    def test__get_diagonal_end_3(self):
+    def test_get_diagonal_end_3(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1092,7 +1092,7 @@ class TestBasePiece:
         assert base._get_diagonal_end("e1", -1, 1, board) == "a5"
     
     
-    def test__get_diagonal_end_4(self):
+    def test_get_diagonal_end_4(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1107,7 +1107,7 @@ class TestBasePiece:
         assert base._get_diagonal_end("h5", -1, -1, board) == "d1"
     
     
-    def test__get_diagonal_end_error_1(self):
+    def test_get_diagonal_end_error_1(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1123,7 +1123,7 @@ class TestBasePiece:
             base._get_diagonal_end("a1", 1, 0, board)
     
     
-    def test__get_diagonal_end_error_2(self):
+    def test_get_diagonal_end_error_2(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1139,7 +1139,7 @@ class TestBasePiece:
             base._get_diagonal_end("a0", 1, 1, board)
     
     
-    def test__get_diagonal_end_error_3(self):
+    def test_get_diagonal_end_error_3(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1155,7 +1155,7 @@ class TestBasePiece:
             base._get_diagonal_end("m3", 1, 1, board)
 
 
-    def test__get_valid_v_moves_none_1(self):
+    def test_get_valid_v_moves_none_1(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1171,7 +1171,7 @@ class TestBasePiece:
         assert base._get_valid_v_moves("d5", board) == expected
         
 
-    def test__get_valid_v_moves_none_2(self):
+    def test_get_valid_v_moves_none_2(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1187,7 +1187,7 @@ class TestBasePiece:
         assert base._get_valid_v_moves("c3", board) == expected
 
 
-    def test__get_valid_v_moves_1(self):
+    def test_get_valid_v_moves_1(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1203,7 +1203,7 @@ class TestBasePiece:
         assert base._get_valid_v_moves("c3", board) == expected
         
         
-    def test__get_valid_v_moves_2(self):
+    def test_get_valid_v_moves_2(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1219,7 +1219,7 @@ class TestBasePiece:
         assert base._get_valid_v_moves("e6", board) == expected
 
 
-    def test__get_valid_v_moves_3(self):
+    def test_get_valid_v_moves_3(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1235,7 +1235,7 @@ class TestBasePiece:
         assert base._get_valid_v_moves("e6", board) == expected
     
     
-    def test__get_valid_v_moves_4(self):
+    def test_get_valid_v_moves_4(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1251,7 +1251,7 @@ class TestBasePiece:
         assert base._get_valid_v_moves("d3", board) == expected
 
 
-    def test__get_valid_L_moves_1(self):
+    def test_get_valid_L_moves_1(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1267,7 +1267,7 @@ class TestBasePiece:
         assert base._get_valid_L_moves("e4", board) == expected
         
         
-    def test__get_valid_L_moves_2(self):
+    def test_get_valid_L_moves_2(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0, -3,  0,  0,
@@ -1283,7 +1283,7 @@ class TestBasePiece:
         assert base._get_valid_L_moves("f8", board) == expected
     
     
-    def test__get_valid_L_moves_3(self):
+    def test_get_valid_L_moves_3(self):
         base = BasePiece()
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -1299,7 +1299,7 @@ class TestBasePiece:
         assert base._get_valid_L_moves("a5", board) == expected
     
     
-    def test__get_valid_L_moves_4(self):
+    def test_get_valid_L_moves_4(self):
         base = BasePiece()
         board = [
              1,  1,  1,  1,  1,  1,  1,  1,
@@ -1354,120 +1354,3 @@ class TestBasePiece:
         with pytest.raises(ValueError, match="Invalid transformation."):
             base._relative_to_absolute_pos("a1", (2, -1))
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
