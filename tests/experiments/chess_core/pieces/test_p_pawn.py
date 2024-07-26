@@ -3,8 +3,6 @@ from src.experiments.chess_core.pieces.p_pawn import PawnPiece
 
 
 class TestPawnPiece:
-    
-    
     def test_pawn_move_1(self):
         pawn = PawnPiece()
         board = [
@@ -370,6 +368,106 @@ class TestPawnPiece:
         assert pawn.get_valid_moves("f2", match) == expected
 
 
+    def test_get_valid_v_moves_none_1(self):
+        pawn = PawnPiece()
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  1,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(board)
+        expected = []
+        assert pawn._get_valid_v_moves("d5", match) == expected
+        
+
+    def test_get_valid_v_moves_none_2(self):
+        pawn = PawnPiece()
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  3,  0,  0,  0,  0,
+             0,  0,  1,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(board)
+        expected = []
+        assert pawn._get_valid_v_moves("c3", match) == expected
+
+
+    def test_get_valid_v_moves_1(self):
+        pawn = PawnPiece()
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0, -3,  0,  0,  0,  0,
+             0,  0,  1,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(board)
+        expected = ["d4"]
+        assert pawn._get_valid_v_moves("c3", match) == expected
+        
+        
+    def test_get_valid_v_moves_2(self):
+        pawn = PawnPiece()
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -1,  0,  0,  0,
+             0,  0,  0,  0,  2,  4,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(board)
+        expected = ["f5"]
+        assert pawn._get_valid_v_moves("e6", match) == expected
+
+
+    def test_get_valid_v_moves_3(self):
+        pawn = PawnPiece()
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -1,  0,  0,  0,
+             0,  0,  0,  2,  2,  4,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(board)
+        expected = ["d5", "f5"]
+        assert pawn._get_valid_v_moves("e6", match) == expected
+    
+    
+    def test_get_valid_v_moves_4(self):
+        pawn = PawnPiece()
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0, -4,  2, -3,  0,  0,  0,
+             0,  0,  0,  1,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(board)
+        expected = ["c4", "e4"]
+        assert pawn._get_valid_v_moves("d3", match) == expected
 
 
 

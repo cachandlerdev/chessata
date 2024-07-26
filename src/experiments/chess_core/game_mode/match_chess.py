@@ -1,6 +1,3 @@
-from src.experiments.chess_core.game_mode.gm_chess import ChessGameMode
-
-
 class ChessMatch:
     """A class representing a chess match. Holds info about the board, pieces,
     and current state of the game."""

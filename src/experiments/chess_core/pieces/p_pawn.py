@@ -7,45 +7,74 @@ import src.experiments.chess_core.board_utils as board_utils
 class PawnPiece(BasePiece):
     """A class representing a pawn chess piece."""
     
+
     def __init__(self):
-        """Creates a pawn object."""
-        super().__init__("|", [1, 2], "V")
+        self._initial_movement_range = 2
+        self._standard_movement_range = 1
 
 
     def get_valid_moves(self, start, match):
-        # Check if the piece has moved
-        # If not, it can move 2 spaces forward
-        # Else, just one
-
-        # Check if there are enemy pieces on diagonals
-        # Use self.is_white to see what's friendly or not
-
-        # Check if it's blocked in front
-
-        # Don't forget en passant rules
-        # https://www.chess.com/terms/en-passant
-        
-        # This is a special case where you might need to write a custom 
-        # collision checker for attack rules.
-        
+        # TODO: En passant
         # TODO: Add pawn promotion
-        return super().get_valid_moves(start, match)
+
+        super().get_valid_moves(start, match)
+        
+        moves = self._get_valid_vertical_moves(start, match, True)
+        moves.extend(self._get_valid_v_moves(start, match))
+        moves.extend(self._get_valid_en_passant_moves(start, match))
+        
+        return moves
     
     
-    def _get__movement_range(self, pos, board):
+    def _get_movement_range(self, pos, board):
         this_piece = board_utils.get_piece_at_pos(board, pos)
         if this_piece > 0:
             # White
             if int(pos[1]) == 2:
-                return self._movement_range[1]
+                return self._initial_movement_range
             else:
-                return self._movement_range[0]
+                return self._standard_movement_range
         else:
             # Black
             if int(pos[1]) == 7:
-                return self._movement_range[1]
+                return self._initial_movement_range
             else:
-                return self._movement_range[0]
+                return self._standard_movement_range
+    
+    
+    def _get_valid_v_moves(self, start, match):
+        """Returns a list of valid pawn attack V moves."""
+        moves = []
+        this_piece = board_utils.get_piece_at_pos(match.board, start)
+        
+        if this_piece > 0:
+            y = 1
+        else:
+            y = -1
+
+        check_moves = []
+        try:
+            left = self._relative_to_absolute_pos(start, (-1, y))
+            check_moves.append(left)
+        except ValueError:
+            # Ignore invalid square.
+            pass
+
+        try:
+            right = self._relative_to_absolute_pos(start, (1, y))
+            check_moves.append(right)
+        except ValueError:
+            # Ignore invalid square
+            pass
+
+        for move in check_moves:
+            if self._is_valid_pos(move):
+                other_piece = board_utils.get_piece_at_pos(match.board, move)
+                if other_piece != 0 and (
+                    not board_utils.is_piece_friendly(this_piece, other_piece)
+                    ):
+                    moves.append(move)
+        return moves
     
 
     def _get_valid_en_passant_moves(self, start, match):

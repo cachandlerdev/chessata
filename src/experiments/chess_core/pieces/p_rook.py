@@ -6,18 +6,11 @@ class RookPiece(BasePiece):
     
     def __init__(self):
         """Creates a rook object."""
-        super().__init__("+", [8])
+        self._movement_range = 8
 
 
     def get_valid_moves(self, start, match):
-        # Check if the piece has moved
-        # If not, it can move 2 spaces forward
-        # Else, just one
-
-        # Check if there are enemy pieces on diagonals
-        # Use self.is_white to see what's friendly or not
-
-        # Check if it's blocked in front
-
-        # Don't forget en passant rules
-        return super().get_valid_moves(start, match)
+        super().get_valid_moves(start, match)
+        moves = self._get_valid_cross_moves(start, match)
+        return moves
+        
