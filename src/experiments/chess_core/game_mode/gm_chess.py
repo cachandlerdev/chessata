@@ -10,14 +10,9 @@ import src.experiments.chess_core.board_utils as board_utils
 class ChessGameMode:
     """A class used to handle rules about the chess game mode."""
     def __init__(self):
+        # TODO: Figure out how we're storing matches. Is it on the game mode?
+        # A separate 'game_manager' class? Not sure.
         self._matches = []
-
-
-    def start_match(self):
-        """Starts a chess match."""
-        # TODO
-        # add to the matches list
-        pass
     
 
     def move_piece_at_pos(self, match, start, end):
@@ -39,7 +34,6 @@ class ChessGameMode:
         Returns:
             list: The new board array after the move was made.
         """
-        # TODO: Get the match from the game mode via an index.
         piece_num = board_utils.get_piece_at_pos(match.board, start)
 
         try:
@@ -54,6 +48,10 @@ class ChessGameMode:
         if end in valid_moves:
             # Generate new board   
             new_board = match.board
+            
+            # TODO: Handle different types of moves
+            # TODO: Perform 'open to en passant' checks if it's a pawn moving
+            # TODO: Look for check/checkmate
 
             start_index = board_utils.get_board_pos_index(start)
             new_board[start_index] = 0

@@ -1,3 +1,6 @@
+from src.experiments.chess_core import board_utils
+
+
 class ChessMatch:
     """A class representing a chess match. Holds info about the board, pieces,
     and current state of the game."""
@@ -42,6 +45,49 @@ class ChessMatch:
                 False, False, False, False, False, False, False, False]
     
     
-    def can_perform_en_passant(self, start, end):
+    def is_exposed_to_en_passant(self, piece_pos):
+        """Checks whether moving a pawn from `start` to `end` via an en passant
+        would be valid based on the other pawn's position, `piece_pos`.
+        We assume that `piece_pos` is a valid position, and that the piece
+        located there will be a valid enemy pawn.
+
+        Args:
+            start (str): The current position of the friendly pawn.
+            piece_pos (str): The position of the enemy pawn to be captured.
+            end (str): The final position of the friendly pawn.
+        """
+        is_white = board_utils.get_piece_at_pos(self.board, piece_pos) > 0
+        if not self._is_farthest_back_pawn(piece_pos, is_white):
+            return False
+
+        if is_white:
+            index = 8
+        else:
+            index = 0
+
+        col = ord(piece_pos[0]) - ord("a")
+        index += col
+        
+        return self._allow_en_passant[index]
+
+    
+    def _is_farthest_back_pawn(self, pos, is_white):
+        """Returns true if the pawn located at this position is the farthest
+        back pawn in its column."""
+        if is_white:
+            start_row = int(pos[1]) - 1
+            for i in range(start_row, 1, -1):
+                square = f"{pos[0]}{i}"
+                if board_utils.get_piece_at_pos(self.board, square) == 1:
+                    return False
+        else:
+            start_row = int(pos[1]) + 1
+            for i in range(start_row, 8):
+                square = f"{pos[0]}{i}"
+                if board_utils.get_piece_at_pos(self.board, square) == -1:
+                    return False
+        return True
+        
+        
         pass
         

@@ -348,7 +348,7 @@ class TestPawnPiece:
             ]
         match = ChessMatch(board)
         expected = ["e6"]
-        assert pawn.get_valid_moves("f2", match) == expected
+        assert pawn.get_valid_moves("e5", match) == expected
 
 
     def test_pawn_not_en_passant_2(self):
@@ -365,7 +365,7 @@ class TestPawnPiece:
             ]
         match = ChessMatch(board)
         expected = ["e6"]
-        assert pawn.get_valid_moves("f2", match) == expected
+        assert pawn.get_valid_moves("e5", match) == expected
 
 
     def test_get_valid_v_moves_none_1(self):
