@@ -518,7 +518,9 @@ class TestChessMoves:
         assert match.board == final_board
         
         
-        # Need to add attack tests too
+        # TODO: Need to add attack tests too
+        # Let's do those on individual pieces though when we're refactoring 
+        # logic to the child classes
         
         
         
