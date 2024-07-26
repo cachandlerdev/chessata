@@ -10,34 +10,24 @@ import src.experiments.chess_core.board_utils as board_utils
 class ChessGameMode:
     """A class used to handle rules about the chess game mode."""
     def __init__(self):
-        self.matches = []
+        self._matches = []
 
+
+    def start_match(self):
+        """Starts a chess match."""
+        # TODO
+        # add to the matches list
+        pass
     
-    def get_initial_board(self):
-        """Returns a 64-size int array that represents an 8x8 grid. 
-        Integers are used to keep track of piece types. White > 0, Black < 0.
-        Note that the top left and bottom corners are light, while the top right
-        and bottom left corners are dark (visually)."""
-        return [
-            -2, -3, -4, -6, -5, -4, -3, -2,
-            -1, -1, -1, -1, -1, -1, -1, -1,
-             0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
-             1,  1,  1,  1,  1,  1,  1,  1,
-             2,  3,  4,  6,  5,  4,  3,  2,
-            ]
 
-
-    def move_piece_at_pos(self, board, start, end):
-        """Generates a new board array based on the movement of a particular
-        piece on a given board from the start position to the end one if the
-        move is valid for that kind of piece. We check if moves are valid.
+    def move_piece_at_pos(self, match, start, end):
+        """Updates the current match based on the movement of a particular piece
+        from `start` position to `end` if the move is valid for that kind of 
+        piece. We check if moves are valid.
 
         Args:
-            board (list): The current board state, represented by a 64 size int
-            array.
+            match (Match): A chess match with info about the board and current
+            state.
             start (str): The current position of the piece. E.g. `b3`, `d6`
             end (str): The final position of the piece.
 
@@ -49,7 +39,8 @@ class ChessGameMode:
         Returns:
             list: The new board array after the move was made.
         """
-        piece_num = board_utils.get_piece_at_pos(board, start)
+        # TODO: Get the match from the game mode via an index.
+        piece_num = board_utils.get_piece_at_pos(match.board, start)
 
         try:
             piece = self.get_piece_object(piece_num)
@@ -59,10 +50,10 @@ class ChessGameMode:
         if start == end:
             raise ValueError("Start and end positions match.")
 
-        valid_moves = piece.get_valid_moves(start, board)
+        valid_moves = piece.get_valid_moves(start, match)
         if end in valid_moves:
             # Generate new board   
-            new_board = board
+            new_board = match.board
 
             start_index = board_utils.get_board_pos_index(start)
             new_board[start_index] = 0

@@ -10,7 +10,7 @@ class KingPiece(BasePiece):
         super().__init__("+X", [1])
 
 
-    def get_valid_moves(self, start, board):
+    def get_valid_moves(self, start, match):
 
         # Get all available 8 positions
 
@@ -25,5 +25,6 @@ class KingPiece(BasePiece):
         # And make sure the swap is with friendly kings and friendly rooks (no sneaky black rook swapping with white king business)
         
         # NOTE: See castling rules. https://support.chess.com/en/articles/8557430-how-do-i-castle
+        # There is both kingside and queenside castling.
 
-        return super().get_valid_moves(start, board)
+        return super().get_valid_moves(start, match)

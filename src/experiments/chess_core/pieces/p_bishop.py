@@ -8,7 +8,7 @@ class BishopPiece(BasePiece):
         """Creates a bishop object."""
         super().__init__("X", [8])
 
-    def get_valid_moves(self, start, board):
+    def get_valid_moves(self, start, match):
 
         # Get all available diagonal positions
 
@@ -16,4 +16,4 @@ class BishopPiece(BasePiece):
 
         # Check if it's blocked on any side
 
-        return super().get_valid_moves(start, board)
+        return super().get_valid_moves(start, match)

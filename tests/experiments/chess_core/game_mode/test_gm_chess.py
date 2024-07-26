@@ -11,21 +11,6 @@ import pytest
 class TestChessGameMode:
 
     # Get board states
-
-    def test_get_initial_board(self):
-        mode = ChessGameMode()
-        expected = [
-            -2, -3, -4, -6, -5, -4, -3, -2,
-            -1, -1, -1, -1, -1, -1, -1, -1,
-             0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
-             1,  1,  1,  1,  1,  1,  1,  1,
-             2,  3,  4,  6,  5,  4,  3,  2,
-            ]
-        assert mode.get_initial_board() == expected
-
  
     def test_get_pawn_obj(self):
         mode = ChessGameMode()

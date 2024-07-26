@@ -9,7 +9,7 @@ class RookPiece(BasePiece):
         super().__init__("+", [8])
 
 
-    def get_valid_moves(self, start, board):
+    def get_valid_moves(self, start, match):
         # Check if the piece has moved
         # If not, it can move 2 spaces forward
         # Else, just one
@@ -20,4 +20,4 @@ class RookPiece(BasePiece):
         # Check if it's blocked in front
 
         # Don't forget en passant rules
-        return super().get_valid_moves(start, board)
+        return super().get_valid_moves(start, match)

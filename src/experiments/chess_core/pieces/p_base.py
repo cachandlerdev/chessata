@@ -28,15 +28,13 @@ class BasePiece:
         else:
             self._attack_type = attack_type
     
-    def get_valid_moves(self, start, board):
+    def get_valid_moves(self, start, match):
         """Returns a list of valid moves for this piece based on the specified
         board and start position.
 
         Args:
             start (str): The initial position for this piece. E.g. `a1`, `g4`.
-            board (list): A chess board. Represented by a size 64 int array
-            where white pieces are greater than 0, empty squares are 0, and 
-            black pieces are less than 0.
+            match (Match): The current chess match.
 
         Raises:
             ValueError: This will show if `start` does not have a valid piece.
@@ -46,7 +44,7 @@ class BasePiece:
         """
         # TODO: Add king check based on movement
         
-        this_piece = board_utils.get_piece_at_pos(board, start)
+        this_piece = board_utils.get_piece_at_pos(match.board, start)
         if this_piece == 0:
             raise ValueError("Piece not found.")
         
@@ -60,15 +58,18 @@ class BasePiece:
         for type in self._movement_type:
             match type:
                 case "|":
-                    moves.extend(self._get_valid_vertical_moves(start, board, "|", forward_only))
+                    moves.extend(self._get_valid_vertical_moves(start, match, "|", forward_only))
                 case "+":
-                    moves.extend(self._get_valid_cross_moves(start, board))
+                    moves.extend(self._get_valid_cross_moves(start, match))
                 case "X":
-                    moves.extend(self._get_valid_diagonal_moves(start, board))
+                    moves.extend(self._get_valid_diagonal_moves(start, match))
                 case "V":
-                    moves.extend(self._get_valid_v_moves(start, board))
+                    moves.extend(self._get_valid_v_moves(start, match))
                 case _:
-                    moves.extend(self._get_valid_L_moves(start, board))
+                    moves.extend(self._get_valid_L_moves(start, match))
+
+        if "V" in self._attack_type:
+            moves.extend(self._get_valid_v_moves(start, match))           
 
         return moves
     
@@ -78,14 +79,14 @@ class BasePiece:
         return self._movement_range[0]
 
     
-    def _get_valid_vertical_moves(self, start, board, move_type, forward_only):
+    def _get_valid_vertical_moves(self, start, match, move_type, forward_only):
         """Returns a list of valid vertical move positions for this piece based
         on the specified board and start position."""
         moves = []
         col = start[0]
         row = int(start[1])
         
-        this_piece = board_utils.get_piece_at_pos(board, start)
+        this_piece = board_utils.get_piece_at_pos(match.board, start)
         if forward_only:
             if this_piece > 0:
                 # White
@@ -101,19 +102,19 @@ class BasePiece:
 
         if check_above:
             # Check squares above
-            max_range = min(row + self._get__movement_range(start, board) + 1, 9)
+            max_range = min(row + self._get__movement_range(start, match.board) + 1, 9)
             for i in range(row + 1, max_range):
                 square = f"{col}{i}"
-                found_collision = self.__add_move_if_valid(start, square, board, moves, move_type)
+                found_collision = self.__add_move_if_valid(start, square, match.board, moves, move_type)
                 if found_collision:
                     break
         
         if check_below:
             # Check square below
-            min_range = max(row - self._get__movement_range(start, board) - 1, 0)
+            min_range = max(row - self._get__movement_range(start, match.board) - 1, 0)
             for i in range(row - 1, min_range, -1):
                 square = f"{col}{i}"
-                found_collision = self.__add_move_if_valid(start, square, board, moves, move_type)
+                found_collision = self.__add_move_if_valid(start, square, match.board, moves, move_type)
                 if found_collision:
                     break
 
@@ -145,51 +146,51 @@ class BasePiece:
             yield chr(c)
     
     
-    def _get_valid_cross_moves(self, start, board):
+    def _get_valid_cross_moves(self, start, match):
         """Returns a list of valid horizontal and vertical move positions for
         this piece based on the specified board and start position."""
         moves = []
         # Get vertical moves
-        moves.extend(self._get_valid_vertical_moves(start, board, "+", False))
+        moves.extend(self._get_valid_vertical_moves(start, match, "+", False))
         
         col = start[0]
         row = int(start[1])
 
         # Check squares left
-        min_range = max(chr(ord(col) - self._get__movement_range(start, board)), "a")
+        min_range = max(chr(ord(col) - self._get__movement_range(start, match.board)), "a")
         for c in self.__char_range(chr(ord(col) - 1), min_range, -1):
             square = f"{c}{row}"
-            found_collision = self.__add_move_if_valid(start, square, board, moves, "+")
+            found_collision = self.__add_move_if_valid(start, square, match.board, moves, "+")
             if found_collision:
                 break
         
         # Check squares right
-        max_range = min(chr(ord(col) + self._get__movement_range(start, board)), "h")
+        max_range = min(chr(ord(col) + self._get__movement_range(start, match.board)), "h")
         for c in self.__char_range(chr(ord(col) + 1), max_range):
             square = f"{c}{row}"
-            found_collision = self.__add_move_if_valid(start, square, board, moves, "+")
+            found_collision = self.__add_move_if_valid(start, square, match.board, moves, "+")
             if found_collision:
                 break
 
         return moves
 
     
-    def _get_valid_diagonal_moves(self, start, board):
+    def _get_valid_diagonal_moves(self, start, match):
         """Returns a list of valid diagonal move positions for this piece based
         on the specified board and start position."""
         moves = []
         
-        top_left = self._get_diagonal_end(start, -1, 1, board)
-        self.__get_diagonal_move_subset(start, top_left, board, moves)
+        top_left = self._get_diagonal_end(start, -1, 1, match.board)
+        self.__get_diagonal_move_subset(start, top_left, match.board, moves)
         
-        top_right = self._get_diagonal_end(start, 1, 1, board)
-        self.__get_diagonal_move_subset(start, top_right, board, moves)
+        top_right = self._get_diagonal_end(start, 1, 1, match.board)
+        self.__get_diagonal_move_subset(start, top_right, match.board, moves)
         
-        bottom_left = self._get_diagonal_end(start, -1, -1, board)
-        self.__get_diagonal_move_subset(start, bottom_left, board, moves)
+        bottom_left = self._get_diagonal_end(start, -1, -1, match.board)
+        self.__get_diagonal_move_subset(start, bottom_left, match.board, moves)
         
-        bottom_right = self._get_diagonal_end(start, 1, -1, board)
-        self.__get_diagonal_move_subset(start, bottom_right, board, moves)
+        bottom_right = self._get_diagonal_end(start, 1, -1, match.board)
+        self.__get_diagonal_move_subset(start, bottom_right, match.board, moves)
         return moves
 
     
@@ -246,35 +247,52 @@ class BasePiece:
         return prev_pos
     
 
-    def _get_valid_v_moves(self, start, board):
+    def _get_valid_v_moves(self, start, match):
         """Returns a list of valid pawn attack V moves."""
-        # TODO: Handle en passant moves on pawn class
-
         moves = []
-        this_piece = board_utils.get_piece_at_pos(board, start)
+        this_piece = board_utils.get_piece_at_pos(match.board, start)
         
         if this_piece > 0:
             y = 1
         else:
             y = -1
 
-        left = f"{chr(ord(start[0]) - 1)}{int(start[1]) + y}"
-        right = f"{chr(ord(start[0]) + 1)}{int(start[1]) + y}"
-        check_moves = [left, right]
+        check_moves = []
+        try:
+            left = self._relative_to_absolute_pos(start, (-1, y))
+            check_moves.append(left)
+        except ValueError:
+            # Ignore invalid square.
+            pass
+
+        try:
+            right = self._relative_to_absolute_pos(start, (1, y))
+            check_moves.append(right)
+        except ValueError:
+            # Ignore invalid square
+            pass
+
         for move in check_moves:
             if self._is_valid_pos(move):
-                other_piece = board_utils.get_piece_at_pos(board, move)
+                other_piece = board_utils.get_piece_at_pos(match.board, move)
                 if other_piece != 0 and (
                     not board_utils.is_piece_friendly(this_piece, other_piece)
                     ):
                     moves.append(move)
+        moves.extend(self._get_valid_en_passant_moves(start, match))
         return moves
+
+    
+    def _get_valid_en_passant_moves(self, start, match):
+        """Returns a list of valid en passant attack moves."""
+        # TODO: Handle on pawn class
+        return []
                     
     
-    def _get_valid_L_moves(self, start, board):
+    def _get_valid_L_moves(self, start, match):
         """Returns a list of valid L move positions for this piece based on
         the specified board and start position."""
-        this_piece = board_utils.get_piece_at_pos(board, start)
+        this_piece = board_utils.get_piece_at_pos(match.board, start)
         transforms = [(-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1), (1, -2), 
                           (-1, -2), (-2, -1)]
         valid_moves = []
@@ -282,7 +300,7 @@ class BasePiece:
         for transform in transforms:
             try:
                 square = self._relative_to_absolute_pos(start, transform)
-                square_piece = board_utils.get_piece_at_pos(board, square)
+                square_piece = board_utils.get_piece_at_pos(match.board, square)
                 if square_piece == 0:
                     valid_moves.append(square)
                 else:

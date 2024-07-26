@@ -9,7 +9,7 @@ class QueenPiece(BasePiece):
         super().__init__("+X", [8])
 
 
-    def get_valid_moves(self, start, board):
+    def get_valid_moves(self, start, match):
 
         # Get all available directional moves
 
@@ -17,4 +17,4 @@ class QueenPiece(BasePiece):
 
         # Check if it's blocked when moving
 
-        return super().get_valid_moves(start, board)
+        return super().get_valid_moves(start, match)

@@ -9,7 +9,7 @@ class KnightPiece(BasePiece):
         super().__init__("L")
 
 
-    def get_valid_moves(self, start, board):
+    def get_valid_moves(self, start, match):
 
         # Get all available L positions
 
@@ -17,4 +17,4 @@ class KnightPiece(BasePiece):
 
         # Check if it's blocked when making L's
 
-        return super().get_valid_moves(start, board)
+        return super().get_valid_moves(start, match)
