@@ -1,4 +1,5 @@
 from src.experiments.chess_core.game_mode.match_chess import ChessMatch
+from src.experiments.chess_core.structs.piece_type import PieceType
 from src.experiments.chess_core.game_mode.gm_chess import ChessGameMode
 import pytest
 
@@ -313,5 +314,275 @@ class TestPawnMoves:
         match = ChessMatch(initial_board)
         with pytest.raises(ValueError, match="Illegal move."):
             mode.move_piece_at_pos(match, "e5", "d6")
+    
+    
+    def test_promote_to_queen_1(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  1,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        final_board = [
+             0,  0,  5,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        mode.move_piece_at_pos(match, "c7", "c8")
+        assert match.board == final_board
+    
+    
+    def test_promote_to_queen_2(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -1,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        final_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -5,  0,  0,  0,
+            ]
+        mode.move_piece_at_pos(match, "e2", "e1")
+        assert match.board == final_board
+    
+    
+    def test_promote_to_rook_1(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  1,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        final_board = [
+             0,  0,  2,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        mode.move_piece_at_pos(match, "c7", "c8", PieceType.ROOK)
+        assert match.board == final_board
+    
+    
+    def test_promote_to_rook_2(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -1,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        final_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -2,  0,  0,  0,
+            ]
+        mode.move_piece_at_pos(match, "e2", "e1", PieceType.ROOK)
+        assert match.board == final_board
+    
+    
+    def test_promote_to_bishop_1(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  1,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        final_board = [
+             0,  0,  4,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        mode.move_piece_at_pos(match, "c7", "c8", PieceType.BISHOP)
+        assert match.board == final_board
+    
+    
+    def test_promote_to_bishop_2(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -1,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        final_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -4,  0,  0,  0,
+            ]
+        mode.move_piece_at_pos(match, "e2", "e1", PieceType.BISHOP)
+        assert match.board == final_board
+    
+
+    def test_dont_promote_rooks_1(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  2,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        final_board = [
+             0,  0,  2,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        mode.move_piece_at_pos(match, "c5", "c8")
+        assert match.board == final_board
+    
+    
+    def test_dont_promote_rooks_2(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  2,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        final_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  2,  0,  0,  0,  0,  0,
+            ]
+        mode.move_piece_at_pos(match, "c5", "c1")
+        assert match.board == final_board
+    
+    
+    def test_dont_promote_rooks_3(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0, -2,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        final_board = [
+             0,  0, -2,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        mode.move_piece_at_pos(match, "c5", "c8")
+        assert match.board == final_board
+    
+    
+    def test_dont_promote_rooks_4(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0, -2,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        final_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0, -2,  0,  0,  0,  0,  0,
+            ]
+        mode.move_piece_at_pos(match, "c5", "c1")
+        assert match.board == final_board
     
         

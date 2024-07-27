@@ -12,9 +12,6 @@ class PawnPiece(BasePiece):
 
 
     def get_valid_moves(self, start, match):
-        # TODO: En passant
-        # TODO: Add pawn promotion
-
         super().get_valid_moves(start, match)
         
         moves = self._get_valid_vertical_moves(start, match, True)

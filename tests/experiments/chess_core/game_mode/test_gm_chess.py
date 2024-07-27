@@ -118,3 +118,32 @@ class TestChessGameMode:
     # TODO: Castling checks
     # Regular checks
     # Promotion checks
+    
+    def test_identify_move_type_promotion_1(self):
+        mode = ChessGameMode()
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             1,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        assert mode._identify_move_type("a7", "a8", board) == MoveType.PROMOTION
+    
+    
+    def test_identify_move_type_promotion_2(self):
+        mode = ChessGameMode()
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0, -1,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        assert mode._identify_move_type("h2", "h1", board) == MoveType.PROMOTION

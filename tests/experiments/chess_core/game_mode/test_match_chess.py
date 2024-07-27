@@ -85,6 +85,23 @@ class TestMatch:
         assert match.is_exposed_to_en_passant("f4") is True
     
     
+    def test_is_valid_en_passant_5(self):
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  1,  0,  0,
+             0,  0,  0,  0, -1,  1,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        en_passant = [False, False, False, False, False, False, False, False,
+                      False, False, False, False, False, True,  False, False]
+        match = ChessMatch(board, en_passant)
+        assert match.is_exposed_to_en_passant("f4") is True
+    
+    
     def test_is_not_valid_en_passant_1(self):
         board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -113,5 +130,22 @@ class TestMatch:
             ]
         match = ChessMatch(board)
         assert match.is_exposed_to_en_passant("d5") is False
+    
+    
+    def test_is_not_valid_en_passant_3(self):
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -1,  1,  0,  0,
+             0,  0,  0,  0,  0,  1,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        en_passant = [False, False, False, False, False, False, False, False,
+                      False, False, False, False, False, True,  False, False]
+        match = ChessMatch(board, en_passant)
+        assert match.is_exposed_to_en_passant("f4") is False
     
         

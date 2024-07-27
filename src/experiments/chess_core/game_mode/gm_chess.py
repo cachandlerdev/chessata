@@ -1,3 +1,4 @@
+from src.experiments.chess_core.structs.piece_type import PieceType
 from src.experiments.chess_core.structs.move_type import MoveType
 from src.experiments.chess_core.pieces.p_bishop import BishopPiece
 from src.experiments.chess_core.pieces.p_king import KingPiece
@@ -16,7 +17,7 @@ class ChessGameMode:
         self._matches = []
     
 
-    def move_piece_at_pos(self, match, start, end):
+    def move_piece_at_pos(self, match, start, end, promotion_type=PieceType.QUEEN):
         """Updates the current match based on the movement of a particular piece
         from `start` position to `end` if the move is valid for that kind of 
         piece. We check if moves are valid.
@@ -26,6 +27,9 @@ class ChessGameMode:
             state.
             start (str): The current position of the piece. E.g. `b3`, `d6`
             end (str): The final position of the piece.
+            promotion_type (PieceType, optional): Used to determine what kind of
+            promotion to make if we are promoting a pawn this move. Defaults to
+            queen promotions.
 
         Raises:
             ValueError: If there is not a valid piece at `start`.
@@ -52,7 +56,7 @@ class ChessGameMode:
                 case MoveType.EN_PASSANT:
                     self._update_match_en_passant(start, end, match, piece_num)
                 case MoveType.PROMOTION:
-                    self._update_match_promotion(start, end, match, piece_num)
+                    self._update_match_promotion(start, end, match, piece_num, promotion_type)
                 case MoveType.CASTLING:
                     self._update_match_castling(start, end, match, piece_num)
                 case MoveType.REGULAR:
@@ -77,16 +81,25 @@ class ChessGameMode:
         match.board[other_pawn_index] = 0
     
 
-    def _update_match_promotion(self, start, end, match, piece_num):
-           """Updates the specified match board to account for a pawn promotion move."""
-           # TODO
-           pass
+    def _update_match_promotion(self, start, end, match, piece_num, promotion_type):
+        """Updates the specified match board to account for a pawn promotion move."""
+        if promotion_type == PieceType.KING or promotion_type == PieceType.PAWN:
+            raise ValueError("Invalid promotion type.")
+        if abs(piece_num) != 1:
+            raise ValueError("Only pawns can be promoted.")
+        
+        start_index = board_utils.get_board_pos_index(start)
+        match.board[start_index] = 0
+        end_index = board_utils.get_board_pos_index(end)
+        
+        factor = 1 if piece_num > 0 else -1
+        match.board[end_index] = factor * promotion_type.value
     
     
     def _update_match_castling(self, start, end, match, piece_num):
-           """Updates the specified match board to account for a castling move."""
-           # TODO
-           pass
+        """Updates the specified match board to account for a castling move."""
+        # TODO
+        pass
  
 
     def _update_match_regular(self, start, end, match, piece_num):
@@ -125,7 +138,7 @@ class ChessGameMode:
         
         if abs(this_piece) == 1:
             # Pawn
-            if self._is_pawn_promotion_move(start, end, board, this_piece):
+            if self._is_pawn_promotion_move(start, end, this_piece):
                 return MoveType.PROMOTION
             if self._is_en_passant_move(start, end, board, this_piece):
                 return MoveType.EN_PASSANT
@@ -165,10 +178,20 @@ class ChessGameMode:
         return False
  
 
-    def _is_pawn_promotion_move(self, start, end, board, this_piece):
+    def _is_pawn_promotion_move(self, start, end, this_piece):
         """Returns true if this was a pawn promotion move."""
-        # TODO
-        return False
+        if abs(this_piece) != 1:
+            return False
+
+        if this_piece > 0:
+            right_start = (int(start[1]) == 7)
+            right_end = (int(end[1]) == 8)
+            return right_start and right_end
+        else:
+            right_start = (int(start[1]) == 2)
+            right_end = (int(end[1]) == 1)
+            return right_start and right_end
+
 
     def _is_castling_move(self, start, end, board, this_piece):
         """Returns true if this was a castling move."""
