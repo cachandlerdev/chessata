@@ -272,7 +272,7 @@ class TestPawnPiece:
             ]
         en_passant = [False, False, False, False, False, True,  False, False,
                       False, False, False, False, False, False, False, False]
-        match = ChessMatch(board, en_passant)
+        match = ChessMatch(board, allow_en_passant=en_passant)
         expected = ["e6", "f6"]
         assert pawn.get_valid_moves("e5", match) == expected
 
@@ -291,7 +291,7 @@ class TestPawnPiece:
             ]
         en_passant = [False, False, True,  False, False, False, False, False,
                       False, False, False, False, False, False, False, False]
-        match = ChessMatch(board, en_passant)
+        match = ChessMatch(board, allow_en_passant=en_passant)
         expected = ["d6", "c6"]
         assert pawn.get_valid_moves("d5", match) == expected
 
@@ -310,7 +310,7 @@ class TestPawnPiece:
             ]
         en_passant = [False, False, False, False, False, False, False, False,
                       False, False, False, True,  False, False, False, False]
-        match = ChessMatch(board, en_passant)
+        match = ChessMatch(board, allow_en_passant=en_passant)
         expected = ["e3", "d3"]
         assert pawn.get_valid_moves("e4", match) == expected
 
@@ -329,7 +329,7 @@ class TestPawnPiece:
             ]
         en_passant = [False, False, False, False, False, False, False, False,
                       False, False, False, False, False, True,  False, False]
-        match = ChessMatch(board, en_passant)
+        match = ChessMatch(board, allow_en_passant=en_passant)
         expected = ["e3", "f3"]
         assert pawn.get_valid_moves("e4", match) == expected
 

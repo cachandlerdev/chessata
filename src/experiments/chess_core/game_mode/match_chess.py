@@ -5,16 +5,38 @@ class ChessMatch:
     """A class representing a chess match. Holds info about the board, pieces,
     and current state of the game."""
     
-    def __init__(self, board=None, allow_en_passant=[]):
-        if board is None:
-            self.board = self._get_initial_board()
-        else:
-            self.board = board
-        if allow_en_passant == []:
-            self._allow_en_passant = self._get_initial_en_passant()
-        else:
-            self._allow_en_passant = allow_en_passant
+    def __init__(self, board=None, **kwargs):
+        """Creates a new chess match that holds info about the board, pieces,
+        and current game state.
 
+        Args:
+            board (list, optional): A 64 size int array representing the board. 
+            Defaults to the initial board at the start of a chess game.
+
+            allow_en_passant (list, optional): A 16 size boolean array used to
+            keep track of whether each pawn has exposed itself to an en passant
+            attack by moving two spaces on its first move. Defaults to `False`
+            for each array element.
+            
+            has_king_moved (dict, optional): A 2 size dictionary that tracks
+            whether each king has moved in the format `{6: False, -6: False}`.
+            Defaults to `False` for each element.
+            
+            has_rook_moved (dict, optional): A 4 size dictionary that tracks
+            whether each rook has moved in the format 
+            `{"a1": False, "h1": False, ...}`. Defaults to `False` for each 
+            element.
+        """
+        self.board = board if board is not None else self._get_initial_board()
+        self._allow_en_passant = kwargs.get("allow_en_passant", 
+                                      self._get_initial_en_passant())
+        self._has_king_moved = kwargs.get("has_king_moved", 
+                                    {6: False, -6: False})
+        self._has_rook_moved = kwargs.get("has_rook_moved", 
+                                    {"a1": False,
+                                     "h1": False,
+                                     "a8": False,
+                                     "h8": False})
     
     
     def _get_initial_board(self):

@@ -190,7 +190,7 @@ class TestPawnMoves:
             ]
         en_passant = [False, False, False, False, False, True,  False, False,
                       False, False, False, False, False, False, False, False]
-        match = ChessMatch(initial_board, en_passant)
+        match = ChessMatch(initial_board, allow_en_passant=en_passant)
         mode.move_piece_at_pos(match, "e5", "f6")
         assert match.board == final_board
     
@@ -219,7 +219,7 @@ class TestPawnMoves:
             ]
         en_passant = [False, False, True,  False, False, False, False, False,
                       False, False, False, False, False, False, False, False]
-        match = ChessMatch(initial_board, en_passant)
+        match = ChessMatch(initial_board, allow_en_passant=en_passant)
         mode.move_piece_at_pos(match, "d5", "c6")
         assert match.board == final_board
     
@@ -248,7 +248,7 @@ class TestPawnMoves:
             ]
         en_passant = [False, False, False, False, False, False, False, False,
                       False, False, False, True,  False, False, False, False]
-        match = ChessMatch(initial_board, en_passant)
+        match = ChessMatch(initial_board, allow_en_passant=en_passant)
         mode.move_piece_at_pos(match, "e4", "d3")
         assert match.board == final_board
     
@@ -277,7 +277,7 @@ class TestPawnMoves:
             ]
         en_passant = [False, False, False, False, False, False, False, False,
                       False, False, False, False, False, True,  False, False]
-        match = ChessMatch(initial_board, en_passant)
+        match = ChessMatch(initial_board, allow_en_passant=en_passant)
         mode.move_piece_at_pos(match, "e4", "f3")
         assert match.board == final_board
     

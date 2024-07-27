@@ -30,7 +30,7 @@ class TestMatch:
             ]
         en_passant = [False, False, False, False, False, True,  False, False,
                       False, False, False, False, False, False, False, False]
-        match = ChessMatch(board, en_passant)
+        match = ChessMatch(board, allow_en_passant=en_passant)
         assert match.is_exposed_to_en_passant("f5") is True
     
 
@@ -47,7 +47,7 @@ class TestMatch:
             ]
         en_passant = [False, False, True,  False, False, False, False, False,
                       False, False, False, False, False, False, False, False]
-        match = ChessMatch(board, en_passant)
+        match = ChessMatch(board, allow_en_passant=en_passant)
         assert match.is_exposed_to_en_passant("c5") is True
     
     
@@ -64,7 +64,7 @@ class TestMatch:
             ]
         en_passant = [False, False, False, False, False, False, False, False,
                       False, False, False, True,  False, False, False, False]
-        match = ChessMatch(board, en_passant)
+        match = ChessMatch(board, allow_en_passant=en_passant)
         assert match.is_exposed_to_en_passant("d4") is True
     
     
@@ -81,7 +81,7 @@ class TestMatch:
             ]
         en_passant = [False, False, False, False, False, False, False, False,
                       False, False, False, False, False, True,  False, False]
-        match = ChessMatch(board, en_passant)
+        match = ChessMatch(board, allow_en_passant=en_passant)
         assert match.is_exposed_to_en_passant("f4") is True
     
     
@@ -98,7 +98,7 @@ class TestMatch:
             ]
         en_passant = [False, False, False, False, False, False, False, False,
                       False, False, False, False, False, True,  False, False]
-        match = ChessMatch(board, en_passant)
+        match = ChessMatch(board, allow_en_passant=en_passant)
         assert match.is_exposed_to_en_passant("f4") is True
     
     
@@ -145,7 +145,7 @@ class TestMatch:
             ]
         en_passant = [False, False, False, False, False, False, False, False,
                       False, False, False, False, False, True,  False, False]
-        match = ChessMatch(board, en_passant)
+        match = ChessMatch(board, allow_en_passant=en_passant)
         assert match.is_exposed_to_en_passant("f4") is False
     
         
