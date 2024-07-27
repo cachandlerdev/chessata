@@ -1,3 +1,5 @@
+from src.experiments.chess_core.structs.move_type import MoveType
+from src.experiments.chess_core.game_mode.match_chess import ChessMatch
 from src.experiments.chess_core.pieces.p_base import BasePiece
 from src.experiments.chess_core.pieces.p_bishop import BishopPiece
 from src.experiments.chess_core.pieces.p_king import KingPiece
@@ -52,3 +54,67 @@ class TestChessGameMode:
         king = mode.get_piece_object(6)
         assert isinstance(king, BasePiece)
         assert isinstance(king, KingPiece)
+    
+    
+    def test_identify_move_type_en_passant_1(self):
+        mode = ChessGameMode()
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  1, -1,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        assert mode._identify_move_type("e5", "f6", board) == MoveType.EN_PASSANT
+
+
+    def test_identify_move_type_en_passant_2(self):
+        mode = ChessGameMode()
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0, -1,  1,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        assert mode._identify_move_type("d5", "c6", board) == MoveType.EN_PASSANT
+    
+    
+    def test_identify_move_type_en_passant_3(self):
+        mode = ChessGameMode()
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  1, -1,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        assert mode._identify_move_type("e4", "d3", board) == MoveType.EN_PASSANT
+    
+    
+    def test_identify_move_type_en_passant_4(self):
+        mode = ChessGameMode()
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -1,  1,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        assert mode._identify_move_type("e4", "f3", board) == MoveType.EN_PASSANT
+    
+    # TODO: Castling checks
+    # Regular checks
+    # Promotion checks

@@ -191,7 +191,7 @@ class BasePiece:
         if (abs(x) != 1) or (abs(y) != 1):
             raise ValueError("Invalid direction.")
 
-        if not self._is_valid_pos(start):
+        if not board_utils.is_valid_pos(start):
             raise ValueError("Invalid starting position.")
         
         square = start
@@ -210,31 +210,3 @@ class BasePiece:
             if spaces_traversed > self._get_movement_range(start, board):
                 break
         return prev_pos
-    
-
-    def _relative_to_absolute_pos(self, start, transform):
-        """Transforms a relative position into an absolute one. 
-        Eg. `a3`, `(2, 1)` -> `c4`.
-        Throws a `ValueError` if the transform is invalid."""
-        if not self._is_valid_pos(start):
-            raise ValueError("Invalid starting position.")
-        
-        col = chr(ord(start[0]) + transform[0])
-        row = int(start[1]) + transform[1]
-        
-        square = f"{col}{row}"
-        
-        if not self._is_valid_pos(square):
-            raise ValueError("Invalid transformation.")
-        
-        return square
-    
-
-    def _is_valid_pos(self, pos):
-        """A helper function that returns whether a given position is in the
-        range a1 through h8."""
-        valid_col = (int(pos[1]) > 0) and (int(pos[1]) < 9)
-        valid_row = (pos[0] >= 'a') and (pos[0] <= 'h')
-        row_not_double_digits = (len(pos) == 2)
-        return valid_col and valid_row and row_not_double_digits
-    

@@ -139,3 +139,80 @@ class TestBoardUtils:
     def test_is_piece_friendly8(self):
         with pytest.raises(ValueError, match="Invalid piece number."):
             is_piece_friendly(-7, 4)
+
+
+    def test_relative_to_absolute_pos_1(self):
+        assert relative_to_absolute_pos("a3", (2, 1)) == "c4"
+        
+    
+    def test_relative_to_absolute_pos_2(self):
+        assert relative_to_absolute_pos("d7", (-2, -1)) == "b6"
+    
+    
+    def test_relative_to_absolute_pos_3(self):
+        assert relative_to_absolute_pos("f5", (2, -1)) == "h4"
+    
+    
+    def test_relative_to_absolute_pos_4(self):
+        assert relative_to_absolute_pos("e1", (-2, 1)) == "c2"
+    
+    
+    def test_relative_to_absolute_pos_5(self):
+        with pytest.raises(ValueError, match="Invalid starting position."):
+            relative_to_absolute_pos("z9", (2, 1))
+    
+    
+    def test_relative_to_absolute_pos_6(self):
+        with pytest.raises(ValueError, match="Invalid transformation."):
+            relative_to_absolute_pos("a3", (-5, 1))
+    
+
+    def test_relative_to_absolute_pos_7(self):
+        with pytest.raises(ValueError, match="Invalid transformation."):
+            relative_to_absolute_pos("a1", (2, -1))
+    
+    
+    def test_absolute_to_relative_pos_1(self):
+        assert absolute_to_relative_pos("a3", "c4") == (2, 1)
+    
+    
+    def test_absolute_to_relative_pos_2(self):
+        assert absolute_to_relative_pos("d7", "b6") == (-2, -1)
+    
+    
+    def test_absolute_to_relative_pos_3(self):
+        assert absolute_to_relative_pos("f5", "h4") == (2, -1)
+    
+    
+    def test_absolute_to_relative_pos_4(self):
+        assert absolute_to_relative_pos("e1", "c2") == (-2, 1)
+    
+    
+    def test_absolute_to_relative_pos_5(self):
+        with pytest.raises(ValueError, match="Invalid starting position."):
+            absolute_to_relative_pos("z9", "c2")
+    
+    
+    def test_absolute_to_relative_pos_6(self):
+        with pytest.raises(ValueError, match="Invalid final point."):
+            absolute_to_relative_pos("b3", "t2")
+    
+    
+    def test_is_valid_pos_1(self):
+        assert is_valid_pos("a1") is True
+        
+    
+    def test_is_valid_pos_2(self):
+        assert is_valid_pos("g4") is True
+    
+    
+    def test_is_valid_pos_3(self):
+        assert is_valid_pos("z1") is False
+    
+    
+    def test_is_valid_pos_4(self):
+        assert is_valid_pos("f0") is False
+    
+    
+    def test_is_valid_pos_5(self):
+        assert is_valid_pos("d9") is False

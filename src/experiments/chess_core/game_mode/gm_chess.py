@@ -1,3 +1,4 @@
+from src.experiments.chess_core.structs.move_type import MoveType
 from src.experiments.chess_core.pieces.p_bishop import BishopPiece
 from src.experiments.chess_core.pieces.p_king import KingPiece
 from src.experiments.chess_core.pieces.p_knight import KnightPiece
@@ -46,20 +47,54 @@ class ChessGameMode:
 
         valid_moves = piece.get_valid_moves(start, match)
         if end in valid_moves:
-            # Generate new board   
-            new_board = match.board
-            
-            # TODO: Handle different types of moves
-            # TODO: Perform 'open to en passant' checks if it's a pawn moving
+            type = self._identify_move_type(start, end, match.board)
+            match type:
+                case MoveType.EN_PASSANT:
+                    self._update_match_en_passant(start, end, match, piece_num)
+                case MoveType.PROMOTION:
+                    self._update_match_promotion(start, end, match, piece_num)
+                case MoveType.CASTLING:
+                    self._update_match_castling(start, end, match, piece_num)
+                case MoveType.REGULAR:
+                    self._update_match_regular(start, end, match, piece_num)
             # TODO: Look for check/checkmate
-
-            start_index = board_utils.get_board_pos_index(start)
-            new_board[start_index] = 0
-            end_index = board_utils.get_board_pos_index(end)
-            new_board[end_index] = piece_num
-            return new_board
         else:
             raise ValueError("Illegal move.")
+    
+   
+    def _update_match_en_passant(self, start, end, match, piece_num):
+        """Updates the specified match board to account for an en passant move."""
+        # TODO
+        start_index = board_utils.get_board_pos_index(start)
+        match.board[start_index] = 0
+        end_index = board_utils.get_board_pos_index(end)
+        match.board[end_index] = piece_num
+        
+        transform = board_utils.absolute_to_relative_pos(start, end)
+        x = 1 if transform[0] > 0 else -1
+        other_pawn_square = board_utils.relative_to_absolute_pos(start, (x, 0))
+        other_pawn_index = board_utils.get_board_pos_index(other_pawn_square)
+        match.board[other_pawn_index] = 0
+    
+
+    def _update_match_promotion(self, start, end, match, piece_num):
+           """Updates the specified match board to account for a pawn promotion move."""
+           # TODO
+           pass
+    
+    
+    def _update_match_castling(self, start, end, match, piece_num):
+           """Updates the specified match board to account for a castling move."""
+           # TODO
+           pass
+ 
+
+    def _update_match_regular(self, start, end, match, piece_num):
+        """Updates the specified match board to account for a regular move."""
+        start_index = board_utils.get_board_pos_index(start)
+        match.board[start_index] = 0
+        end_index = board_utils.get_board_pos_index(end)
+        match.board[end_index] = piece_num
     
 
     def get_piece_object(self, num):
@@ -81,3 +116,61 @@ class ChessGameMode:
             case _:
                 raise ValueError("Invalid piece number.")
     
+
+    def _identify_move_type(self, start, end, board):
+        """Tries to identify the type of move that was just made. The special 
+        move types we look for are en passants, pawn promotions, and castling.
+        If it wasn't one of these, we assume it was a regular move."""
+        this_piece = board_utils.get_piece_at_pos(board, start)
+        
+        if abs(this_piece) == 1:
+            # Pawn
+            if self._is_pawn_promotion_move(start, end, board, this_piece):
+                return MoveType.PROMOTION
+            if self._is_en_passant_move(start, end, board, this_piece):
+                return MoveType.EN_PASSANT
+        elif abs(this_piece) == 6:
+            # King
+            if self._is_castling_move(start, end, board, this_piece):
+                return MoveType.CASTLING
+        
+        return MoveType.REGULAR
+
+    
+    def _is_en_passant_move(self, start, end, board, this_piece):
+        """Returns true if this was an en passsant move."""
+        if this_piece > 0:
+            y = 1
+        else:
+            y = -1
+        
+        transform = board_utils.absolute_to_relative_pos(start, end)
+        is_left_attack = (transform[0] == -1) and (transform[1] == y)
+        is_right_attack = (transform[0] == 1) and (transform[1] == y)
+        
+        if is_left_attack:
+            left_square = board_utils.relative_to_absolute_pos(start, (-1, 0))
+            square_piece = board_utils.get_piece_at_pos(board, left_square)
+            if (abs(square_piece) == 1) and not (
+                board_utils.is_piece_friendly(this_piece, square_piece)):
+                return True
+        
+        if is_right_attack:
+            right_square = board_utils.relative_to_absolute_pos(start, (1, 0))
+            square_piece = board_utils.get_piece_at_pos(board, right_square)
+            if (abs(square_piece) == 1) and not (
+                board_utils.is_piece_friendly(this_piece, square_piece)):
+                return True
+
+        return False
+ 
+
+    def _is_pawn_promotion_move(self, start, end, board, this_piece):
+        """Returns true if this was a pawn promotion move."""
+        # TODO
+        return False
+
+    def _is_castling_move(self, start, end, board, this_piece):
+        """Returns true if this was a castling move."""
+        # TODO
+        return False

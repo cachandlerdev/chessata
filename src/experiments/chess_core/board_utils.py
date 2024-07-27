@@ -56,3 +56,47 @@ def is_piece_friendly(this_piece, other_piece):
         else:
             return other_piece < 0
 
+
+def relative_to_absolute_pos(start, transform):
+    """Transforms a relative position into an absolute one. 
+    Eg. `a3`, `(2, 1)` -> `c4`.
+    Throws a `ValueError` if the transform is invalid."""
+    if not is_valid_pos(start):
+        raise ValueError("Invalid starting position.")
+    
+    col = chr(ord(start[0]) + transform[0])
+    row = int(start[1]) + transform[1]
+    
+    square = f"{col}{row}"
+    
+    if not is_valid_pos(square):
+        raise ValueError("Invalid transformation.")
+    
+    return square
+
+
+def absolute_to_relative_pos(origin, point):
+    """Gets the relative transform `(x, y)` from the `origin` to the 
+    destination `point`. Throws a `ValueError` if either position is invalid."""
+    if not is_valid_pos(origin):
+        raise ValueError("Invalid starting position.")
+    if not is_valid_pos(point):
+        raise ValueError("Invalid final point.")
+    
+    x1 = ord(origin[0]) - ord("a")
+    x2 = ord(point[0]) - ord("a")
+    dx = x2 - x1
+
+    y1 = int(origin[1])
+    y2 = int(point[1])
+    dy = y2 - y1
+    
+    return (dx, dy)
+    
+
+def is_valid_pos(pos):
+    """Returns true if a given position is in the range a1 through h8."""
+    valid_col = (int(pos[1]) > 0) and (int(pos[1]) < 9)
+    valid_row = (pos[0] >= 'a') and (pos[0] <= 'h')
+    row_not_double_digits = (len(pos) == 2)
+    return valid_col and valid_row and row_not_double_digits

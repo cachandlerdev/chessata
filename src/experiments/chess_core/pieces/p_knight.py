@@ -22,7 +22,7 @@ class KnightPiece(BasePiece):
         
         for transform in transforms:
             try:
-                square = self._relative_to_absolute_pos(start, transform)
+                square = board_utils.relative_to_absolute_pos(start, transform)
                 square_piece = board_utils.get_piece_at_pos(match.board, square)
                 if square_piece == 0:
                     valid_moves.append(square)

@@ -1,8 +1,5 @@
-from src.experiments.chess_core.structs.move import Move
-from src.experiments.chess_core.structs.move_type import MoveType
 from src.experiments.chess_core.pieces.p_base import BasePiece
 import src.experiments.chess_core.board_utils as board_utils
-from src.experiments.chess_core.game_mode.match_chess import ChessMatch
 
 
 class PawnPiece(BasePiece):
@@ -55,21 +52,21 @@ class PawnPiece(BasePiece):
 
         check_moves = []
         try:
-            left = self._relative_to_absolute_pos(start, (-1, y))
+            left = board_utils.relative_to_absolute_pos(start, (-1, y))
             check_moves.append(left)
         except ValueError:
             # Ignore invalid square.
             pass
 
         try:
-            right = self._relative_to_absolute_pos(start, (1, y))
+            right = board_utils.relative_to_absolute_pos(start, (1, y))
             check_moves.append(right)
         except ValueError:
             # Ignore invalid square
             pass
 
         for move in check_moves:
-            if self._is_valid_pos(move):
+            if board_utils.is_valid_pos(move):
                 other_piece = board_utils.get_piece_at_pos(match.board, move)
                 if other_piece != 0 and (
                     not board_utils.is_piece_friendly(this_piece, other_piece)
@@ -95,12 +92,12 @@ class PawnPiece(BasePiece):
         if check_moves:
             # Left
             try:
-                left_square = self._relative_to_absolute_pos(start, (-1, 0))
+                left_square = board_utils.relative_to_absolute_pos(start, (-1, 0))
                 left_piece = board_utils.get_piece_at_pos(match.board, left_square)
                 
                 if abs(left_piece) == 1 and not (
                     board_utils.is_piece_friendly(this_piece, left_piece)):
-                    end = self._relative_to_absolute_pos(left_square, (0, y))
+                    end = board_utils.relative_to_absolute_pos(left_square, (0, y))
                     if match.is_exposed_to_en_passant(left_square):
                         moves.append(end)
             except ValueError:
@@ -109,12 +106,12 @@ class PawnPiece(BasePiece):
 
             # Right
             try:
-                right_square = self._relative_to_absolute_pos(start, (1, 0))
+                right_square = board_utils.relative_to_absolute_pos(start, (1, 0))
                 right_piece = board_utils.get_piece_at_pos(match.board, right_square)
 
                 if abs(right_piece) == 1 and not (
                     board_utils.is_piece_friendly(this_piece, right_piece)):
-                    end = self._relative_to_absolute_pos(right_square, (0, y))
+                    end = board_utils.relative_to_absolute_pos(right_square, (0, y))
                     if match.is_exposed_to_en_passant(right_square):
                         moves.append(end)
             except ValueError:

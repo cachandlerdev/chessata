@@ -88,6 +88,3 @@ class ChessMatch:
                     return False
         return True
         
-        
-        pass
-        

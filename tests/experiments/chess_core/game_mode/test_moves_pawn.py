@@ -163,3 +163,155 @@ class TestPawnMoves:
             ]
         mode.move_piece_at_pos(match, "d7", "d5")
         assert match.board == final_board
+    
+    
+    def test_move_white_pawn_en_passant_1(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  1, -1,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        final_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  1,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        en_passant = [False, False, False, False, False, True,  False, False,
+                      False, False, False, False, False, False, False, False]
+        match = ChessMatch(initial_board, en_passant)
+        mode.move_piece_at_pos(match, "e5", "f6")
+        assert match.board == final_board
+    
+
+    def test_move_white_pawn_en_passant_2(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0, -1,  1,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        final_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  1,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        en_passant = [False, False, True,  False, False, False, False, False,
+                      False, False, False, False, False, False, False, False]
+        match = ChessMatch(initial_board, en_passant)
+        mode.move_piece_at_pos(match, "d5", "c6")
+        assert match.board == final_board
+    
+
+    def test_move_black_pawn_en_passant_1(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  1, -1,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        final_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0, -1,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        en_passant = [False, False, False, False, False, False, False, False,
+                      False, False, False, True,  False, False, False, False]
+        match = ChessMatch(initial_board, en_passant)
+        mode.move_piece_at_pos(match, "e4", "d3")
+        assert match.board == final_board
+    
+    
+    def test_move_black_pawn_en_passant_2(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -1,  1,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        final_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -1,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        en_passant = [False, False, False, False, False, False, False, False,
+                      False, False, False, False, False, True,  False, False]
+        match = ChessMatch(initial_board, en_passant)
+        mode.move_piece_at_pos(match, "e4", "f3")
+        assert match.board == final_board
+    
+
+    def test_move_white_pawn_not_en_passant_1(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  1, -1,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        with pytest.raises(ValueError, match="Illegal move."):
+            mode.move_piece_at_pos(match, "e5", "f6")
+    
+
+    def test_move_white_pawn_not_en_passant_2(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0, -1,  1,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        with pytest.raises(ValueError, match="Illegal move."):
+            mode.move_piece_at_pos(match, "e5", "d6")
+    
+        
