@@ -1,3 +1,4 @@
+from src.experiments.chess_core import board_utils
 from src.experiments.chess_core.pieces.p_base import BasePiece
 
 
@@ -12,9 +13,58 @@ class KingPiece(BasePiece):
     def get_valid_moves(self, start, match):
         # TODO: Add castling
             # Make sure castling can only happen with friendly rooks
-        # TODO: Add king check
-        # TODO: Add checkmate (probably on the gamemode class)
         super().get_valid_moves(start, match)
         moves = self._get_valid_cross_moves(start, match)
         moves.extend(self._get_valid_diagonal_moves(start, match))
+        moves.extend(self._get_valid_castling_moves(start, match))
         return moves
+    
+    
+    def _get_valid_castling_moves(self, start, match):
+        """Gets the valid castling moves for this king piece."""
+        # TODO
+        # TODO: Handle check on the gamemode class
+        this_piece = board_utils.get_piece_at_pos(match.board, start)
+        is_white = this_piece > 0
+        if match.has_king_moved(is_white):
+            return []
+        
+        moves = []
+        queenside_check = not match.has_rook_moved(is_white, False)
+        kingside_check = not match.has_rook_moved(is_white, True)
+        
+        if queenside_check:
+            if self._is_castling_path_clear(start, False, match):
+                move = board_utils.relative_to_absolute_pos(start, (-2, 0))
+                moves.append(move)
+        
+        if kingside_check:
+            if self._is_castling_path_clear(start, True, match):
+                move = board_utils.relative_to_absolute_pos(start, (2, 0))
+                moves.append(move)
+        return moves
+
+    
+    def _is_castling_path_clear(self, start, is_kingside, match):
+        """Returns true if the castling route is clear in this direction."""
+        if is_kingside:
+            square1 = board_utils.relative_to_absolute_pos(start, (1, 0))
+            square2 = board_utils.relative_to_absolute_pos(start, (2, 0))
+            piece1 = board_utils.get_piece_at_pos(match.board, square1)
+            piece2 = board_utils.get_piece_at_pos(match.board, square2)
+            clear1 = piece1 == 0
+            clear2 = piece2 == 0
+            return clear1 and clear2
+        else:
+            square1 = board_utils.relative_to_absolute_pos(start, (-1, 0))
+            square2 = board_utils.relative_to_absolute_pos(start, (-2, 0))
+            square3 = board_utils.relative_to_absolute_pos(start, (-3, 0))
+            piece1 = board_utils.get_piece_at_pos(match.board, square1)
+            piece2 = board_utils.get_piece_at_pos(match.board, square2)
+            piece3 = board_utils.get_piece_at_pos(match.board, square3)
+            clear1 = piece1 == 0
+            clear2 = piece2 == 0
+            clear3 = piece3 == 0
+            return clear1 and clear2 and clear3
+            
+    
