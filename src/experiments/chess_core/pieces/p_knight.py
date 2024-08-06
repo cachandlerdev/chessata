@@ -17,7 +17,7 @@ class KnightPiece(BasePiece):
         the specified board and start position."""
         this_piece = board_utils.get_piece_at_pos(match.board, start)
         transforms = [(-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1), (1, -2), 
-                          (-1, -2), (-2, -1)]
+                      (-1, -2), (-2, -1)]
         valid_moves = []
         
         for transform in transforms:

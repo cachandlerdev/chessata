@@ -14,6 +14,7 @@ class ChessGameMode:
     def __init__(self):
         # TODO: Figure out how we're storing matches. Is it on the game mode?
         # A separate 'game_manager' class? Not sure.
+        # I'm thinking a separate turn_manager class will be used
         self._matches = []
     
 
@@ -69,12 +70,63 @@ class ChessGameMode:
             raise ValueError("Illegal move.")
     
     
-    def _is_in_check(self, pos, is_white, match):
+    def is_in_check(self, pos, is_white, match):
         """Checks whether a king at this position for the specified match is
-        in check."""
-        # TODO
+        in check. Note that the king doesn't actually *have* to be at this 
+        position, as we're testing whether he *would* be in check if he moved 
+        here."""
+        if self._is_in_cross_check(pos, is_white, match):
+            return True
+        if self._is_in_diagonal_check(pos, is_white, match):
+            return True
+        if self._is_in_knight_check(pos, is_white, match):
+            return True
         return False
     
+
+    def _is_in_cross_check(self, pos, is_white, match):
+        """Checks whether a king located at this position would be in check from
+        rooks, queens, or the other king."""
+        # TODO
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        for direction in directions:
+            pass
+            # In each case, check whether an enemy rook, queen, or king is there
+            # Only check kings for the first space away
+            # If the piece is present, he's in check
+        
+        return False
+
+    def _is_in_diagonal_check(self, pos, is_white, match):
+        """Checks whether a king located at this position would be in check from
+        bishops, queens, pawns, or the other king."""
+        # TODO
+        directions = [(1, -1), (1, 1), (1, -1), (-1, -1)]
+        for direction in directions:
+            pass
+            # In each case, check whether an enemy bishop, queen, king, or pawn is 
+            # there for squares in the direction
+                # If a bishop or a queen, he's in check
+                # Only check kings and pawns for the first space away
+                # Make sure the pawns are in the right direction for attacking
+                # (probably make this a separate function)
+        return False
+
+    
+    def _is_in_knight_check(self, pos, is_white, match):
+        """Checks whether a king located at this position would be in check from
+        knights."""
+        transforms = [(-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1), (1, -2), 
+                      (-1, -2), (-2, -1)]
+        for transform in transforms:
+            enemy_knight = -3 if is_white else 3
+            square = board_utils.relative_to_absolute_pos(pos, transform)
+            square_piece = board_utils.get_piece_at_pos(match.board, square)
+            if square_piece == enemy_knight:
+                return True
+
+        return False
+
     
     def is_in_checkmate(self, pos, is_white, match):
         """Checks whether a king at this position for the specified match is
@@ -82,6 +134,9 @@ class ChessGameMode:
         # TODO
         # Get whether the piece is in check
         # If so, check whether he has any possible moves
+        
+        # Note: you might want to separate out the "is_in_check" logic to avoid
+        # duplicating computationally intensive calculations
         return False
     
    
@@ -156,7 +211,7 @@ class ChessGameMode:
         squares_to_check.append(square2)
 
         for square in squares_to_check:
-            if self._is_in_check(square, is_white, match):
+            if self.is_in_check(square, is_white, match):
                 return True
         return False
  
