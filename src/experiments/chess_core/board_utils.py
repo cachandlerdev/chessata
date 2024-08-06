@@ -100,3 +100,24 @@ def is_valid_pos(pos):
     valid_row = (pos[0] >= 'a') and (pos[0] <= 'h')
     row_not_double_digits = (len(pos) == 2)
     return valid_col and valid_row and row_not_double_digits
+
+
+def find_piece_pos(piece_num, board):
+    """Returns the position of the first piece it finds with the specified 
+    value. This is really only useful for locating the kings or queens."""
+    # TODO
+    try:
+        index = board.index(piece_num)
+    except ValueError:
+        raise ValueError("Piece not found.")
+    pos = get_pos_from_index(index)
+    return pos
+
+
+def get_pos_from_index(index):
+    """A helper function that gets the chess board position of the specified 
+    board index."""
+    col = chr((index % 8) + ord("a"))
+    row = 8 - (index // 8)
+    return f"{col}{row}"
+

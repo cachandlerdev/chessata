@@ -176,7 +176,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  6,  0,  0,  0,
             ]
         final_board = [
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -186,7 +186,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  6,  0,  0,  0,
             ]
         en_passant = [False, False, False, False, False, True,  False, False,
                       False, False, False, False, False, False, False, False]
@@ -198,7 +198,7 @@ class TestPawnMoves:
     def test_move_white_pawn_en_passant_2(self):
         mode = ChessGameMode()
         initial_board = [
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0, -1,  1,  0,  0,  0,  0,
@@ -208,7 +208,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
             ]
         final_board = [
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  1,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -227,24 +227,24 @@ class TestPawnMoves:
     def test_move_black_pawn_en_passant_1(self):
         mode = ChessGameMode()
         initial_board = [
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  1, -1,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
             ]
         final_board = [
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0, -1,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
             ]
         en_passant = [False, False, False, False, False, False, False, False,
                       False, False, False, True,  False, False, False, False]
@@ -256,24 +256,24 @@ class TestPawnMoves:
     def test_move_black_pawn_en_passant_2(self):
         mode = ChessGameMode()
         initial_board = [
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0, -1,  1,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
             ]
         final_board = [
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0, -1,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
             ]
         en_passant = [False, False, False, False, False, False, False, False,
                       False, False, False, False, False, True,  False, False]
@@ -292,7 +292,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
             ]
         match = ChessMatch(initial_board)
         with pytest.raises(ValueError, match="Illegal move."):
@@ -309,7 +309,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0, -6,  0,  6,  0,  0,
             ]
         match = ChessMatch(initial_board)
         with pytest.raises(ValueError, match="Illegal move."):
@@ -325,7 +325,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
             ]
         match = ChessMatch(initial_board)
@@ -336,7 +336,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
             ]
         mode.move_piece_at_pos(match, "c7", "c8")
@@ -346,7 +346,7 @@ class TestPawnMoves:
     def test_promote_to_queen_2(self):
         mode = ChessGameMode()
         initial_board = [
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -357,7 +357,7 @@ class TestPawnMoves:
             ]
         match = ChessMatch(initial_board)
         final_board = [
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -380,7 +380,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  6,  0,  0,  0,
             ]
         match = ChessMatch(initial_board)
         final_board = [
@@ -391,7 +391,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  6,  0,  0,  0,
             ]
         mode.move_piece_at_pos(match, "c7", "c8", PieceType.ROOK)
         assert match.board == final_board
@@ -400,7 +400,7 @@ class TestPawnMoves:
     def test_promote_to_rook_2(self):
         mode = ChessGameMode()
         initial_board = [
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -411,7 +411,7 @@ class TestPawnMoves:
             ]
         match = ChessMatch(initial_board)
         final_board = [
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -434,7 +434,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  6,  0,  0,  0,
             ]
         match = ChessMatch(initial_board)
         final_board = [
@@ -445,7 +445,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  6,  0,  0,  0,
             ]
         mode.move_piece_at_pos(match, "c7", "c8", PieceType.BISHOP)
         assert match.board == final_board
@@ -454,7 +454,7 @@ class TestPawnMoves:
     def test_promote_to_bishop_2(self):
         mode = ChessGameMode()
         initial_board = [
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -6,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -465,7 +465,7 @@ class TestPawnMoves:
             ]
         match = ChessMatch(initial_board)
         final_board = [
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0, -6,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -487,7 +487,7 @@ class TestPawnMoves:
              0,  0,  2,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
             ]
         match = ChessMatch(initial_board)
@@ -498,7 +498,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
             ]
         mode.move_piece_at_pos(match, "c5", "c8")
@@ -514,7 +514,7 @@ class TestPawnMoves:
              0,  0,  2,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
             ]
         match = ChessMatch(initial_board)
@@ -525,7 +525,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
              0,  0,  2,  0,  0,  0,  0,  0,
             ]
         mode.move_piece_at_pos(match, "c5", "c1")
@@ -539,7 +539,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0, -2,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -550,7 +550,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -566,7 +566,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0, -2,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -577,7 +577,7 @@ class TestPawnMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -6,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0, -2,  0,  0,  0,  0,  0,

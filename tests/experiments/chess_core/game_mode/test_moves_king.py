@@ -46,25 +46,193 @@ class TestKingMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0, -6,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  1,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        with pytest.raises(ValueError, match="Illegal move."):
+            mode.move_piece_at_pos(match, "d4", "d3")
+    
+    
+    def test_move_puts_king_in_check_2(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0, -1,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0, -6,  0,  6,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
             ]
+        match = ChessMatch(initial_board)
+        with pytest.raises(ValueError, match="Illegal move."):
+            mode.move_piece_at_pos(match, "f4", "f5")
+    
+    
+    def test_move_puts_king_in_check_3(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0, -2,
+             0,  0,  0, -6,  0,  6,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        with pytest.raises(ValueError, match="Illegal move."):
+            mode.move_piece_at_pos(match, "f4", "f5")
+    
+    
+    def test_move_puts_king_in_check_4(self):
+        mode = ChessGameMode()
         initial_board = [
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0, -6,  0,  0,  0,  0,
+             0,  0,  0, -6,  0,  6,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  2,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
             ]
         match = ChessMatch(initial_board)
-        mode.move_piece_at_pos(match, "d3", "e5")
-        # TODO
-        assert False
+        with pytest.raises(ValueError, match="Illegal move."):
+            mode.move_piece_at_pos(match, "d4", "d3")
+    
+    
+    def test_is_in_checkmate_1(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            -6,  5,  6,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        assert mode.resolve_game_state(match, False) == 1
+    
+    
+    def test_is_in_checkmate_2(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             6, -5, -6,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        assert mode.resolve_game_state(match, True) == 2
+    
+    
+    def test_is_not_in_checkmate_3(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0, -6,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
+             0,  0,  0,  0,  6,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        assert mode.resolve_game_state(match, True) == 0
+    
+    
+    def test_is_in_stalemate_1(self):
+        mode = ChessGameMode()
+        initial_board = [
+            -6,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  6,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  5,  0,  0,  6,  0,  0,
+             0,  0,  0,  0,  6,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        assert mode.resolve_game_state(match, False) == 3
+    
+    
+    def test_is_in_stalemate_2(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0, -6,  0,
+            -4,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -1,  0,  0,
+             0,  0,  0,  0,  6,  0,  0, -1,
+             0,  0,  0,  0,  0,  0,  0,  1,
+             0,  0,  0,  0,  0,  0,  0,  6,
+            ]
+        match = ChessMatch(initial_board)
+        assert mode.resolve_game_state(match, True) == 3
+    
+    
+    def test_is_in_stalemate_3(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  2,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            -1,  0,  0,  2,  0,  0,  0,  0,
+            -6,  0,  0,  0,  6,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  6,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        assert mode.resolve_game_state(match, True) == 3
+    
+    
+    def test_is_in_stalemate_4(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  6,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -5,  0, -6,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  6,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  6,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        assert mode.resolve_game_state(match, True) == 3
+    
+    
+    def test_is_not_in_stalemate_1(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  6,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0, -5,  0, -6,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  6,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  6,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        assert mode.resolve_game_state(match, False) == 3
     
     
     def test_is_king_in_check_1(self):
@@ -572,7 +740,7 @@ class TestKingMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0, -2,  0,  0,  0,  0,  0,
+             0, -4,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -707,7 +875,7 @@ class TestKingMoves:
         initial_board = [
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0, -2,
+             0,  0,  0,  0,  0,  0, -2,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
@@ -727,7 +895,7 @@ class TestKingMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0, -4,  0,  0,
+             0,  0,  0,  0, -4,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              2,  0,  0,  0,  6,  0,  0,  2,
             ]

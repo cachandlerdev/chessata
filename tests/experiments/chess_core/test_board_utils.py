@@ -216,3 +216,66 @@ class TestBoardUtils:
     
     def test_is_valid_pos_5(self):
         assert is_valid_pos("d9") is False
+
+
+    def test_find_piece_pos_1(self):
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0, -4,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  6,  0,  0,  2,
+            ]
+        assert find_piece_pos(-4, board) == "b4"
+    
+    
+    def test_find_piece_pos_2(self):
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  6,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        assert find_piece_pos(6, board) == "d3"
+    
+    
+    def test_find_piece_pos_3(self):
+        board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  6,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        with pytest.raises(ValueError, match="Piece not found."):
+            find_piece_pos(-6, board)
+
+
+    def test_get_pos_from_index_1(self):
+        assert get_pos_from_index(33) == "b4"
+    
+    
+    def test_get_pos_from_index_2(self):
+        assert get_pos_from_index(43) == "d3"
+    
+    
+    def test_get_pos_from_index_3(self):
+        assert get_pos_from_index(0) == "a8"
+    
+    
+    def test_get_pos_from_index_4(self):
+        assert get_pos_from_index(56) == "a1"
+    
+    
+    def test_get_pos_from_index_5(self):
+        assert get_pos_from_index(9) == "b7"

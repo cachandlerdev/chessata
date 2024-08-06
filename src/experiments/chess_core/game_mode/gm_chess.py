@@ -7,16 +7,11 @@ from src.experiments.chess_core.pieces.p_pawn import PawnPiece
 from src.experiments.chess_core.pieces.p_queen import QueenPiece
 from src.experiments.chess_core.pieces.p_rook import RookPiece
 import src.experiments.chess_core.board_utils as board_utils
+import copy
 
 
 class ChessGameMode:
     """A class used to handle rules about the chess game mode."""
-    def __init__(self):
-        # TODO: Figure out how we're storing matches. Is it on the game mode?
-        # A separate 'game_manager' class? Not sure.
-        # I'm thinking a separate turn_manager class will be used
-        self._matches = []
-    
 
     def move_piece_at_pos(self, match, start, end, promotion_type=PieceType.QUEEN):
         """Updates the current match based on the movement of a particular piece
@@ -50,12 +45,11 @@ class ChessGameMode:
         if start == end:
             raise ValueError("Start and end positions match.")
 
-        valid_moves = piece.get_valid_moves(start, match)
-        # TODO: Remove all moves that would put the friendly king in check or 
-        # checkmate
+        moves = piece.get_valid_moves(start, match)
+        moves = self._remove_friendly_check_moves(moves, start, promotion_type, match)
         # TODO: Update the match "king moved", "pawn en passant", and "rook
         # moved" states
-        if end in valid_moves:
+        if end in moves:
             type = self._identify_move_type(start, end, match.board)
             match type:
                 case MoveType.EN_PASSANT:
@@ -68,6 +62,98 @@ class ChessGameMode:
                     self._update_match_regular(start, end, match, piece_num)
         else:
             raise ValueError("Illegal move.")
+    
+    
+    def resolve_game_state(self, match, is_white_turn):
+        """Determines whether the specified match is over yet. Returns 0 if the
+        game is not over yet, 1 if the white player is in check, 2 if the black 
+        player is in check, 3 if the game ended in a stalemate, 4 if the white 
+        player has won, and 5 if the black player has won."""
+        # TODO
+        # Is white player in check?
+            # Does white player not have moves?
+                # Checkmate. Black wins
+                # return 4
+            # else
+                # Check for white.
+                # return 1
+        
+        # Is black player in check?
+            # Does black player not have moves?
+                # Checkmate. White wins
+                # return 4
+            # else
+                # Check for black
+                # return 2
+        
+        # Does current player have moves?
+            # Game's not over yet
+            # return 0
+        # else:
+            # Stalemate
+            # return 3
+        return 0
+    
+    
+    # TODO Handle limiting player moves if the current player is in check
+    
+    
+    def _remove_friendly_check_moves(self, all_moves, start, promotion_type, match):
+        """Removes all moves that would put the friendly king in check and 
+        returns the resulting moves."""
+        piece_to_move = board_utils.get_piece_at_pos(match.board, start)
+        check_white_king = (piece_to_move > 0)
+        valid_moves = []
+        
+        for move in all_moves:
+            type = self._identify_move_type(start, move, match.board)
+            invalid_castling = (type == MoveType.CASTLING) and (
+                self._is_illegal_castling_move(start, move, check_white_king, match))
+            invalid_regular = self._is_illegal_regular_move(start, move, check_white_king, type, promotion_type, match)
+            if not invalid_castling and not invalid_regular:
+                valid_moves.append(move)
+        return valid_moves
+    
+
+    def _is_illegal_regular_move(self, start, end, check_white_king, move_type, promotion_type, match):
+        """Checks whether making this move would put the friendly king in check,
+        and therefore be an illegal move. Note that this function does not
+        handle castling cases."""
+        # TODO
+        new_match = copy.deepcopy(match)
+        this_piece = board_utils.get_piece_at_pos(new_match.board, start)
+        match move_type:
+            case MoveType.EN_PASSANT:
+                self._update_match_en_passant(start, end, new_match, this_piece)
+            case MoveType.PROMOTION:
+                self._update_match_promotion(start, end, new_match, this_piece, promotion_type)
+            case MoveType.REGULAR:
+                self._update_match_regular(start, end, new_match, this_piece)
+
+        king_value = 6 if check_white_king else -6
+        king_pos = board_utils.find_piece_pos(king_value, new_match.board)
+        return self.is_in_check(king_pos, check_white_king, new_match)
+    
+    
+    def _is_illegal_castling_move(self, start, end, check_white_king, match):
+        """Looks at whether making this castling move would be legal with regard 
+        to check rules. Namely, we determine whether the king is trying to 
+        castle out of, through, or into check."""
+        x = 1 if start[0] < end[0] else -1
+        if self.is_in_check(start, check_white_king, match):
+            # Castle out of check
+            return True
+
+        middle = board_utils.relative_to_absolute_pos(start, (x, 0))
+        if self.is_in_check(middle, check_white_king, match):
+            # Castle through check
+            return True
+        
+        if self.is_in_check(end, check_white_king, match):
+            # Castle into check
+            return True
+        
+        return False
     
     
     def is_in_check(self, pos, is_white, match):
@@ -87,29 +173,71 @@ class ChessGameMode:
     def _is_in_cross_check(self, pos, is_white, match):
         """Checks whether a king located at this position would be in check from
         rooks, queens, or the other king."""
-        # TODO
+        if is_white:
+            enemy_pieces = [-2, -5, -6]
+        else:
+            enemy_pieces = [2, 5, 6]
+        
         directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         for direction in directions:
-            pass
-            # In each case, check whether an enemy rook, queen, or king is there
-            # Only check kings for the first space away
-            # If the piece is present, he's in check
-        
+            if self._is_in_directional_check(pos, is_white, direction, 
+                                             enemy_pieces, match.board):
+                return True
         return False
+
 
     def _is_in_diagonal_check(self, pos, is_white, match):
         """Checks whether a king located at this position would be in check from
         bishops, queens, pawns, or the other king."""
-        # TODO
-        directions = [(1, -1), (1, 1), (1, -1), (-1, -1)]
+        if is_white:
+            enemy_pieces = [-1, -4, -5, -6]
+        else:
+            enemy_pieces = [1, 4, 5, 6]
+        
+        directions = [(-1, 1), (1, 1), (1, -1), (-1, -1)]
         for direction in directions:
-            pass
-            # In each case, check whether an enemy bishop, queen, king, or pawn is 
-            # there for squares in the direction
-                # If a bishop or a queen, he's in check
-                # Only check kings and pawns for the first space away
-                # Make sure the pawns are in the right direction for attacking
-                # (probably make this a separate function)
+            if self._is_in_directional_check(pos, is_white, direction, 
+                                             enemy_pieces, match.board):
+                return True
+        return False
+
+    def _is_in_directional_check(self, pos, is_white, direction, enemy_pieces, board):
+        """Checks whether a king located at this position would be in check
+        for the specified list of enemy pieces in the given direction.
+        Note: You must specify whether the enemy pieces are white or black by
+        inputting positive/negative piece numbers!"""
+        square = pos
+        distance = 0
+        while (square[0] >= "a" and square[0] <= "h") and (
+            int(square[1]) >= 1 and int(square[1]) <= 8):
+            try:
+                new_square = board_utils.relative_to_absolute_pos(square, direction)
+            except ValueError:
+                # We've reached the edge of the board
+                return False
+
+            distance += 1
+            square_piece = board_utils.get_piece_at_pos(board, new_square)
+            if square_piece != 0:
+                if square_piece in enemy_pieces:
+                    match abs(square_piece):
+                        # Pawn
+                        case 1:
+                            right_distance = (distance == 1)
+                            y_to_check = 1 if is_white else -1
+                            right_direction = direction[1] == y_to_check
+                            return right_distance and right_direction
+                        # King
+                        case 6:
+                            return (distance == 1)
+                        # Others
+                        case _:
+                            return True
+                # Even if he's not in check, we still stop looking in this 
+                # direction because we found the first piece in this direction.
+                return False
+            square = new_square
+        # Checked all squares in this direction
         return False
 
     
@@ -120,7 +248,11 @@ class ChessGameMode:
                       (-1, -2), (-2, -1)]
         for transform in transforms:
             enemy_knight = -3 if is_white else 3
-            square = board_utils.relative_to_absolute_pos(pos, transform)
+            try:
+                square = board_utils.relative_to_absolute_pos(pos, transform)
+            except ValueError:
+                # This square doesn't exist
+                continue
             square_piece = board_utils.get_piece_at_pos(match.board, square)
             if square_piece == enemy_knight:
                 return True
@@ -128,16 +260,20 @@ class ChessGameMode:
         return False
 
     
-    def is_in_checkmate(self, pos, is_white, match):
-        """Checks whether a king at this position for the specified match is
-        in checkmate."""
-        # TODO
-        # Get whether the piece is in check
-        # If so, check whether he has any possible moves
-        
-        # Note: you might want to separate out the "is_in_check" logic to avoid
-        # duplicating computationally intensive calculations
-        return False
+    #def is_in_checkmate(self, pos, is_white, match):
+    #    """Checks whether a king at this position for the specified match is
+    #    in checkmate."""
+    #    # TODO
+    #    if not self.is_in_check(pos, is_white, match):
+    #        return False
+    #    
+    #    king = KingPiece()
+    #    moves = king.get_valid_moves(pos, match)
+    #    moves = self._remove_friendly_check_moves(moves, pos, promotion_type, match)
+    #    return len(moves) == 0
+    #    # Note: you might want to separate out the "is_in_check" logic to avoid
+    #    # duplicating computationally intensive calculations
+    #    return False
     
    
     def _update_match_en_passant(self, start, end, match, piece_num):

@@ -16,7 +16,9 @@ class BasePiece:
     
     def get_valid_moves(self, start, match):
         """Returns a list of valid moves for this piece based on the specified
-        board and start position.
+        board and start position. Note that this function does not check whether
+        the moves will put the friendly king in check. That logic is handled on
+        the gamemode class.
 
         Args:
             start (str): The initial position for this piece. E.g. `a1`, `g4`.
@@ -28,10 +30,6 @@ class BasePiece:
         Returns:
             list: A list of valid positions like `b3`, `e6`, and `f2`.
         """
-        # TODO: Add king check based on movement
-        # You should probably write a king_check function on the base class and
-        # throw everything into it before returning the moves.
-        
         this_piece = board_utils.get_piece_at_pos(match.board, start)
         if this_piece == 0:
             raise ValueError("Piece not found.")

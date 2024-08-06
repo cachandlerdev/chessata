@@ -14,7 +14,7 @@ class TestKnightMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  3,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
             ]
         match = ChessMatch(initial_board)
         final_board = [
@@ -25,7 +25,7 @@ class TestKnightMoves:
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
              0,  0,  0,  0,  0,  0,  0,  0,
-             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  6,  0,  0,
             ]
         mode.move_piece_at_pos(match, "d3", "e5")
         assert match.board == final_board
