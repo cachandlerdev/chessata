@@ -102,6 +102,9 @@ def absolute_to_relative_pos(origin, point):
 
 def is_valid_pos(pos):
     """Returns true if a given position is in the range a1 through h8."""
+    if len(pos) != 2:
+        return False
+
     valid_col = (int(pos[1]) > 0) and (int(pos[1]) < 9)
     valid_row = (pos[0] >= 'a') and (pos[0] <= 'h')
     row_not_double_digits = (len(pos) == 2)

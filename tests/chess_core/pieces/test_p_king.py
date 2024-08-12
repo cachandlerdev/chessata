@@ -1,6 +1,6 @@
 import pytest
 from src.chess_core.pieces.p_king import KingPiece
-from src.chess_core.game_mode.match_chess import ChessMatch
+from src.chess_core.game_match.match_chess import ChessMatch
 
 
 class TestKingPiece:

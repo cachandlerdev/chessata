@@ -1,4 +1,4 @@
-from src.chess_core.game_mode.match_chess import ChessMatch
+from src.chess_core.game_match.match_chess import ChessMatch
 from src.chess_core.pieces.p_knight import KnightPiece
 
 class TestKnightPiece:

@@ -216,6 +216,14 @@ class TestBoardUtils:
     
     def test_is_valid_pos_5(self):
         assert is_valid_pos("d9") is False
+    
+    
+    def test_is_valid_pos_6(self):
+        assert is_valid_pos("b") is False
+    
+    
+    def test_is_valid_pos_7(self):
+        assert is_valid_pos("bw14") is False
 
 
     def test_find_piece_pos_1(self):

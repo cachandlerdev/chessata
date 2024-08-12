@@ -65,6 +65,16 @@ class ChessGameMode:
             raise ValueError("Illegal move.")
     
     
+    def is_players_piece(self, pos, is_white, board):
+        """Checks whether the piece located at the given position belongs to
+        this player."""
+        piece = board_utils.get_piece_at_pos(board, pos)
+        if is_white:
+            return piece > 0
+        else:
+            return piece < 0
+    
+    
     def _update_match_state(self, start, end, match, piece_num, type):
         """Updates the match state if necesssary to keep track of things like 
         the king moving for the first time, pawns exposing themselves to en 
@@ -85,7 +95,7 @@ class ChessGameMode:
 
         if abs(piece_num) == 1:
             length = int(end[1]) - int(start[1])
-            if length == 2:
+            if abs(length) == 2:
                 match.expose_pawn_to_en_passant(is_white, end)
 
         if abs(piece_num) == 2:

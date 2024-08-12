@@ -1,6 +1,6 @@
-from src.chess_core.game_mode.match_chess import ChessMatch
+from src.chess_core.game_match.match_chess import ChessMatch
 from src.chess_core.structs.piece_type import PieceType
-from src.chess_core.game_mode.gm_chess import ChessGameMode
+from src.chess_core.game_mode.gamemode_chess import ChessGameMode
 import pytest
 
 class TestPawnMoves: 
@@ -314,6 +314,39 @@ class TestPawnMoves:
         match = ChessMatch(initial_board)
         with pytest.raises(ValueError, match="Illegal move."):
             mode.move_piece_at_pos(match, "e5", "d6")
+        
+    
+    def test_move_en_passant(self):
+        mode = ChessGameMode()
+        initial_board = [
+            -2, -3, -4, -6, -5, -4, -3, -2,
+            -1, -1, -1, -1, -1, -1, -1, -1,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             1,  1,  1,  1,  1,  1,  1,  1,
+             2,  3,  4,  6,  5,  4,  3,  2,
+            ]
+        final_board = [
+            -2, -3, -4, -6, -5, -4, -3, -2,
+             0, -1, -1, -1, -1,  0, -1, -1,
+            -1,  0,  0,  0,  0,  1,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             1,  1,  1,  1,  0,  1,  1,  1,
+             2,  3,  4,  6,  5,  4,  3,  2,
+            ]
+        match = ChessMatch(initial_board)
+        mode.move_piece_at_pos(match, "e2", "e4")
+        mode.move_piece_at_pos(match, "a7", "a6")
+        mode.move_piece_at_pos(match, "e4", "e5")
+        mode.move_piece_at_pos(match, "f7", "f5")
+        mode.move_piece_at_pos(match, "e5", "f6")
+        assert match.board == final_board
+        
+    # TODO: Test updating match state 
     
     
     def test_promote_to_queen_1(self):

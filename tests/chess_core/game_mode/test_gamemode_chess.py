@@ -1,5 +1,5 @@
 from src.chess_core.structs.move_type import MoveType
-from src.chess_core.game_mode.match_chess import ChessMatch
+from src.chess_core.game_match.match_chess import ChessMatch
 from src.chess_core.pieces.p_base import BasePiece
 from src.chess_core.pieces.p_bishop import BishopPiece
 from src.chess_core.pieces.p_king import KingPiece
@@ -7,7 +7,7 @@ from src.chess_core.pieces.p_knight import KnightPiece
 from src.chess_core.pieces.p_pawn import PawnPiece
 from src.chess_core.pieces.p_queen import QueenPiece
 from src.chess_core.pieces.p_rook import RookPiece
-from src.chess_core.game_mode.gm_chess import ChessGameMode
+from src.chess_core.game_mode.gamemode_chess import ChessGameMode
 import pytest
 
 class TestChessGameMode:
@@ -147,3 +147,49 @@ class TestChessGameMode:
              0,  0,  0,  0,  0,  0,  0,  0,
             ]
         assert mode._identify_move_type("h2", "h1", board) == MoveType.PROMOTION
+    
+    
+    # TODO: Add a bunch of update game state tests for castling, moving, kings, pawns, etc.
+    
+    def test_update_game_state_en_passant_1(self):
+        mode = ChessGameMode()
+        board = [
+             0, -6,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  1,  0,  0,  0,
+             0,  6,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(board)
+        mode.move_piece_at_pos(match, "e2", "e4")
+        assert match.is_exposed_to_en_passant("e4") is True
+    
+    
+    
+    def test_update_game_state_en_passant_2(self):
+        mode = ChessGameMode()
+        board = [
+             0, -6,  0,  0,  0,  0,  0,  0,
+             0,  0, -1,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  6,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(board)
+        mode.move_piece_at_pos(match, "c7", "c5")
+        assert match.is_exposed_to_en_passant("c5") is True
+
+    # TODO Check pawn movement after crosses
+    # I think I found a bug where either it thought I was in check, but I wasn't
+    # or it thought I couldn't move a pawn for some reason
+    # not sure how to replicate yet
+    # maybe a match update issue?
+
+    # TODO Also add more checkmate tests because I'm pretty sure that game was
+    # checkmate for white

@@ -1,5 +1,5 @@
-from src.chess_core.game_mode.match_chess import ChessMatch
-from src.chess_core.game_mode.gm_chess import ChessGameMode
+from src.chess_core.game_match.match_chess import ChessMatch
+from src.chess_core.game_mode.gamemode_chess import ChessGameMode
 
 
 class TestKnightMoves:

@@ -1,6 +1,6 @@
 from src.chess_core.structs.piece_type import PieceType
-from src.chess_core.game_mode.match_chess import ChessMatch
-from src.chess_core.game_mode.gm_chess import ChessGameMode
+from src.chess_core.game_match.match_chess import ChessMatch
+from src.chess_core.game_mode.gamemode_chess import ChessGameMode
 from src.chess_core.structs.game_state import GameState
 import pytest
 
