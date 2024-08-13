@@ -168,7 +168,6 @@ class TestChessGameMode:
         assert match.is_exposed_to_en_passant("e4") is True
     
     
-    
     def test_update_game_state_en_passant_2(self):
         mode = ChessGameMode()
         board = [
@@ -184,7 +183,8 @@ class TestChessGameMode:
         match = ChessMatch(board)
         mode.move_piece_at_pos(match, "c7", "c5")
         assert match.is_exposed_to_en_passant("c5") is True
-
+    
+    
     # TODO Check pawn movement after crosses
     # I think I found a bug where either it thought I was in check, but I wasn't
     # or it thought I couldn't move a pawn for some reason

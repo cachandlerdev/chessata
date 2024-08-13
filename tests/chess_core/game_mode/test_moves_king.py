@@ -141,6 +141,40 @@ class TestKingMoves:
         assert mode.resolve_game_state(match, True, PieceType.QUEEN) == GameState.BLACK_WIN
     
     
+    def test_is_in_checkmate_3(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0, -6,  0,  0,  0,  0,  0,
+             6,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0, -3,  0,  0,  0,  0,
+             0,  0,  0,  0, -5,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        mode.move_piece_at_pos(match, "e1", "a1")
+        assert mode.resolve_game_state(match, True, PieceType.QUEEN) == GameState.BLACK_WIN
+    
+    
+    
+    def test_is_in_check_3(self):
+        mode = ChessGameMode()
+        initial_board = [
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0, -1,
+             0, -6,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  1,
+             0,  0, -3,  0,  0,  0, -1,  0,
+             0,  0,  0,  0, -1,  0,  1,  0,
+             0,  0,  0,  0,  1,  3,  0,  0,
+            -2,  0,  0,  0,  6,  4,  3,  0,
+            ]
+        match = ChessMatch(initial_board)
+        assert mode.resolve_game_state(match, True, PieceType.QUEEN) == GameState.WHITE_CHECK
+    
+    
     def test_is_not_in_checkmate_3(self):
         mode = ChessGameMode()
         initial_board = [
