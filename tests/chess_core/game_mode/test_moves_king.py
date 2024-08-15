@@ -158,6 +158,23 @@ class TestKingMoves:
         assert mode.resolve_game_state(match, True, PieceType.QUEEN) == GameState.BLACK_WIN
     
     
+    def test_is_in_checkmate_4(self):
+        mode = ChessGameMode()
+        initial_board = [
+            -6,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  1,  0,  2,
+             0,  0,  0,  6,  0,  0,  0,  0,
+             0,  0,  3,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             6,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+            ]
+        match = ChessMatch(initial_board)
+        mode.move_piece_at_pos(match, "f7", "f8")
+        assert mode.resolve_game_state(match, True, PieceType.QUEEN) == GameState.WHITE_WIN
+    
+    
     
     def test_is_in_check_3(self):
         mode = ChessGameMode()
