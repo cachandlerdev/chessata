@@ -1,5 +1,47 @@
-# Instructions for testing the core chess functionality
+# Chessata
+A multiplayer chess program for playing online with your friends.
 
-In order to run `chess_full_client.py`, you need to be in the `src` folder and run `python -m chess_core.chess_full_client` (without the `.py`!). If you try to run it directly from `chess_core`, you will get errors. This is because of an annoying issue with relative imports and launching as a module vs a script.
+![Logo](/src/web/chess_web/frontend/src/assets/dashboard_logo.png)
 
-Also note that all imports in the `tests` folder need to start at `src.otherstuff`. This is because of some issue with Pytest that I don't want to worry about right now.
+## Screenshots
+TODO: Add 2-3 screenshots here
+
+## Current website
+TODO: Add the website link here
+
+## Distinctiveness and Complexity (CS50W)
+TODO: Add this stuff for CS50W. (Don't worry, you'll probably end up deleting it after the project gets graded).
+
+## Development
+This is a multiplayer network-based full stack chess application that uses a React frontend to make API calls to a Django backend over the WebSockets protocol.
+We accomplish this using Django Channels and its Daphne server, and tests are run via Pytest and Selenium.
+This allows us to perform real time updates with low server overhead via JSON responses as described in the [API Documentation](api_documentation.md). 
+
+### Installation
+TODO: Add instructions on how to run things locally and install dependencies.
+
+### Running the Web App
+
+1. First startup the backend:
+    - Navigate to `src/web/chess_web`.
+    - Run `python manage.py runserver`.
+2. Then startup the frontend:
+    - Open a new terminal.
+    - Navigate to `src/web/chess_web/frontend`.
+    - Run `npm start`.
+
+### Running the Console App
+
+You can run the chess terminal application locally with the use of `chess_full_client.py`.
+This can be helpful for testing core functionality without needing to worry about the complexities introduced by Django or React.
+
+1. Navigate to `src/`.
+    - Make sure you're in the root `src` folder and not `frontend/src/`, which holds the React code.
+2. Run `python -m chess_core.chess_full_client`.
+    - Don't include `.py` in the command.
+    - Don't try to run the script from the `chess_core/` directory, or else you'll run into issues with relative imports and launching the app as a script instead of a module.
+
+### Notes
+
+All imports in the `tests` folder need to start at `src.otherstuff`.
+This occurs due to an issue that Pytest has regarding relative imports.
