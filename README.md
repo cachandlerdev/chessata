@@ -1,5 +1,5 @@
 # Chessata
-A multiplayer chess program for playing online with your friends.
+A chess website you can use to play online with your friends!
 
 ![Logo](/src/web/chess_web/frontend/src/assets/dashboard_logo.png)
 
