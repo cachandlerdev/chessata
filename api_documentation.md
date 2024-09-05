@@ -36,7 +36,7 @@ Numerical value translation:
 ## Message Payload Format
 
 All communication is done via JSON format over WebSockets.
-Creating a socket would be done with the following address `ws://127.0.0.1:8000/ws/api/32g9y/` for a client trying to connect with a game code of `32g9y`.
+Creating a socket would be done with the following address `ws://127.0.0.1:8000/ws/api/game_code/32g9y/` for a client trying to connect with a game code of `32g9y`.
 - TODO: Update the documentation when you're not running on `127.0.0.1` anymore.
 
 ### Init
