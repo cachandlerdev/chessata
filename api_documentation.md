@@ -7,7 +7,7 @@ In order to initialize a connection, a client must connect using a particular ga
 The server will then check whether that code is currently in use, and send back information accordingly.
 - If the game code is not in use, then a new game will be initialized, and the server will wait for another user to join over that same game code.
 - If the game code is in use, but there is only one player in the lobby, then it will connect the other player and start the match.
-- TODO: If there are already two players in the lobby, the server will allow the client to spectate the in-progress game.
+- If there are already two players in the lobby, the server will allow the client to spectate the in-progress game.
 
 ## Board Format
 The server exposes boards as a 64-size array of integers, as demonstrated below.
@@ -20,7 +20,7 @@ The server exposes boards as a 64-size array of integers, as demonstrated below.
          0,  0,  0,  0,  0,  0,  0,  0,
          0,  0,  0,  0,  0,  0,  0,  0,
          1,  1,  1,  1,  1,  1,  1,  1,
-         2,  3,  4,  5,  6,  4,  3,  2,]
+         2,  3,  4,  5,  6,  4,  3,  2]
 ```
 
 In this format, white pieces are positive numbers, black pieces are negative numbers, and empty squares are `0`.
@@ -161,7 +161,7 @@ Server to client:
          0,  0,  0,  0,  0,  0,  0,  0,
          0,  0,  0,  0,  0,  0,  0,  0,
          1,  1,  1,  1,  1,  1,  1,  1,
-         2,  3,  4,  5,  6,  4,  3,  2,],
+         2,  3,  4,  5,  6,  4,  3,  2],
 }
 ```
 
