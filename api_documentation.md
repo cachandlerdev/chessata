@@ -36,25 +36,12 @@ Numerical value translation:
 ## Message Payload Format
 
 All communication is done via JSON format over WebSockets.
-Creating a socket would be done with the following address `ws://127.0.0.1:8000/ws/api/game_code/32g9y/` for a client trying to connect with a game code of `32g9y`.
 - TODO: Update the documentation when you're not running on `127.0.0.1` anymore.
 
 ### Init
-When a client first connects to a server, it must send an `init` packet containing the `username` and `game_code`.
-This has to be done first in order to associate the user with a particular match.
+When a client first connects to a server, it will do so with an address like `ws://127.0.0.1:8000/ws/api/barry/32g9y/` for a client with username `barry` trying to connect with a game code of `32g9y`.
 
-This MUST be sent before other data packets.
-
-Client to server:
-```json
-{
-    "type": "init",
-    "username": "steve",
-    "game_code": "12fd4",
-}
-```
-
-In turn, the server will send back a confirmation or an error payload as follows.
+In turn, the server will send back a confirmation payload as follows.
 
 Server to client:
 ```json
@@ -63,7 +50,7 @@ Server to client:
     "user_id": "132fds0958gjfd",
     "num_of_players": 2,
     "num_of_spectators": 1,
-    "role": "observer",
+    "role": "spectator",
 }
 ```
 
