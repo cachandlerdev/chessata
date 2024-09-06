@@ -4,8 +4,11 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
 export default function ChessGame({username, game, client}) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [userId, setUserId] = useState('');
   
   const updateNewMessage = (e) => setNewMessage(e.target.value);
+  
+  setupSocket(client);
   
   function sendMessage(e) {
     client.send(
@@ -40,7 +43,7 @@ export default function ChessGame({username, game, client}) {
   )
 }
 
-function setupSocket({client}) {
+function setupSocket(client) {
   if (typeof client !== "undefined") {
     client.onopen = () => {
       console.log('Websocket client connected.')
@@ -49,7 +52,7 @@ function setupSocket({client}) {
     client.onmessage = (message) => {
       const dataFromServer = JSON.parse(message.data);
       if (dataFromServer) {
-        console.log(dataFromServer);
+        processServerResponse(dataFromServer);
       }
     };
     
@@ -57,4 +60,8 @@ function setupSocket({client}) {
       console.log('Connection error.');
     };
   }
+}
+
+function processServerResponse(data) {
+  console.log(data);
 }

@@ -32,26 +32,30 @@ function StartGame({ setUsername, setGameCode, client, setClient }) {
   const maxUsernameLength = 16;
   const joinCodeLength = 5;
 
-  const updateTempUsername = (e) => setTempUsername(e.target.value);
-  const updateTempGameCode = (e) => setTempGameCode(e.target.value);
+  const updateTempUsername = (e) => {
+    const stripped = sanitizeInput(e.target.value);
+    setTempUsername(stripped);
+  };
+  const updateTempGameCode = (e) => {
+    const stripped = sanitizeInput(e.target.value);
+    setTempGameCode(stripped);
+  };
 
   function submitHost(e) {
-    console.log('Submit host.');
     setUsername(tempUsername);
     const code = generateGameCode(joinCodeLength);
     setGameCode(code);
     
-    createSocket(setClient, code);
+    createSocket(setClient, code, tempUsername);
     
     e.preventDefault();
   }
 
   function submitJoin(e) {
-    console.log('Submit join.');
     setUsername(tempUsername);
     setGameCode(tempGameCode);
     
-    createSocket(setClient, tempGameCode);
+    createSocket(setClient, tempGameCode, tempUsername);
 
     e.preventDefault();
   }
@@ -103,10 +107,18 @@ function WaitingForGame() {
 /**
  * Sets up the websocket for this client.
  */
-function createSocket(setClient, gameCode) {
+function createSocket(setClient, gameCode, username) {
   const gameCodeEncoded = encodeURIComponent(gameCode);
-  const address = 'ws://127.0.0.1:8000/ws/api/game_code/' + gameCodeEncoded + '/'
+  const usernameEncoded = encodeURIComponent(username);
+  const address = 'ws://127.0.0.1:8000/ws/api/' + usernameEncoded + '/' + gameCodeEncoded + '/';
   setClient(new W3CWebSocket(address));
+}
+
+/**
+ * Remove all non-alphanumberic characters from a string.
+ */
+function sanitizeInput(input) {
+  return input.replace(/\W/g, '');
 }
 
 /**

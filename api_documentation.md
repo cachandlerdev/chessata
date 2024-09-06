@@ -48,8 +48,6 @@ Server to client:
 {
     "type": "init",
     "user_id": "132fds0958gjfd",
-    "num_of_players": 2,
-    "num_of_spectators": 1,
     "role": "spectator",
 }
 ```

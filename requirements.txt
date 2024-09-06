@@ -2,3 +2,4 @@ django
 pytest
 channels[daphne]
 selenium
+channels-redis
