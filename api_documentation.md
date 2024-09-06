@@ -59,8 +59,7 @@ In turn, the server will send back a confirmation or an error payload as follows
 Server to client:
 ```json
 {
-    "type": "success",
-    "status_code": 200,
+    "type": "init",
     "user_id": "132fds0958gjfd",
     "num_of_players": 2,
     "num_of_spectators": 1,
@@ -213,4 +212,4 @@ Server to client:
 }
 ```
 
-Once both players have left the match, all remaining spectators will be disconnected to free up the game code for future matches.
+Once both players have left the match, all remaining spectators will be disconnected to free up the join code for future matches.
