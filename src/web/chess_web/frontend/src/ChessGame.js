@@ -63,5 +63,40 @@ function setupSocket(client) {
 }
 
 function processServerResponse(data) {
+  switch (data["type"]) {
+    case 'init':
+      console.log('Init');
+      break;
+    case 'error':
+      console.log('Error');
+      break;
+    case 'join':
+      console.log('Join');
+      break;
+    case 'leave':
+      console.log('Leave');
+      break;
+    case 'start':
+      console.log('Start');
+      break;
+    case 'game_status':
+      console.log('Game status');
+      break;
+    case 'chat':
+      console.log('Chat');
+      break;
+    case 'note':
+      console.log('Note');
+      break;
+    case 'end_of_game':
+      console.log('End of game');
+      break;
+    case 'close':
+      console.log('Close match');
+      break;
+    default:
+      console.log('Error: Unsupported server response type.');
+      break;
+  }
   console.log(data);
 }

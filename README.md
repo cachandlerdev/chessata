@@ -15,6 +15,7 @@ TODO: Add this stuff for CS50W. (Don't worry, you'll probably end up deleting it
 ## Development
 This is a multiplayer network-based full stack chess application that uses a React frontend to make API calls to a Django backend over the WebSockets protocol.
 We accomplish this using Django Channels and its Daphne server, and tests are run via Pytest and Selenium.
+Redis is utilized in order to make use of channel layers and store information.
 This allows us to perform real time updates with low server overhead via JSON responses as described in the [API Documentation](api_documentation.md). 
 
 ### Installation
@@ -22,10 +23,12 @@ TODO: Add instructions on how to run things locally and install dependencies.
 
 ### Running the Web App
 
-1. First startup the backend:
+1. First spin up the Redis database.
+    - Run `docker run -p 6379:6379 -d redis:5`
+2. Next startup the backend:
     - Navigate to `src/web/chess_web`.
     - Run `python manage.py runserver`.
-2. Then startup the frontend:
+3. Then startup the frontend:
     - Open a new terminal.
     - Navigate to `src/web/chess_web/frontend`.
     - Run `npm start`.

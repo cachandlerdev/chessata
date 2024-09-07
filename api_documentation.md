@@ -96,6 +96,17 @@ Server to client:
 
 If this was a player and the game was not over yet, this packet will be followed up by an End of Game payload.
 
+### Close Lobby
+The server sends this to all clients in a game lobby when both actual players have left the game, at which point all spectators will be disconnected and should return to the dashboard.
+
+Server to client:
+```json
+{
+    "type": "close",
+    "message": "Both players have left the match."
+}
+```
+
 ### Start Game
 If a second player joins a lobby that had only one player and the match has not started, then the server will send all clients the following response.
 The `color` will either be `"white"`, `"black"`, or `"undefined"`, depending on the client's role in the match as a player or a spectator.
