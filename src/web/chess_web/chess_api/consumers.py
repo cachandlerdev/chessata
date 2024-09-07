@@ -23,6 +23,9 @@ class ClientConsumer(WebsocketConsumer):
 
         self.username = self.scope['url_route']['kwargs']['username']
         self.user_id = secrets.token_urlsafe(self.user_id_length)
+        
+        if self.game_code == "" or self.username == "":
+            self.close()
 
         self._add_user_to_match()
         self.accept()
@@ -54,6 +57,7 @@ class ClientConsumer(WebsocketConsumer):
         elif num_of_other_players == 1:
             self.color = "black"
         
+        # Save to database
         self.chess_user = models.ChessUser(user_id=self.user_id, 
                                     username=self.username,
                                     game_code=self.game_code,
@@ -63,6 +67,15 @@ class ClientConsumer(WebsocketConsumer):
         except IntegrityError as e:
             print(str(e))
             self.close()
+        
+        # Inform other clients
+        role = "player" if self.color != "" else "spectator"
+        self._broadcast_to_lobby({
+            "type": "join",
+            "user_id": self.user_id,
+            "username": self.username,
+            "role": role
+        })
     
     
     def disconnect(self, close_code):
@@ -125,24 +138,39 @@ class ClientConsumer(WebsocketConsumer):
                 }))
             return
         
-        # Check whether this user is associated with an id.
-        #user = self.scope["user"]
-        #async_to_sync(login)(self.scope, user)
-        #self.scope["session"].save
+        match text_data_json["type"]:
+            case "chat":
+                self._send_chat_message(text_data_json)
+                pass
+            case "move":
+                # Handle move
+                # TODO
+                pass
+            case _:
+                # Unsupported move
+                # TODO
+                pass
+        
+        #text = text_data_json['text']
+        #sender = text_data_json['sender']
 
-        text = text_data_json['text']
-        sender = text_data_json['sender']
-
-        # Send message to room group
-        self._broadcast_to_lobby({
-            'type': 'chat_message',
-            'message': text,
-            'sender': sender
-        })
+        ## Send message to room group
+        #self._broadcast_to_lobby({
+        #    'type': 'chat_message',
+        #    'message': text,
+        #    'sender': sender
+        #})
+    
+    
+    def _send_chat_message(self, data):
+       """Parses this chat JSON object and sends a message to all users in the 
+       lobby.""" 
+       
         
     
     def chat_message(self, event):
         # Receive message from room group
+        print(event)
         text = event['message']
         sender = event['sender']
         # Send message to WebSocket
