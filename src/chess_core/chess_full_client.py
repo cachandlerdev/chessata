@@ -1,6 +1,6 @@
 from chess_core import board_utils
 from chess_core.structs.game_state import GameState
-from .game_mode.gamemode_chess import ChessGameMode
+from .game_mode import gamemode_chess
 from .game_match.match_chess import ChessMatch
 from .structs.piece_type import PieceType
 import os
@@ -32,7 +32,6 @@ def run_app():
 def play_match(game_number):
     """Plays out a chess match."""
     chess_match = ChessMatch()
-    chess_mode = ChessGameMode()
     game_not_over = True
     is_white_turn = True
     alert = ""
@@ -40,10 +39,10 @@ def play_match(game_number):
     while game_not_over:
         draw_match(chess_match, game_number, alert)
         alert = ""
-        let_player_move(is_white_turn, chess_match, chess_mode)
+        let_player_move(is_white_turn, chess_match)
         is_white_turn = not is_white_turn
 
-        state = chess_mode.resolve_game_state(chess_match, is_white_turn, PieceType.QUEEN)
+        state = gamemode_chess.resolve_game_state(chess_match, is_white_turn, PieceType.QUEEN)
         match state:
             case GameState.NOT_OVER:
                 # Keep playing!
@@ -78,7 +77,7 @@ def print_game_over(state):
             print("Black won the game!")
 
 
-def let_player_move(is_white_turn, match, mode):
+def let_player_move(is_white_turn, match):
     """Lets the given player make a chess move in the format "e3 d5"."""
     need_valid_move = True
     
@@ -98,10 +97,10 @@ def let_player_move(is_white_turn, match, mode):
         start = move[0]
         end = move[1]
         
-        if mode.is_players_piece(start, is_white_turn, match.board):
+        if gamemode_chess.is_players_piece(start, is_white_turn, match.board):
             try:
                 # TODO: Add promotion type
-                mode.move_piece_at_pos(match, start, end, PieceType.QUEEN)
+                gamemode_chess.move_piece_at_pos(match, start, end, PieceType.QUEEN)
                 need_valid_move = False
             except ValueError as e:
                 print("Error: " + str(e))   
