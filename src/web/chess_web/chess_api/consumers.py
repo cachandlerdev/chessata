@@ -2,10 +2,10 @@ import json
 from sqlite3 import IntegrityError
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-import secrets
 from channels.auth import login
 
-from . import models
+from . import lobby_manager
+from . import chess_manager
 
 
 class ClientConsumer(WebsocketConsumer):
@@ -14,20 +14,24 @@ class ClientConsumer(WebsocketConsumer):
         self.user_id_length = 12
         self.user_id = ""
         self.color = ""
+        self.role = ""
 
     def connect(self):
         """Connects a new websocket client to the server and performs init 
         logic."""
         self.game_code = self.scope['url_route']['kwargs']['game_code']
+        self.username = self.scope['url_route']['kwargs']['username']
         self.game_group_code = f'game_{self.game_code}'
 
-        self.username = self.scope['url_route']['kwargs']['username']
-        self.user_id = secrets.token_urlsafe(self.user_id_length)
-        
-        if self.game_code == "" or self.username == "":
+        self.user_id, self.role = lobby_manager.create_user(self.game_code, 
+                                                            self.username)
+        if self.user_id == "" or self.role == "":
             self.close()
+        
+        if not chess_manager.does_match_exist(self.game_code):
+            chess_manager.create_new_match(self.game_code)
 
-        self._add_user_to_match()
+        self._add_client_to_match()
         self.accept()
 
         self.send(text_data=json.dumps({
@@ -37,7 +41,7 @@ class ClientConsumer(WebsocketConsumer):
         }))
     
     
-    def _add_user_to_match(self):
+    def _add_client_to_match(self):
         """Updates the ChessUser database to keep track of this user."""
         # TODO: Handle spectators 
 
@@ -46,83 +50,81 @@ class ClientConsumer(WebsocketConsumer):
             self.game_group_code,
             self.channel_name
         )
-
-        other_users = models.ChessUser.objects.filter(game_code=self.game_code)
-        num_of_other_players = len(other_users.exclude(color="").all())
         
-        # TODO: Add an option to select the player color
-        
-        if num_of_other_players == 0:
-            self.color = "white"
-        elif num_of_other_players == 1:
-            self.color = "black"
-        
-        # Save to database
-        self.chess_user = models.ChessUser(user_id=self.user_id, 
-                                    username=self.username,
-                                    game_code=self.game_code,
-                                    color=self.color)
         try:
-            self.chess_user.save()
+            self.color = lobby_manager.add_user_to_match(self.user_id, 
+                                                         self.game_code, 
+                                                         self.username)
         except IntegrityError as e:
             print(str(e))
             self.close()
         
         # Inform other clients
-        role = "player" if self.color != "" else "spectator"
         self._broadcast_to_lobby({
             "type": "join",
             "user_id": self.user_id,
             "username": self.username,
-            "role": role
+            "role": self.role
         })
     
     
     def disconnect(self, close_code):
         """Runs when the websocket client disconnects from the server."""
-        if self.user_id != "":
-            all_users = models.ChessUser.objects.filter(game_code=self.game_code)
-            other_users = all_users.exclude(pk=self.user_id)
-
-            num_of_other_players = len(other_users.exclude(color="").all())
-            if num_of_other_players == 0:
-                # Kick out all spectators
-                self._broadcast_to_lobby({
-                    "type": "close",
-                    "message": "Both players have left the match."
-                })
-            else:
-                # Check if he was a player or a spectator.
-                if self.color == "":
-                    self._broadcast_to_lobby({
-                        "type": "leave",
-                        "user_id": self.user_id,
-                        "username": self.username,
-                        "role": "spectator",
-                    })
-                else:
-                    self._broadcast_to_lobby({
-                        "type": "leave",
-                        "user_id": self.user_id,
-                        "username": self.username,
-                        "role": "player",
-                    })
-                    self._handle_player_leaving()
+        lobby_manager.disconnect_user(self.user_id)
+        
+        if self.role == "player":
+            self._on_player_leave()
+            is_lobby_closed = self._on_player_leave()
+        else:
+            is_lobby_closed = False
+        
+        if is_lobby_closed:
+            # Kick out all spectators
+            self._broadcast_to_lobby({
+                "type": "close",
+                "message": "Both players have left the match."
+            })
+        else:
+            self._broadcast_to_lobby({
+                "type": "leave",
+                "user_id": self.user_id,
+                "username": self.username,
+                "role": self.role,
+            })
 
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
             self.game_group_code,
             self.channel_name
         )
-        self.chess_user.delete()
     
     
-    def _handle_player_leaving(self):
-        """Gets called when this player leaves the match. We check whether 
-        the match was over, and send an End of Game message packet if it 
-        was still in progress."""
+    def _on_player_leave(self):
+        """Runs when this player leaves the match. We check whether the match
+        was over and send an End of Game message packet if it wasn't.
+        Returns true if the lobby was closed, and false otherwise."""
         # TODO
+        if lobby_manager.is_game_in_progress(self.game_code):
+            self._end_game("player_left")
+        
+        return lobby_manager.close_if_all_players_left(self.user_id, self.game_code)
+    
+    
+    def _end_game(self, type):
+        """Ends the game for this client's join code. Recognized `type` values
+        are 'white_win', 'black_win', 'stalemate', 'surrender', and 'disconnect'."""
+        # TODO
+        # Send an error/do nothing if the game doesn't exist
+        # Match on type
+            # White/black win: Get the winning player's ID and color, and send packet
+            # Stalemate: Send stalemate packet
+            # Surrender: Get remaining player's ID and send surrender packet
+            # Disconnect: Get remaining player's ID and send disconnect packet
+            
+        # Call lobby_manager code that will call chess_manager code and end
+        # the match
         pass
+        
     
     
     def receive(self, text_data):
@@ -165,7 +167,6 @@ class ClientConsumer(WebsocketConsumer):
     def _send_chat_message(self, data):
        """Parses this chat JSON object and sends a message to all users in the 
        lobby.""" 
-       
         
     
     def chat_message(self, event):

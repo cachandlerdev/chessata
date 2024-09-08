@@ -123,6 +123,7 @@ After this, a game status payload will be sent.
 
 ### Move 
 Players can send the server moves with the following format.
+The `promotion` key is optional because it will only get used if the move involves a pawn promotion, and the server defaults to queen promotions when not specified.
 
 Client to server:
 ```json
@@ -130,6 +131,7 @@ Client to server:
     "type": "move",
     "start": "c2",
     "end": "c3",
+    "promotion": "rook", // <- optional
 }
 ```
 
@@ -197,7 +199,7 @@ Server to client:
 
 ### End Of Game
 When the game is over or when one player disconnects from an in progress game, the server will send a payload like the one below.
-The `result` can either be `"white_win"`, `"black_win"`, or `"stalemate"`.
+The `result` can either be `"white_win"`, `"black_win"`, `"stalemate"`, `"surrender"`, or `"disconnect"`.
 
 Server to client:
 ```json
