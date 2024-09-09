@@ -79,8 +79,8 @@ function processServerResponse(data) {
     case 'start':
       console.log('Start');
       break;
-    case 'game_status':
-      console.log('Game status');
+    case 'game_state':
+      console.log('Game state');
       break;
     case 'chat':
       console.log('Chat');

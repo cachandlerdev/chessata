@@ -104,10 +104,10 @@ class ClientConsumer(WebsocketConsumer):
         was over and send an End of Game message packet if it wasn't.
         Returns true if the lobby was closed, and false otherwise."""
         # TODO
-        if lobby_manager.is_game_in_progress(self.game_code):
+        if chess_manager.is_match_in_progress(self.game_code):
             self._end_game("player_left")
         
-        return lobby_manager.close_if_all_players_left(self.user_id, self.game_code)
+        return lobby_manager.close_if_all_players_left(self.game_code)
     
     
     def _end_game(self, type):

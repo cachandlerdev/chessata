@@ -9,7 +9,9 @@ The server will then check whether that code is currently in use, and send back 
 - If the game code is in use, but there is only one player in the lobby, then it will connect the other player and start the match.
 - If there are already two players in the lobby, the server will allow the client to spectate the in-progress game.
 
-## Board Format
+## Match Storage Format
+
+### Board Format
 The server exposes boards as a 64-size array of integers, as demonstrated below.
 ```json
     "board": [
@@ -32,6 +34,33 @@ Numerical value translation:
 - `3`: Knight
 - `2`: Rook
 - `1`: Pawn
+
+### Additional Game State Information
+We keep information about the game state throughout the match in order to handle en passant and castling moves.
+These are explained below.
+```json
+    "allow_en_passant": [
+        False, False, False, False, False, False, False, False,
+        False, False, False, False, False, False, False, False
+    ],
+    "has_king_moved": [
+        "white": False, 
+        "black": False
+    ],
+    "has_rook_moved": [
+        "a1": False,
+        "h1": False,
+        "a8": False,
+        "h8": False
+    ]
+```
+- `allow_en_passant`: This is a 16-size boolean array that represents whether the rearmost pawn located on this column has exposed himself to an en passant attack.
+Internally, we perform evaluation logic to handle cases where multiple pawns are located on the same column. 
+The first 8 entries represent black pawns, while the second set of 8 hold information about the white pawns.
+
+- `has_king_moved`: This gets used in order to determine whether players can legally perform castling moves, and holds information about the king's movements.
+
+- `has_rook_moved`: This gets used to determine whether players can legally perform castling moves, and holds information about the various rooks' movements.
 
 ## Message Payload Format
 
@@ -138,7 +167,7 @@ Client to server:
 If this was an invalid move, the server will respond with an error message.
 Otherwise, it will send a game status payload.
 
-### Game Status
+### Game State
 Each turn, the server will send the state of the board and the `id` of the player whose turn it is.
 For this reason, clients should hold onto the `id` the server sends them in the Init payload.
 
@@ -148,7 +177,7 @@ However, it should be retained in order to inform users on the client's end whet
 Server to client:
 ```json
 {
-    "type": "game_status",
+    "type": "game_state",
     "player_turn_id": "132fds0958gjfd",
     "board": [
         -2, -3, -4, -5, -6, -4, -3, -2,
@@ -159,10 +188,24 @@ Server to client:
          0,  0,  0,  0,  0,  0,  0,  0,
          1,  1,  1,  1,  1,  1,  1,  1,
          2,  3,  4,  5,  6,  4,  3,  2],
+    "allow_en_passant": [
+        False, False, False, False, False, False, False, False,
+        False, False, False, False, False, False, False, False
+    ],
+    "has_king_moved": [
+        "white": False, 
+        "black": False
+    ],
+    "has_rook_moved": [
+        "a1": False,
+        "h1": False,
+        "a8": False,
+        "h8": False
+    ],
 }
 ```
 
-For an explanation of the board, see [Board Format](#board-format) above.
+For an explanation of the board and other details, see [Match Storage Format](#match-storage-format) above.
 
 ### Chat
 Users have the ability to communicate with each other by sending messages to the server in the following form.
