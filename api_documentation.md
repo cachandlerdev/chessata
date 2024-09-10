@@ -173,37 +173,49 @@ For this reason, clients should hold onto the `id` the server sends them in the 
 
 Note that the client itself will never send the server its `id`, as that information is stored on the server when the websocket is created.
 However, it should be retained in order to inform users on the client's end whether it is their turn or not.
+- TODO: This information might be outdated. Check again once you've finished implementing the backend/frontend code.
 
 Server to client:
 ```json
 {
     "type": "game_state",
-    "player_turn_id": "132fds0958gjfd",
-    "board": [
-        -2, -3, -4, -5, -6, -4, -3, -2,
-        -1, -1, -1, -1, -1, -1, -1, -1,
-         0,  0,  0,  0,  0,  0,  0,  0,
-         0,  0,  0,  0,  0,  0,  0,  0,
-         0,  0,  0,  0,  0,  0,  0,  0,
-         0,  0,  0,  0,  0,  0,  0,  0,
-         1,  1,  1,  1,  1,  1,  1,  1,
-         2,  3,  4,  5,  6,  4,  3,  2],
-    "allow_en_passant": [
-        False, False, False, False, False, False, False, False,
-        False, False, False, False, False, False, False, False
-    ],
-    "has_king_moved": [
-        "white": False, 
-        "black": False
-    ],
-    "has_rook_moved": [
-        "a1": False,
-        "h1": False,
-        "a8": False,
-        "h8": False
-    ],
+    "state": {
+        "your_turn": true,
+        "match_state": "not over"
+        "board": [
+            -2, -3, -4, -5, -6, -4, -3, -2,
+            -1, -1, -1, -1, -1, -1, -1, -1,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             0,  0,  0,  0,  0,  0,  0,  0,
+             1,  1,  1,  1,  1,  1,  1,  1,
+             2,  3,  4,  5,  6,  4,  3,  2],
+        "allow_en_passant": [
+            False, False, False, False, False, False, False, False,
+            False, False, False, False, False, False, False, False
+        ],
+        "has_king_moved": [
+            "white": False, 
+            "black": False
+        ],
+        "has_rook_moved": [
+            "a1": False,
+            "h1": False,
+            "a8": False,
+            "h8": False
+        ],
+        "white_in_check": false,
+        "black_in_check": false
+    }
 }
 ```
+
+Internally (between Django consumers), we do things slightly differently. 
+There, we send back and forth the ID of the current player's turn because each consumer keep track of its ID.
+That means that instead of sending `"your_turn": true`, we store `"player_turn_id": "132fds0958gjfd"`.
+
+The `"match_state"` variable can be `"not over"`, `white check`, `black check`, `stalemate`, `white win`, or `black win`.
 
 For an explanation of the board and other details, see [Match Storage Format](#match-storage-format) above.
 

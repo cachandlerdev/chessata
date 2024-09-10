@@ -36,13 +36,22 @@ def add_user_to_match(user_id, game_code, username):
     else:
         color = ""
     # Save to database
+    game = models.GameLobby.objects.get(pk=game_code)
     chess_user = models.ChessUser(user_id=user_id, 
                                 username=username,
-                                game_code=game_code,
+                                game_code=game,
                                 color=color)
     chess_user.save()
     
-    return chess_user, color
+    return color
+
+
+def get_other_player(user_id, game_code):
+    """Gets the other player in this match."""
+    users = models.ChessUser.objects.filter(game_code=game_code)
+    players = users.exclude(color="").all()
+    other_player = players.exclude(pk=user_id).first()
+    return other_player
 
 
 def _get_next_user_role(game_code):

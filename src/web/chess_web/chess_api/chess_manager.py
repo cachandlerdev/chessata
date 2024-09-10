@@ -1,10 +1,10 @@
-from chess_core import game_mode
 from . import models
 from . import lobby_manager
 import json
-import src.chess_core.game_match.match_chess as chess_match
-import src.chess_core.game_mode.gamemode_chess as chess_mode
-import src.chess_core.structs.piece_type as promotion
+from chess_core.structs.game_state import GameState
+import chess_core.game_match.match_chess as chess_match
+import chess_core.game_mode.gamemode_chess as chess_mode
+import chess_core.structs.piece_type as promotion
 
 
 def create_new_match(game_code):
@@ -28,8 +28,7 @@ def is_match_in_progress(game_code):
     doesn't exist."""
     if does_match_exist(game_code):
         game = models.GameLobby.objects.get(pk=game_code)
-        num_of_players, _ = lobby_manager.get_num_of_users(game_code)
-        return num_of_players == 2 and not game.is_over
+        return not game.is_over
     else:
         return False
 
@@ -55,37 +54,98 @@ def _load_match(game_code):
     
 
 
-def make_match_move(game_code, start, end, user_id, promotion_type=promotion.PieceType.QUEEN):
+def make_match_move(game_code, start, end, user_id, promotion_type="queen"):
     """Looks up the chess match with this game code and tries to make the move
     for the specified player.
     Returns `true, ''` if the move could be made, and `false, reason` if not."""
+    promotion = promotion_to_enum(promotion_type)
     match, is_white_turn = _load_match(game_code)
+    if match is None:
+        return False, "The match does not exist."
+
     if _is_correct_player(game_code, is_white_turn, user_id):
-        try:
-            chess_mode.move_piece_at_pos(match, start, end, promotion_type)
-            _save_match_state(game_code, match, not is_white_turn)
-            return True
-        except ValueError as e:
-            reason = getattr(e, 'message', repr(e))
-            return False, reason
+        if chess_mode.is_players_piece(start, is_white_turn, match.board):
+            try:
+                chess_mode.move_piece_at_pos(match, start, end, promotion)
+                _save_match_state(game_code, match, not is_white_turn)
+                return True, ""
+            except ValueError as e:
+                reason = getattr(e, 'message', repr(e))
+                return False, reason
+        else:
+            return False, "This is not your piece."
     else:
         return False, "It is not your turn."
 
 
+def promotion_to_enum(str):
+    """Converts the promotion string to an enum."""
+    match str:
+        case "queen":
+            return promotion.PieceType.QUEEN
+        case "bishop":
+            return promotion.PieceType.BISHOP
+        case "knight":
+            return promotion.PieceType.KNIGHT
+        case "rook":
+            return promotion.PieceType.ROOK
+        case _:
+            # If all else fails, default to the queen
+            return promotion.PieceType.QUEEN
+
+
+def end_state_to_str(state):
+    """Converts the end state enum to a string."""
+    match state:
+        case GameState.NOT_OVER:
+            return "not over"
+        case GameState.WHITE_CHECK:
+            return "white check"
+        case GameState.BLACK_CHECK:
+            return "black check"
+        case GameState.STALEMATE:
+            return "stalemate"
+        case GameState.WHITE_WIN:
+            return "white win"
+        case GameState.BLACK_WIN:
+            return "black win"
+
+
 def _save_match_state(game_code, match, is_white_turn):
-    """Saves this match's state to the database."""
+    """Saves this match's state to the database. Normally, we return an empty 
+    string, but if the match just ended, we return either 'white_win', 
+    'black win', or 'stalemate'."""
+    # TODO: Support other promotion types
+    end_state = chess_mode.resolve_game_state(match, is_white_turn, promotion.PieceType.QUEEN)
+    end_state_str = end_state_to_str(end_state)
+
+    black_win = end_state == GameState.BLACK_WIN
+    white_win = end_state == GameState.WHITE_WIN
+    stalemate = end_state == GameState.STALEMATE
+    is_over = (black_win or white_win or stalemate)
+    
     board_data = json.dumps(match.board)
     allow_en_passant_data = json.dumps(match._allow_en_passant)
     has_king_moved_data = json.dumps(match._has_king_moved)
     has_rook_moved_data = json.dumps(match._has_rook_moved)
     game = models.GameLobby(game_code=game_code, 
-                                is_over=False, 
+                                is_over=is_over, 
                                 is_white_turn=is_white_turn,
                                 board=board_data,
                                 allow_en_passant=allow_en_passant_data, 
                                 has_king_moved=has_king_moved_data, 
-                                has_rook_moved=has_rook_moved_data)
+                                has_rook_moved=has_rook_moved_data,
+                                match_state=end_state_str)
     game.save()
+    
+
+def end_match(game_code, match_state):
+    """Used to prematurely end matches."""
+    if does_match_exist(game_code):
+        models.GameLobby.objects.filter(pk=game_code).update(
+            is_over=True,
+            match_state=match_state,
+        )
     
         
 
@@ -102,7 +162,7 @@ def get_game_state(game_code):
         else:
             users = models.ChessUser.objects.filter(game_code=game_code)
             player = users.get(color="black")
-            
+        
         player_turn_id = player.user_id
 
         json_decoder = json.decoder.JSONDecoder()
@@ -110,8 +170,10 @@ def get_game_state(game_code):
         allow_en_passant = json_decoder.decode(game.allow_en_passant)
         has_king_moved = json_decoder.decode(game.has_king_moved)
         has_rook_moved = json_decoder.decode(game.has_rook_moved)
+        match_state = game.match_state
         data = {
             "player_turn_id": player_turn_id,
+            "match_state": match_state,
             "board": board,
             "allow_en_passant": allow_en_passant,
             "has_king_moved": has_king_moved,

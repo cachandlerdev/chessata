@@ -106,6 +106,9 @@ def _update_match_state(start, end, match, piece_num, type):
 def resolve_game_state(match, is_white_turn, promotion_type):
     """Determines whether the specified match is over yet."""
     white_king_pos = board_utils.find_piece_pos(6, match.board)
+    # TODO: Support other promotion types. You'll have to rework some of this 
+    # logic so we calculate 'player has moves' for every possible promotion 
+    # type.
     white_has_moves = player_has_moves(match, True, promotion_type)
     if is_in_check(white_king_pos, True, match):
         if white_has_moves:
