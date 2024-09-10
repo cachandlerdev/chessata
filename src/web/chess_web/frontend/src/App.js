@@ -9,11 +9,12 @@ export default function App() {
   const [gameCode, setGameCode] = useState("");
   const [client, setClient] = useState();
   
-  if (!username || !gameCode) {
+  const showDashboard = (username === "") && (gameCode === "");
+  
+  if (showDashboard) {
     return <Dashboard setUsername={setUsername} setGameCode={setGameCode}
       client={client} setClient={setClient} />
   } else {
     return <ChessGame username={username} game={gameCode} client={client} />
   }
 }
-
