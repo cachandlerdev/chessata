@@ -7,29 +7,15 @@ import './Dashboard.css';
 /**
  * Displays the dashboard from which players can host or join games.
  */
-export default function Dashboard({ setUsername, setGameCode, client, setClient, shouldStartGame }) {
-  const [isHost, setIsHost] = useState(true);
-  const [hasSubmitted, setHasSubmitted] = useState(false);
-  
-  const startPage = <StartGame setUsername={setUsername}
-    setGameCode={setGameCode} setClient={setClient}
-    setIsHost={setIsHost} setHasSubmitted={setHasSubmitted} />
-
-  const waitingPage = <WaitingForGame />
-  
-  let mainPage;
-  if (hasSubmitted) {
-    mainPage = waitingPage;
-  } else {
-    mainPage = startPage;
-  }
+export default function Dashboard({ setUsername, setGameCode, client, setClient, shouldStartGame, setIsHost }) {
   
   return (
     <>
     <div className='bg'>
     </div>
       <div className='center-children'>
-        {mainPage}
+        <StartGame setUsername={setUsername} setGameCode={setGameCode}
+          setClient={setClient} setIsHost={setIsHost} />
       </div>
     </>
   );
@@ -38,7 +24,7 @@ export default function Dashboard({ setUsername, setGameCode, client, setClient,
 /**
  * Displays the host/join game screen.
  */
-function StartGame({ setUsername, setGameCode, setClient, setIsHost, setHasSubmitted}) {
+function StartGame({ setUsername, setGameCode, setClient, setIsHost}) {
   const [tempUsername, setTempUsername] = useState("");
   const [tempGameCode, setTempGameCode] = useState("");
 
@@ -59,7 +45,6 @@ function StartGame({ setUsername, setGameCode, setClient, setIsHost, setHasSubmi
     const code = generateGameCode(joinCodeLength);
     setGameCode(code);
     setIsHost(true);
-    setHasSubmitted(true);
     
     createSocket(setClient, code, tempUsername);
     
@@ -70,7 +55,6 @@ function StartGame({ setUsername, setGameCode, setClient, setIsHost, setHasSubmi
     setUsername(tempUsername);
     setGameCode(tempGameCode);
     setIsHost(false);
-    setHasSubmitted(true);
     
     createSocket(setClient, tempGameCode, tempUsername);
 
@@ -115,28 +99,6 @@ function StartGame({ setUsername, setGameCode, setClient, setIsHost, setHasSubmi
 }
 
 /**
- * Displays the waiting screen for hosts before someone else has joined.
- */
-function WaitingForGame() {
-  return (
-    <>
-        <img id='dashboard-logo' src={dashboard_logo} alt="Logo" />
-          <div className='floating-box center-children'>
-            <h1>Waiting...</h1>
-            <hr />
-            <p>Send a friend your join code!</p>
-            <div className='blue-widget'>ch36dg</div>
-          </div>
-          <div className='floating-box center-children'>
-            <div className='tip-box'>
-              The game will start when two players have joined and the board is loaded.
-            </div>
-          </div>
-    </>
-  )
-}
-
-/**
  * Sets up the websocket for this client.
  */
 function createSocket(setClient, gameCode, username) {
@@ -156,11 +118,11 @@ function sanitizeInput(input) {
 /**
  * Generates a game code of length n.
  */
-function generateGameCode(n) {
+function generateGameCode(length) {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let code = '';
-  for (let i = 0; i < n; i++) {
-    code += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return code;
+  let result = '';
+  for (var i = length; i > 0; --i) {
+    result += chars[Math.floor(Math.random() * chars.length)];   
+  } 
+  return result;
 }

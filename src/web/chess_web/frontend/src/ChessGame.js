@@ -4,9 +4,11 @@ import dashboard_logo from './assets/dashboard_logo.png';
 
 import './Dashboard.css';
 
-export default function ChessGame({username, game, client}) {
+export default function ChessGame({isHost, username, setUsername, gameCode, setGameCode, client}) {
   const [userId, setUserId] = useState('');
   const [userRole, setUserRole] = useState('');
+  const [numOfPlayers, setNumOfPlayers] = useState(0);
+  const [color, setColor] = useState('');
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -48,20 +50,30 @@ export default function ChessGame({username, game, client}) {
   function processServerResponse(data) { 
     switch (data["type"]) {
       case 'init':
-        setUserId(data["user_id"]);
-        setUserRole(data["role"]);
+        setUserId(data['user_id']);
+        setUserRole(data['role']);
         break;
       case 'error':
         console.log('Error');
         break;
       case 'join':
         console.log('Join');
+        setNumOfPlayers(data['num_of_players']);
+        if (data['num_of_players'] < 2 && !isHost) {
+          // Exit match.
+          setGameCode('');
+          setUsername('');
+        } else if (data['num_of_players'] === 2) {
+          setShowMatch(true);
+        }
         break;
       case 'leave':
         console.log('Leave');
         break;
       case 'start':
         console.log('Start');
+        setColor(data['color']);
+        setShowMatch(true);
         break;
       case 'game_state':
         console.log('Game state');
@@ -87,12 +99,11 @@ export default function ChessGame({username, game, client}) {
 
   setupSocket(client);
   
-
   
   if (showMatch) {
     return (
       <>
-        <h1>Game Name: {game}</h1>
+        <h1>Game Name: {gameCode}</h1>
         <h4>Username: {username}</h4>
         <hr />
         <h2>Messages</h2>
@@ -115,7 +126,7 @@ export default function ChessGame({username, game, client}) {
       <div className='bg'>
       </div>
         <div className='center-children'>
-          <WaitingPage />
+          <WaitingPage gameCode={gameCode} />
         </div>
       </>
     );
@@ -126,7 +137,7 @@ export default function ChessGame({username, game, client}) {
 /**
  * Displays the waiting screen for hosts before someone else has joined.
  */
-function WaitingPage() {
+function WaitingPage({ gameCode }) {
   return (
     <>
         <img id='dashboard-logo' src={dashboard_logo} alt="Logo" />
@@ -134,7 +145,7 @@ function WaitingPage() {
             <h1>Waiting...</h1>
             <hr />
             <p>Send a friend your join code!</p>
-            <div className='blue-widget'>ch36dg</div>
+          <div className='blue-widget'>{gameCode}</div>
           </div>
           <div className='floating-box center-children'>
             <div className='tip-box'>

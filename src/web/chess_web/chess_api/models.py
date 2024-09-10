@@ -15,6 +15,7 @@ class ChessUser(models.Model):
 class GameLobby(models.Model):
     game_code = models.CharField(max_length=6, primary_key=True)
     is_over = models.BooleanField(default=False)
+    has_started = models.BooleanField(default=False)
     is_white_turn = models.BooleanField(default=True)
     # Match details for reconstructing the game between moves
     board = models.JSONField()

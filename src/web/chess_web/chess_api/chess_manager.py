@@ -10,7 +10,7 @@ import chess_core.structs.piece_type as promotion
 def create_new_match(game_code):
     """Creates a new chess match in the database with the specified game code."""
     match = chess_match.ChessMatch()
-    _save_match_state(game_code, match, True)
+    _save_match_state(game_code, match, True, False)
 
 
 def does_match_exist(game_code):
@@ -28,7 +28,7 @@ def is_match_in_progress(game_code):
     doesn't exist."""
     if does_match_exist(game_code):
         game = models.GameLobby.objects.get(pk=game_code)
-        return not game.is_over
+        return game.has_started and (not game.is_over)
     else:
         return False
 
@@ -67,7 +67,7 @@ def make_match_move(game_code, start, end, user_id, promotion_type="queen"):
         if chess_mode.is_players_piece(start, is_white_turn, match.board):
             try:
                 chess_mode.move_piece_at_pos(match, start, end, promotion)
-                _save_match_state(game_code, match, not is_white_turn)
+                _save_match_state(game_code, match, not is_white_turn, True)
                 return True, ""
             except ValueError as e:
                 reason = getattr(e, 'message', repr(e))
@@ -111,7 +111,7 @@ def end_state_to_str(state):
             return "black win"
 
 
-def _save_match_state(game_code, match, is_white_turn):
+def _save_match_state(game_code, match, is_white_turn, has_started):
     """Saves this match's state to the database. Normally, we return an empty 
     string, but if the match just ended, we return either 'white_win', 
     'black win', or 'stalemate'."""
@@ -130,6 +130,7 @@ def _save_match_state(game_code, match, is_white_turn):
     has_rook_moved_data = json.dumps(match._has_rook_moved)
     game = models.GameLobby(game_code=game_code, 
                                 is_over=is_over, 
+                                has_started=has_started, 
                                 is_white_turn=is_white_turn,
                                 board=board_data,
                                 allow_en_passant=allow_en_passant_data, 

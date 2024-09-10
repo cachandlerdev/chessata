@@ -11,7 +11,6 @@ from . import chess_manager
 class ClientConsumer(WebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.user_id_length = 12
         self.user_id = ""
         self.color = ""
         self.role = ""
