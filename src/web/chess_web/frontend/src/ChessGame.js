@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import dashboard_logo from './assets/dashboard_logo.png';
+import game_logo from './assets/game_logo.png';
 
 import './Dashboard.css';
 import './ChessGame.css';
@@ -10,29 +11,16 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
   const [userRole, setUserRole] = useState('');
   const [color, setColor] = useState('');
 
+  const [showMatch, setShowMatch] = useState(false);
+
   const [numOfPlayers, setNumOfPlayers] = useState(0);
   const [boardData, setBoardData] = useState([]);
   const [isYourTurn, setIsYourTurn] = useState(false);
   const [isOver, setIsOver] = useState(false);
   const [matchState, setMatchState] = useState('');
-
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [showMatch, setShowMatch] = useState(false);
-
-  const updateNewMessage = (e) => setNewMessage(e.target.value);
-
-  function sendMessage(e) {
-    client.send(
-      JSON.stringify({
-        type: "message",
-        text: newMessage,
-        sender: username,
-      })
-    );
-    setNewMessage('');
-    e.preventDefault();
-  }
+  const [moves, setMoves] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [notifications, setNotifications] = useState([]);
 
   function setupSocket(client) {
     if (typeof client !== "undefined") {
@@ -155,6 +143,8 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
    */
   function processChat(data) {
     console.log('Chat');
+    const chatMessage = { 'username': data['username'], 'message': data['message'] };
+    setChatMessages([...chatMessages, chatMessage])
   }
 
   /**
@@ -173,31 +163,13 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
 
   setupSocket(client);
 
-
   if (showMatch) {
-    //return (
-    //  <>
-    //    <h1>Game Name: {gameCode}</h1>
-    //    <h4>Username: {username}</h4>
-    //    <hr />
-    //    <h2>Messages</h2>
-    //    {messages.map((message, index) => (
-    //      <div key={index}>
-    //        <b>{message.name}: </b>{message.msg}
-    //      </div>
-    //    ))}
-    //    <form noValidate onSubmit={(e) => sendMessage(e)}>
-    //      <input type="text" autoFocus placeholder='Type a message...' value={newMessage}
-    //        onChange={updateNewMessage}
-    //      />
-    //      <button type='submit'>Send</button>
-    //    </form>
-    //  </>
-    //);
     return (
       <>
         <div className='board-container'>
-          <BoardPage color={color} boardData={boardData} />
+          <BoardPage color={color} boardData={boardData} client={client}
+            moves={moves} messages={chatMessages} username={username}
+            isYourTurn={isYourTurn} notifications={notifications} />
         </div>
       </>
     );
@@ -226,7 +198,7 @@ function WaitingPage({ gameCode }) {
         <h1>Waiting...</h1>
         <hr />
         <p>Send a friend your join code!</p>
-        <div className='blue-widget'>{gameCode}</div>
+        <div className='blue-widget big-widget'>{gameCode}</div>
       </div>
       <div className='floating-box center-children'>
         <div className='tip-box'>
@@ -237,8 +209,67 @@ function WaitingPage({ gameCode }) {
   )
 }
 
-function BoardPage({ color, boardData }) {
-  return <Board playerColor={color} boardData={boardData} />
+function BoardPage({ color, boardData, client, moves, messages, username, isYourTurn, notifications }) {
+
+  const [newChatMessage, setNewChatMessage] = useState('');
+  const updateNewChatMessage = (e) => setNewChatMessage(e.target.value);
+
+  function sendMessage(e, message) {
+    if (message.startsWith('/m')) {
+      // Process it as a move instead
+      const userInput = message.split(' ');
+      if (userInput.length === 3 || userInput.length === 4) {
+        const start = userInput[1];
+        const end = userInput[2];        
+        
+        let promotion;
+        if (userInput.length === 4) {
+          promotion = userInput[3];
+        } else {
+          promotion = "queen";
+        }
+        
+        client.send(
+          JSON.stringify({
+            type: "move",
+            start: start,
+            end: end,
+            promotion: promotion,
+          })
+        );
+        setNewChatMessage('');
+        e.preventDefault();
+
+        return;
+      }
+    }
+
+    // Otherwise treat it as a regular chat message.
+    client.send(
+      JSON.stringify({
+        type: "chat",
+        message: newChatMessage,
+      })
+    );
+    setNewChatMessage('');
+    e.preventDefault();
+  }
+
+  return (
+    <div className='horizontal-children'>
+      <div className='vertical-children'>
+        <LogoWindow />
+        <NotifyWindow isYourTurn={isYourTurn} notifications={notifications} />
+      </div>
+      <div className='vertical-window-box'>
+        <Board playerColor={color} boardData={boardData} />  
+      </div>
+      <div className='vertical-window-box'>
+        <MovesWindow moves={ moves } />
+        <ChatWindow messages={messages} sendMessage={sendMessage} newChatMessage={newChatMessage} updateNewChatMessage={updateNewChatMessage} />
+      </div>
+    </div>
+  );
 }
 
 function Board({ playerColor, boardData }) {
@@ -290,8 +321,6 @@ function Board({ playerColor, boardData }) {
         }
       }
       
-      console.log(index);
-
       const pieceType = boardData[index];
 
       let rowText = '';
@@ -317,8 +346,6 @@ function Board({ playerColor, boardData }) {
     // TODO: Find a more performance efficient way to reverse the board view
     boardSquares.reverse();
   }
-
-  console.log(boardSquares);
   return (
     <div id='board'>
       {boardSquares.map((square) => (
@@ -388,4 +415,74 @@ function Piece({ pieceType }) {
       </div>
     );
   }
+}
+
+function ChatWindow({messages, sendMessage, newChatMessage, updateNewChatMessage}) {
+
+  return (
+    <div id='chat' className='floating-box center-children'>
+      <h1>Chat</h1>
+      <hr />
+      <div className='messages'>
+        {messages.map((message, index) => (
+          <div key={index}>
+            <b>{message.username}: </b>{message.message}
+          </div>
+        ))}
+      </div>
+      <form noValidate onSubmit={(e) => sendMessage(e, newChatMessage)}>
+        <div id='chat-input-box' className='horizontal-children small-gap'>
+          <input type='text' placeholder='Type something...' value={newChatMessage}
+            onChange={updateNewChatMessage} />
+          <button type='submit'>{'>'}</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function MovesWindow({ moves }) {
+  return (
+    <div id='moves' className='floating-box center-children'>
+      <h1>Moves</h1>
+      <hr />
+      <div className='messages'>
+        {moves.map((move, index) => (
+          <div key={index}>
+            {move}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function NotifyWindow({ isYourTurn, notifications }) {
+  let turnText;
+  if (isYourTurn) {
+    turnText = 'Your Turn!';
+  } else {
+    turnText = 'Waiting...';
+  }
+  return (
+    <div id='notify' className='floating-box center-children'>
+      <h1>{ turnText }</h1>
+      <hr></hr>
+      <div className='messages'>
+        {notifications.map((notification, index) => (
+          <div key={index}>
+            {notification}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function LogoWindow() {
+  return (
+    <div id='logo' className='floating-box center-children'>
+      <img src={game_logo} alt='Logo'/>
+    </div>
+  );
 }

@@ -133,16 +133,21 @@
 
     background-color: var(--button-blue);
     border: 2px solid var(--dark-blue);
-    height: 3.188rem;
-    line-height: 2rem;
+    padding: 1rem;
     
     color: var(--dark-blue);
 
     font-weight: var(--bold-font-size);
-    font-size: 1.938rem;
     font-style: italic;
 
     filter: drop-shadow(5px 5px 5px #969696);
+}
+
+.floating-box > .big-widget {
+    font-size: 1.938rem;
+    line-height: 2rem;
+    height: 3.188rem;
+    padding: 0;
 }
 
 .floating-box > p {
