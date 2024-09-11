@@ -165,7 +165,17 @@ Client to server:
 ```
 
 If this was an invalid move, the server will respond with an error message.
-Otherwise, it will send a game status payload.
+Otherwise, it will send a game status payload, and then a move payload like this:
+
+Server to client:
+```json
+{
+   "type": "move",
+   "start": "c2",
+   "end": "c3",
+   "is_white": true,
+}
+```
 
 ### Game State
 Each turn, the server will send the state of the board and the `id` of the player whose turn it is.
@@ -238,17 +248,6 @@ Server to client:
     "type": "chat",
     "username": "Billy",
     "message": "Billy says hi",    
-}
-```
-
-### Note
-The server has the ability to send clients alerts in certain cases, like when the black king is in check.
-
-Server to client:
-```json
-{
-    "type": "note",
-    "message": "The black king is in check!",
 }
 ```
 

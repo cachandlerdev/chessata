@@ -240,8 +240,34 @@ class ClientConsumer(WebsocketConsumer):
                                                              promotion)
         if success:
             self._send_game_state()
+            self._send_last_move(start, end)
         else:
             self._send_error(fail_reason, 405)
+    
+    
+    def _send_last_move(self, start, end):
+        """Sends the last move to all users in the lobby."""
+        is_white = (self.color == "white")
+        self._broadcast_to_lobby({
+            "type": "receive.last.move",
+            "start": start,
+            "end": end,
+            "is_white": is_white
+        })
+    
+    
+    def receive_last_move(self, event):
+        """Receives the last move from the server and sends it to the client 
+        websocket."""
+        start = event["start"]
+        end = event["end"]
+        is_white = event["is_white"]
+        self.send(text_data=json.dumps({
+            "type": "move",
+            "start": start,
+            "end": end,
+            "is_white": is_white
+        }))
     
     
     def _send_game_state(self):

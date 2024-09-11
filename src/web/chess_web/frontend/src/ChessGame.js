@@ -21,6 +21,8 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
   const [moves, setMoves] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  
+  const [newMove, setNewMove] = useState();
 
   function setupSocket(client) {
     if (typeof client !== "undefined") {
@@ -61,11 +63,11 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
       case 'game_state':
         processGameState(data);
         break;
+      case 'move':
+        processMove(data);
+        break;
       case 'chat':
         processChat(data);
-        break;
-      case 'note':
-        processNote(data);
         break;
       case 'end_of_game':
         console.log('End of game');
@@ -77,7 +79,6 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
         console.log('Error: Unsupported server response type.');
         break;
     }
-    console.log(data);
   }
 
   /**
@@ -99,7 +100,6 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
    * Handles join packets from the server.
    */
   function processJoin(data) {
-    console.log('Join');
     setNumOfPlayers(data['num_of_players']);
     if (data['num_of_players'] < 2 && !isHost) {
       // Exit match.
@@ -130,7 +130,6 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
    * Handles start packets from the server.
    */
   function processStart(data) {
-    console.log('Start');
     setColor(data['color']);
     setShowMatch(true);
   }
@@ -139,7 +138,6 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
    * Processes game state updates from the server.
    */
   function processGameState(data) {
-    console.log('Game state');
     const state = data['state'];
     setIsYourTurn(state['your_turn']);
     setMatchState(state['match_state']);
@@ -168,7 +166,11 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
           break;
       }
       setNotifications([...notifications, newNotification]);
+    } else {
+      setNotifications([]);
     }
+
+    setNewMove();
     
     const isGameOver = (state['match_state'] === 'white win' || state['match_state'] === 'black win' || state['match_state'] === 'stalemate' );
     
@@ -176,23 +178,25 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
       setIsOver(true);
     }
   }
+  
+  /**
+   * Processes move packets from the server.
+   */
+  function processMove(data) {
+    const serverMove = {
+      "start": data['start'],
+      "end": data['end'],
+      "is_white": data['is_white']
+    };
+    setMoves([...moves, serverMove]);
+  }
 
   /**
    * Processes chat packets from the server.
    */
   function processChat(data) {
-    console.log('Chat');
     const chatMessage = { 'username': data['username'], 'message': data['message'] };
     setChatMessages([...chatMessages, chatMessage])
-  }
-
-  /**
-   * Processes note updates from the server.
-   */
-  function processNote(data) {
-    console.log('Note');
-    const message = data['message'];
-    setNotifications([...notifications, message]);
   }
 
   /**
@@ -232,7 +236,8 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
           <BoardPage color={color} boardData={boardData} client={client}
             moves={moves} messages={chatMessages} username={username}
             isYourTurn={isYourTurn} notifications={notifications}
-            isGameOver={isOver} resetAllVars={resetAllVars}/>
+            isGameOver={isOver} resetAllVars={resetAllVars} newMove={newMove}
+            setNewMove={setNewMove} />
         </div>
       </>
     );
@@ -273,7 +278,7 @@ function WaitingPage({ gameCode }) {
 }
 
 function BoardPage({ color, boardData, client, moves, messages, username,
-  isYourTurn, isGameOver, notifications, resetAllVars }) {
+  isYourTurn, isGameOver, notifications, resetAllVars, newMove, setNewMove }) {
 
   const [newChatMessage, setNewChatMessage] = useState('');
   const updateNewChatMessage = (e) => setNewChatMessage(e.target.value);
@@ -326,7 +331,7 @@ function BoardPage({ color, boardData, client, moves, messages, username,
         <NotifyWindow isYourTurn={isYourTurn} notifications={notifications} isGameOver={isGameOver} />
       </div>
       <div className='vertical-window-box center-children'>
-        <Board playerColor={color} boardData={boardData} />  
+        <Board playerColor={color} boardData={boardData} newMove={newMove} setNewMove={setNewMove} client={client} />  
         <button id='surrender-button' className='blue-button' onClick={resetAllVars}>Leave Match</button>
       </div>
       <div className='vertical-window-box'>
@@ -337,7 +342,7 @@ function BoardPage({ color, boardData, client, moves, messages, username,
   );
 }
 
-function Board({ playerColor, boardData }) {
+function Board({ playerColor, boardData, newMove, setNewMove, client }) {
 
   function boardIndexToPos(index) {
     const column = String.fromCharCode((index % 8) + 97);
@@ -398,7 +403,8 @@ function Board({ playerColor, boardData }) {
       }
 
       const square = <Square is_white={isWhiteSquare} pieceType={pieceType}
-        boardPos={position} rowText={rowText} columnText={columnText} />;
+        boardPos={position} rowText={rowText} columnText={columnText}
+        newMove={newMove} setNewMove={setNewMove} client={client} />;
       boardSquares[index] = square;
 
       if (j !== boardLen - 1) {
@@ -422,20 +428,68 @@ function Board({ playerColor, boardData }) {
   )
 }
 
-function Square({ is_white, pieceType, boardPos, rowText, columnText }) {
-  if (is_white) {
-    return <div className='board-square white'>
-      <div className='piece-row-text'>{rowText}</div>
-      <div className='piece-column-text'>{columnText}</div>
-      <Piece pieceType={pieceType} />
-    </div>;
-  } else {
-    return <div className='board-square black'>
-      <div className='piece-row-text'>{rowText}</div>
-      <div className='piece-column-text'>{columnText}</div>
-      <Piece pieceType={pieceType} />
-    </div>;
+function Square({ is_white, pieceType, boardPos, rowText, columnText, newMove,
+  setNewMove, client }) {
+  
+  function sendMove(start, end) {
+    // TODO: Support multiple promotion types.
+    let promotion = 'queen';
+    client.send(
+      JSON.stringify({
+        type: "move",
+        start: start,
+        end: end,
+        promotion: promotion,
+      })
+    );
+    setNewMove();
   }
+
+  function handleLeftClick() {
+    if (typeof (newMove) === 'undefined') {
+      if (pieceType !== 0) {
+        setNewMove(boardPos);
+      }
+    } else {
+      const start = newMove;
+      sendMove(start, boardPos);
+    }
+  }
+
+  function handleRightClick(e) {
+    setNewMove();
+    e.preventDefault();
+  }
+  
+  const squareContents = (<>
+    <div className='piece-row-text'>{rowText}</div>
+    <div className='piece-column-text'>{columnText}</div>
+    <Piece pieceType={pieceType} />
+  </>);
+  
+  let color;
+  if (is_white) {
+    color = 'white';
+  } else {
+    color = 'black';
+  }
+
+  let selected = '';
+  if (typeof (newMove) !== 'undefined') {
+    if (newMove === boardPos) {
+      selected = 'selected';
+    }
+  }
+  
+  let selectable = '';
+  if (pieceType !== 0) {
+    selectable = 'selectable';
+  }
+  
+  return <div className={`board-square ${color} ${selectable} ${selected}`}
+    onClick={handleLeftClick} onContextMenu={handleRightClick}>
+    {squareContents}
+  </div>;
 }
 
 function Piece({ pieceType }) {
@@ -511,15 +565,29 @@ function MovesWindow({ moves }) {
     <div id='moves' className='floating-box center-children'>
       <h1>Moves</h1>
       <hr />
-      <div className='messages'>
-        {moves.map((move, index) => (
-          <div key={index}>
-            {move}
-          </div>
-        ))}
+      <div className='moves'>
+        <div className='moves-content'>
+          {moves.map((move, index) => (
+            <div key={index}>
+              <MoveItem move={move} />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
+}
+
+function MoveItem({ move }) {
+  if (move['is_white']) {
+    return <div className='move move-white'>
+      <b>White:</b> {move['start']} -{'>'} {move['end']}
+    </div>
+  } else {
+    return <div className='move move-black'>
+      <b>Black:</b> {move['start']} -{'>'} {move['end']}
+    </div>    
+  }
 }
 
 function NotifyWindow({ isYourTurn, notifications, isGameOver }) {
@@ -533,7 +601,6 @@ function NotifyWindow({ isYourTurn, notifications, isGameOver }) {
   } else {
     turnText = 'Match Finished!';
   }
-  // Idk why this is needed, but if it works, it works
   return (
     <div id='notify' className='floating-box center-children'>
       <h1>{ turnText }</h1>

@@ -31,9 +31,11 @@
 }
 
 .messages {
-    font-size: 1rem;
+    font-size: 1.25rem;
     width: 80%;
     height: 17.5rem;
+    
+    overflow: auto;
 
     background-color: var(--button-blue);
     border: 2px solid var(--dark-blue);
@@ -47,10 +49,6 @@
 #logo {
     padding-top: 2.125rem;
     padding-bottom: 2.125rem;
-}
-
-.moves-box {
-    height: 21.875rem;
 }
 
 .floating-box > form {
@@ -127,7 +125,48 @@
 }
 
 #surrender-button {
+    margin-top: 1.25rem;
     width: 21rem;
+}
+
+.moves {
+    height: 21.875rem;
+    overflow: hidden;
+    padding: .625rem;
+    display: flex;
+    flex-direction: column-reverse;
+    scroll-behavior: smooth;
+
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.moves-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.moves::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+}
+
+.move {
+    border: 2px solid var(--dark-blue);
+    border-radius: 5px;
+    font-style: italic;
+    padding: .6rem .9rem;
+    width: 20.938rem;
+    margin-bottom: .625rem;
+    font-size: 1.25rem;
+    color: var(--dark-blue);
+}
+
+.move-white {
+    background-color: var(--button-blue);
+}
+
+.move-black {
+    background-color: var(--light-blue);
 }
 
 .board-container {
@@ -163,6 +202,22 @@
 
 .black {
     background-color: var(--med-dark-blue);
+}
+
+.white:hover {
+    background-color: var(--hover-select-accent);
+}
+
+.black:hover {
+    background-color: var(--dark-accent);
+}
+
+.selected {
+    background-color: var(--selected);
+}
+
+.selected:hover {
+    background-color: var(--selected-hover);
 }
 
 .board-piece {
