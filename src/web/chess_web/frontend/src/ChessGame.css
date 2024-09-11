@@ -51,6 +51,10 @@
     padding-bottom: 2.125rem;
 }
 
+#logo > img {
+    margin-bottom: 1.5rem;
+}
+
 .floating-box > form {
     width: 89%;
     box-sizing: border-box;
@@ -129,6 +133,12 @@
     width: 21rem;
 }
 
+.notifications {
+    height: 21.875rem;
+    overflow: hidden;
+    padding: .625rem;
+}
+
 .moves {
     height: 21.875rem;
     overflow: hidden;
@@ -150,6 +160,17 @@
     display: none;  /* Safari and Chrome */
 }
 
+.game-code {
+    border: 2px solid var(--dark-blue);
+    border-radius: 5px;
+    padding: .6rem .9rem;
+    width: 20.938rem;
+    margin-bottom: .625rem;
+    font-size: 1.25rem;
+    color: var(--dark-blue);
+    background-color: var(--button-blue);
+}
+
 .move {
     border: 2px solid var(--dark-blue);
     border-radius: 5px;
@@ -162,11 +183,11 @@
 }
 
 .move-white {
-    background-color: var(--button-blue);
+    background-color: var(--light-blue);
 }
 
 .move-black {
-    background-color: var(--light-blue);
+    background-color: var(--button-blue);
 }
 
 .board-container {

@@ -26,9 +26,7 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
 
   function setupSocket(client) {
     if (typeof client !== "undefined") {
-      client.onopen = () => {
-        console.log('Websocket client connected.')
-      };
+      client.onopen = () => {};
 
       client.onmessage = (message) => {
         const dataFromServer = JSON.parse(message.data);
@@ -44,6 +42,7 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
   }
 
   function processServerResponse(data) {
+    console.log(data);
     switch (data["type"]) {
       case 'init':
         processInit(data);
@@ -68,9 +67,6 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
         break;
       case 'chat':
         processChat(data);
-        break;
-      case 'end_of_game':
-        console.log('End of game');
         break;
       case 'close':
         processClose(data);
@@ -100,12 +96,20 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
    * Handles join packets from the server.
    */
   function processJoin(data) {
+    let textRole;
+    if (data['role'] === 'player') {
+      textRole = 'Player';
+    } else {
+      textRole = 'Spectator';
+    }
+    let newNotificationMsg = `${textRole} '${data['username']}' has joined the match.`;
+    const notifyData = { 'type': 'join', 'message': newNotificationMsg };
+    setNotifications([notifyData, ...notifications]);
+
     setNumOfPlayers(data['num_of_players']);
     if (data['num_of_players'] < 2 && !isHost) {
       // Exit match.
-      setShowMatch(false);
-      setGameCode('');
-      setUsername('');
+      resetAllVars();
     } else if (data['num_of_players'] === 2) {
       setShowMatch(true);
     }
@@ -115,15 +119,15 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
    * Handles leave packets from the server.
    */
   function processLeave(data) {
-    console.log('Leave');
     let textRole;
     if (data['role'] === 'player') {
       textRole = 'Player';
     } else {
       textRole = 'Spectator'
     }
-    let newNotification = `${textRole} '${username}' has left the match.`;
-    setNotifications([...notifications, newNotification]);
+    let newNotificationMsg = `${textRole} '${data['username']}' has left the match.`;
+    const notifyData = { 'type': 'leave', 'message': newNotificationMsg };
+    setNotifications([notifyData, ...notifications]);
   }
 
   /**
@@ -144,30 +148,33 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
     setBoardData(state['board']);
     
     if (state['match_state'] !== 'not over') {
-      let newNotification;
+      let newNotification = {'type': 'match_state'};
       switch (state['match_state']) {
         case 'white check':
-          newNotification = 'The white king is in check!';
+          newNotification['message'] = 'The white king is in check!';
           break;
         case 'black check':
-          newNotification = 'The black king is in check!';
+          newNotification['message'] = 'The black king is in check!';
           break;
         case 'stalemate':
-          newNotification = 'The match ended in a stalemate.';
+          newNotification['message'] = 'The match ended in a stalemate.';
           break;
         case 'white win':
-          newNotification = 'White won the game!';
+          newNotification['message'] = 'White won the game!';
           break;
         case 'black win':
-          newNotification = 'Black won the game!';
+          newNotification['message'] = 'Black won the game!';
           break;
         default:
           console.log('Error: Unsupported match state');
           break;
       }
-      setNotifications([...notifications, newNotification]);
+      setNotifications([newNotification, ...notifications]);
     } else {
-      setNotifications([]);
+      const filtered = notifications.filter((notification) => {
+        return notification['type'] !== 'match_state';
+      })
+      setNotifications(filtered);
     }
 
     setNewMove();
@@ -237,7 +244,7 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
             moves={moves} messages={chatMessages} username={username}
             isYourTurn={isYourTurn} notifications={notifications}
             isGameOver={isOver} resetAllVars={resetAllVars} newMove={newMove}
-            setNewMove={setNewMove} />
+            setNewMove={setNewMove} userRole={userRole} gameCode={gameCode} />
         </div>
       </>
     );
@@ -278,7 +285,8 @@ function WaitingPage({ gameCode }) {
 }
 
 function BoardPage({ color, boardData, client, moves, messages, username,
-  isYourTurn, isGameOver, notifications, resetAllVars, newMove, setNewMove }) {
+  isYourTurn, isGameOver, notifications, resetAllVars, newMove, setNewMove,
+  userRole, gameCode }) {
 
   const [newChatMessage, setNewChatMessage] = useState('');
   const updateNewChatMessage = (e) => setNewChatMessage(e.target.value);
@@ -286,30 +294,33 @@ function BoardPage({ color, boardData, client, moves, messages, username,
   function sendMessage(e, message) {
     if (message.startsWith('/m')) {
       // Process it as a move instead
-      const userInput = message.split(' ');
-      if (userInput.length === 3 || userInput.length === 4) {
-        const start = userInput[1];
-        const end = userInput[2];        
-        
-        let promotion;
-        if (userInput.length === 4) {
-          promotion = userInput[3];
-        } else {
-          promotion = "queen";
-        }
-        
-        client.send(
-          JSON.stringify({
-            type: "move",
-            start: start,
-            end: end,
-            promotion: promotion,
-          })
-        );
-        setNewChatMessage('');
-        e.preventDefault();
+      
+      if (!isGameOver) {
+        const userInput = message.split(' ');
+        if (userInput.length === 3 || userInput.length === 4) {
+          const start = userInput[1];
+          const end = userInput[2];        
+          
+          let promotion;
+          if (userInput.length === 4) {
+            promotion = userInput[3];
+          } else {
+            promotion = "queen";
+          }
+          
+          client.send(
+            JSON.stringify({
+              type: "move",
+              start: start,
+              end: end,
+              promotion: promotion,
+            })
+          );
+          setNewChatMessage('');
+          e.preventDefault();
 
-        return;
+          return;
+        }
       }
     }
 
@@ -327,22 +338,29 @@ function BoardPage({ color, boardData, client, moves, messages, username,
   return (
     <div className='horizontal-children'>
       <div className='vertical-children'>
-        <LogoWindow />
-        <NotifyWindow isYourTurn={isYourTurn} notifications={notifications} isGameOver={isGameOver} />
+        <LogoWindow gameCode={gameCode} />
+        <NotifyWindow isYourTurn={isYourTurn} notifications={notifications}
+          isGameOver={isGameOver}/>
       </div>
       <div className='vertical-window-box center-children'>
-        <Board playerColor={color} boardData={boardData} newMove={newMove} setNewMove={setNewMove} client={client} />  
-        <button id='surrender-button' className='blue-button' onClick={resetAllVars}>Leave Match</button>
+        <Board playerColor={color} boardData={boardData} newMove={newMove}
+          setNewMove={setNewMove} client={client} isGameOver={isGameOver}
+          userRole={userRole} />  
+        <button id='surrender-button' className='blue-button'
+          onClick={resetAllVars}>Leave Match</button>
       </div>
       <div className='vertical-window-box'>
         <MovesWindow moves={ moves } />
-        <ChatWindow messages={messages} sendMessage={sendMessage} newChatMessage={newChatMessage} updateNewChatMessage={updateNewChatMessage} />
+        <ChatWindow messages={messages} sendMessage={sendMessage}
+          newChatMessage={newChatMessage}
+          updateNewChatMessage={updateNewChatMessage} />
       </div>
     </div>
   );
 }
 
-function Board({ playerColor, boardData, newMove, setNewMove, client }) {
+function Board({ playerColor, boardData, newMove, setNewMove, client,
+  isGameOver, userRole }) {
 
   function boardIndexToPos(index) {
     const column = String.fromCharCode((index % 8) + 97);
@@ -404,8 +422,9 @@ function Board({ playerColor, boardData, newMove, setNewMove, client }) {
 
       const square = <Square is_white={isWhiteSquare} pieceType={pieceType}
         boardPos={position} rowText={rowText} columnText={columnText}
-        newMove={newMove} setNewMove={setNewMove} client={client} />;
-      boardSquares[index] = square;
+        newMove={newMove} setNewMove={setNewMove} client={client}
+        isGameOver={isGameOver} userRole={userRole} />;
+      boardSquares[index] = {"position": position, "square": square };
 
       if (j !== boardLen - 1) {
         isWhiteSquare = !isWhiteSquare;
@@ -419,9 +438,9 @@ function Board({ playerColor, boardData, newMove, setNewMove, client }) {
   }
   return (
     <div id='board'>
-      {boardSquares.map((square) => (
-        <div key={square.boardPos}>
-          {square}
+      {boardSquares.map((square_data) => (
+        <div key={square_data['position']}>
+          {square_data['square']}
         </div>
       ))}
     </div>
@@ -429,20 +448,22 @@ function Board({ playerColor, boardData, newMove, setNewMove, client }) {
 }
 
 function Square({ is_white, pieceType, boardPos, rowText, columnText, newMove,
-  setNewMove, client }) {
+  setNewMove, client, isGameOver, userRole }) {
   
   function sendMove(start, end) {
     // TODO: Support multiple promotion types.
-    let promotion = 'queen';
-    client.send(
-      JSON.stringify({
-        type: "move",
-        start: start,
-        end: end,
-        promotion: promotion,
-      })
-    );
-    setNewMove();
+    if (!isGameOver) {
+      let promotion = 'queen';
+      client.send(
+        JSON.stringify({
+          type: "move",
+          start: start,
+          end: end,
+          promotion: promotion,
+        })
+      );
+      setNewMove();
+    }
   }
 
   function handleLeftClick() {
@@ -476,20 +497,26 @@ function Square({ is_white, pieceType, boardPos, rowText, columnText, newMove,
 
   let selected = '';
   if (typeof (newMove) !== 'undefined') {
-    if (newMove === boardPos) {
+    if (newMove === boardPos && userRole === 'player') {
       selected = 'selected';
     }
   }
   
   let selectable = '';
-  if (pieceType !== 0) {
+  if (pieceType !== 0 && userRole === 'player') {
     selectable = 'selectable';
   }
   
-  return <div className={`board-square ${color} ${selectable} ${selected}`}
-    onClick={handleLeftClick} onContextMenu={handleRightClick}>
-    {squareContents}
-  </div>;
+  if (!isGameOver) {
+    return <div className={`board-square ${color} ${selectable} ${selected}`}
+      onClick={handleLeftClick} onContextMenu={handleRightClick}>
+      {squareContents}
+    </div>;
+  } else {
+    return <div className={`board-square ${color} ${selectable}`}>
+      {squareContents}
+    </div>;
+  }
 }
 
 function Piece({ pieceType }) {
@@ -605,10 +632,10 @@ function NotifyWindow({ isYourTurn, notifications, isGameOver }) {
     <div id='notify' className='floating-box center-children'>
       <h1>{ turnText }</h1>
       <hr></hr>
-      <div className='messages'>
+      <div className='notifications'>
         {notifications.map((notification, index) => (
-          <div key={index}>
-            <b>Note: </b>{notification}
+          <div key={index} className='move move-black'>
+            <b>Note: </b>{notification['message']}
           </div>
         ))}
       </div>
@@ -616,10 +643,11 @@ function NotifyWindow({ isYourTurn, notifications, isGameOver }) {
   );
 }
 
-function LogoWindow() {
+function LogoWindow({ gameCode }) {
   return (
     <div id='logo' className='floating-box center-children'>
       <img src={game_logo} alt='Logo'/>
+      <div className='game-code'><b>Game code:</b> { gameCode }</div>
     </div>
   );
 }

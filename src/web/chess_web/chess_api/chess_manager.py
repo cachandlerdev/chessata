@@ -27,7 +27,11 @@ def is_match_in_progress(game_code):
     doesn't exist."""
     if does_match_exist(game_code):
         game = models.GameLobby.objects.get(pk=game_code)
-        return game.has_started and (not game.is_over)
+        # Temporarily disabling this check to solve a bug involving players that
+        # immediately leave after joining and before the first move is made.
+
+        #return game.has_started and (not game.is_over)
+        return not game.is_over
     else:
         return False
 
@@ -147,6 +151,7 @@ def end_match(game_code, match_state):
     """Used to prematurely end matches."""
     if does_match_exist(game_code):
         models.GameLobby.objects.filter(pk=game_code).update(
+            has_started=True,
             is_over=True,
             match_state=match_state,
         )
@@ -160,14 +165,17 @@ def get_game_state(game_code):
     if does_match_exist(game_code):
         game = models.GameLobby.objects.get(pk=game_code)
         # Get turn id
-        if game.is_white_turn:
-            users = models.ChessUser.objects.filter(game_code=game_code)
-            player = users.get(color="white")
-        else:
-            users = models.ChessUser.objects.filter(game_code=game_code)
-            player = users.get(color="black")
-        
-        player_turn_id = player.user_id
+        try:
+            if game.is_white_turn:
+                users = models.ChessUser.objects.filter(game_code=game_code)
+                player = users.get(color="white")
+            else:
+                users = models.ChessUser.objects.filter(game_code=game_code)
+                player = users.get(color="black")
+            
+            player_turn_id = player.user_id
+        except models.ChessUser.DoesNotExist:
+            player_turn_id = ""
 
         json_decoder = json.decoder.JSONDecoder()
         board = json_decoder.decode(game.board)

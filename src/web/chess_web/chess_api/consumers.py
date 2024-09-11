@@ -72,7 +72,7 @@ class ClientConsumer(WebsocketConsumer):
         num_of_players, _ = lobby_manager.get_num_of_users(self.game_code)
         if self.role == "player" and num_of_players == 2:
             self._start_game()
-            self._send_game_state()
+        self._send_game_state()
     
     
     def receive_user_join(self, event):

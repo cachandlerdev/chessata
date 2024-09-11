@@ -85,8 +85,11 @@ def close_if_all_players_left(game_code):
 
 def disconnect_user(user_id):
     """Removes this user from the database."""
-    user = models.ChessUser.objects.get(pk=user_id)
-    user.delete()
+    try:
+        user = models.ChessUser.objects.get(pk=user_id)
+        user.delete()
+    except models.ChessUser.DoesNotExist:
+        print("User cannot be deleted because he does not exist.")
 
 
 def get_num_of_users(game_code):
