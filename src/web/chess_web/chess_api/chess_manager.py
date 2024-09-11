@@ -1,5 +1,4 @@
 from . import models
-from . import lobby_manager
 import json
 from chess_core.structs.game_state import GameState
 import chess_core.game_match.match_chess as chess_match
@@ -31,6 +30,10 @@ def is_match_in_progress(game_code):
         return game.has_started and (not game.is_over)
     else:
         return False
+
+
+def get_match_board(game_code):
+    """Gets a JSON formatted object """
 
 
 def _load_match(game_code):

@@ -72,6 +72,7 @@ class ClientConsumer(WebsocketConsumer):
         num_of_players, _ = lobby_manager.get_num_of_users(self.game_code)
         if self.role == "player" and num_of_players == 2:
             self._start_game()
+            self._send_game_state()
     
     
     def receive_user_join(self, event):
@@ -95,7 +96,7 @@ class ClientConsumer(WebsocketConsumer):
         """Sends a 'start game' message packet to all lobby members."""
         self._broadcast_to_lobby({
             "type": "receive.start.game",
-            "message": "Begin match.",
+            "message": "Begin match."
         })
     
     

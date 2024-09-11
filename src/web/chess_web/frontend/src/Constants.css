@@ -1,0 +1,16 @@
+body {
+    --dark-blue: #013363;
+    --med-dark-blue: #1F4E7B;
+    --med-blue: #024E98;
+    --placeholder-blue: #80B7EC;
+    --button-blue: #B3D1EE;
+    --bg-blue: #C3D1DE;
+    --light-blue: #E1EBF6;
+    
+    --dark-accent: #018989;
+    --med-accent: #02BDBD;
+    --button-accent: #A6ECEC;
+    
+    --regular-font-size: 400;
+    --bold-font-size: 700;
+}
