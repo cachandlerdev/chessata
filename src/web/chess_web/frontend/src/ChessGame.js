@@ -327,7 +327,7 @@ function BoardPage({ color, boardData, client, moves, messages, username,
       </div>
       <div className='vertical-window-box center-children'>
         <Board playerColor={color} boardData={boardData} />  
-        <button id='surrender-button' className='blue-button' onClick={resetAllVars}>Surrender</button>
+        <button id='surrender-button' className='blue-button' onClick={resetAllVars}>Leave Match</button>
       </div>
       <div className='vertical-window-box'>
         <MovesWindow moves={ moves } />
