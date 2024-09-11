@@ -74,7 +74,7 @@ function StartGame({ setUsername, setGameCode, setClient, setIsHost}) {
               onChange={updateTempUsername}
               maxLength={maxUsernameLength}
               autoFocus />
-            <button type='submit'>Play!</button>
+            <button className='blue-button' type='submit'>Play!</button>
           </div>
         </form>
         <form noValidate onSubmit={e => submitJoin(e)}>
@@ -91,7 +91,7 @@ function StartGame({ setUsername, setGameCode, setClient, setIsHost}) {
               onChange={updateTempGameCode}
               maxLength={joinCodeLength}
             />
-            <button type='submit'>Play!</button>
+            <button className='blue-button' type='submit'>Play!</button>
           </div>
         </form>
     </>

@@ -116,6 +116,14 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
    */
   function processLeave(data) {
     console.log('Leave');
+    let textRole;
+    if (data['role'] === 'player') {
+      textRole = 'Player';
+    } else {
+      textRole = 'Spectator'
+    }
+    let newNotification = `${textRole} '${username}' has left the match.`;
+    setNotifications([...notifications, newNotification]);
   }
 
   /**
@@ -136,6 +144,37 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
     setIsYourTurn(state['your_turn']);
     setMatchState(state['match_state']);
     setBoardData(state['board']);
+    
+    if (state['match_state'] !== 'not over') {
+      let newNotification;
+      switch (state['match_state']) {
+        case 'white check':
+          newNotification = 'The white king is in check!';
+          break;
+        case 'black check':
+          newNotification = 'The black king is in check!';
+          break;
+        case 'stalemate':
+          newNotification = 'The match ended in a stalemate.';
+          break;
+        case 'white win':
+          newNotification = 'White won the game!';
+          break;
+        case 'black win':
+          newNotification = 'Black won the game!';
+          break;
+        default:
+          console.log('Error: Unsupported match state');
+          break;
+      }
+      setNotifications([...notifications, newNotification]);
+    }
+    
+    const isGameOver = (state['match_state'] === 'white win' || state['match_state'] === 'black win' || state['match_state'] === 'stalemate' );
+    
+    if (isGameOver) {
+      setIsOver(true);
+    }
   }
 
   /**
@@ -152,6 +191,8 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
    */
   function processNote(data) {
     console.log('Note');
+    const message = data['message'];
+    setNotifications([...notifications, message]);
   }
 
   /**
@@ -159,6 +200,27 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
    */
   function processClose(data) {
     console.log('Close match');
+    resetAllVars();
+  }
+  
+  function resetAllVars() {
+    setUserId('');
+    setUserRole('');
+    setColor('');
+
+    setShowMatch(false);
+    setUsername('');
+    setGameCode('');
+
+    setNumOfPlayers(0);
+    setBoardData([]);
+    setIsYourTurn(false);
+    setIsOver(false);
+    setMatchState('');
+    setMoves([]);
+    setChatMessages([]);
+    setNotifications([]);
+    client.close();
   }
 
   setupSocket(client);
@@ -169,7 +231,8 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
         <div className='board-container'>
           <BoardPage color={color} boardData={boardData} client={client}
             moves={moves} messages={chatMessages} username={username}
-            isYourTurn={isYourTurn} notifications={notifications} />
+            isYourTurn={isYourTurn} notifications={notifications}
+            isGameOver={isOver} resetAllVars={resetAllVars}/>
         </div>
       </>
     );
@@ -209,7 +272,8 @@ function WaitingPage({ gameCode }) {
   )
 }
 
-function BoardPage({ color, boardData, client, moves, messages, username, isYourTurn, notifications }) {
+function BoardPage({ color, boardData, client, moves, messages, username,
+  isYourTurn, isGameOver, notifications, resetAllVars }) {
 
   const [newChatMessage, setNewChatMessage] = useState('');
   const updateNewChatMessage = (e) => setNewChatMessage(e.target.value);
@@ -259,10 +323,11 @@ function BoardPage({ color, boardData, client, moves, messages, username, isYour
     <div className='horizontal-children'>
       <div className='vertical-children'>
         <LogoWindow />
-        <NotifyWindow isYourTurn={isYourTurn} notifications={notifications} />
+        <NotifyWindow isYourTurn={isYourTurn} notifications={notifications} isGameOver={isGameOver} />
       </div>
-      <div className='vertical-window-box'>
+      <div className='vertical-window-box center-children'>
         <Board playerColor={color} boardData={boardData} />  
+        <button id='surrender-button' className='blue-button' onClick={resetAllVars}>Surrender</button>
       </div>
       <div className='vertical-window-box'>
         <MovesWindow moves={ moves } />
@@ -457,13 +522,18 @@ function MovesWindow({ moves }) {
   );
 }
 
-function NotifyWindow({ isYourTurn, notifications }) {
+function NotifyWindow({ isYourTurn, notifications, isGameOver }) {
   let turnText;
-  if (isYourTurn) {
-    turnText = 'Your Turn!';
+  if (!isGameOver) {
+    if (isYourTurn) {
+      turnText = 'Your Turn!';
+    } else {
+      turnText = 'Waiting...';
+    }
   } else {
-    turnText = 'Waiting...';
+    turnText = 'Match Finished!';
   }
+  // Idk why this is needed, but if it works, it works
   return (
     <div id='notify' className='floating-box center-children'>
       <h1>{ turnText }</h1>
@@ -471,7 +541,7 @@ function NotifyWindow({ isYourTurn, notifications }) {
       <div className='messages'>
         {notifications.map((notification, index) => (
           <div key={index}>
-            {notification}
+            <b>Note: </b>{notification}
           </div>
         ))}
       </div>

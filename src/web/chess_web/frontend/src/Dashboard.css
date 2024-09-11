@@ -101,8 +101,7 @@
     color: var(--placeholder-blue);
 }
 
-.floating-box > button {
-    width: 100%;
+.blue-button {
     background-color: var(--button-blue);
     border: 2px solid var(--dark-blue);
     height: 3.188rem;
@@ -123,6 +122,15 @@
     font-size: 1.125rem;
 
     filter: drop-shadow(5px 5px 5px #969696);
+}
+
+.blue-button:hover, .blue-button:focus {
+    cursor: pointer;
+    background-color: var(--button-accent);
+}
+
+.floating-box > button {
+    width: 100%;
 }
 
 .floating-box > .blue-widget {
@@ -167,11 +175,6 @@
     margin-bottom: .625rem;
     font-weight: var(--bold-font-size);
     font-style: italic;
-}
-
-.floating-box > button:hover, button:focus {
-    cursor: pointer;
-    background-color: var(--button-accent);
 }
 
 form {
