@@ -182,8 +182,6 @@ Each turn, the server will send the state of the board and the `id` of the playe
 For this reason, clients should hold onto the `id` the server sends them in the Init payload.
 
 Note that the client itself will never send the server its `id`, as that information is stored on the server when the websocket is created.
-However, it should be retained in order to inform users on the client's end whether it is their turn or not.
-- TODO: This information might be outdated. Check again once you've finished implementing the backend/frontend code.
 
 Server to client:
 ```json

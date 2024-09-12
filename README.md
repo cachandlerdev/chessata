@@ -4,7 +4,9 @@ A chess website you can use to play online with your friends!
 ![Logo](/src/web/chess_web/frontend/src/assets/dashboard_logo.png)
 
 ## Screenshots
-TODO: Add 2-3 screenshots here
+
+![Dashboard](/screenshots/dashboard.png)
+![Logo](/screenshots/game_desktop.png)
 
 ## Current website
 TODO: Add the website link here
@@ -19,7 +21,15 @@ Redis is utilized in order to make use of channel layers and store information.
 This allows us to perform real time updates with low server overhead via JSON responses as described in the [API Documentation](api_documentation.md). 
 
 ### Installation
-TODO: Add instructions on how to run things locally and install dependencies.
+
+1. First install the backend dependencies 
+    - Navigate to the root directory.
+    - Run `pip install -r requirements.txt`.
+        - I recommend using a virtual environment (`venv`).
+2. Then install the dependencies for the frontend.
+    - Navigate to `src/web/chess_web/frontend/`.
+    - Run `npm install` to download all of the packages located in `package.json`.
+3. Lastly, you'll have to [install Docker](https://www.docker.com/), which we use to run Redis via the `channels-redis` python library.
 
 ### Running the Web App
 
