@@ -4,12 +4,14 @@
     display: flex;
     flex-direction: row;
     gap: 3.125rem;
+    padding: 2rem;
 }
 
 .vertical-window-box {
     display: flex;
     flex-direction: column;
-    gap: 3.125rem;
+    align-items: center;
+    justify-content: center;
 }
 
 .small-gap {
@@ -19,7 +21,7 @@
 .messages {
     font-size: 1.25rem;
     width: 80%;
-    height: 17.5rem;
+    height: 100%;
     
     overflow: auto;
 
@@ -32,9 +34,14 @@
     border-radius: 5px;
 }
 
+#chat {
+    height: 17rem;
+}
+
 #logo {
     padding-top: 2.125rem;
     padding-bottom: 2.125rem;
+    height: 30%;
 }
 
 #logo > img {
@@ -69,6 +76,7 @@
     box-sizing: border-box;
     
     margin-top: .75rem;
+    margin-right: .6rem;
 
     outline-style: none;
     box-shadow: none;
@@ -85,7 +93,7 @@
 }
 
 #chat-input-box > button {
-    width: 3.375rem;
+    width: 2.775rem;
     height: 3.375rem;
 
     background-color: var(--button-blue);
@@ -120,7 +128,8 @@
 }
 
 .notifications {
-    height: 21.875rem;
+    height: 16.5rem;
+
     overflow: hidden;
     padding: .625rem;
     display: flex;
@@ -129,9 +138,10 @@
 }
 
 .moves {
-    height: 21.875rem;
+    height: 12rem;
     overflow: hidden;
     padding: .625rem;
+    width: 100%;
     display: flex;
     flex-direction: column-reverse;
     scroll-behavior: smooth;
@@ -153,7 +163,7 @@
     border: 2px solid var(--dark-blue);
     border-radius: 5px;
     padding: .6rem .9rem;
-    width: 20.938rem;
+    width: 90%;
     margin-bottom: .625rem;
     font-size: 1.25rem;
     color: var(--dark-blue);
@@ -165,7 +175,8 @@
     border-radius: 5px;
     font-style: italic;
     padding: .6rem .9rem;
-    width: 20.938rem;
+    width: 75%;
+    max-width: 20.938rem;
     margin-bottom: .625rem;
     font-size: 1.25rem;
     color: var(--dark-blue);
@@ -191,11 +202,9 @@
 
 #board {
     aspect-ratio: 1 / 1;
-    max-height: 64rem;
-    width: 100%;
-    max-width: 64rem;
+    max-height: 40rem;
     display: grid;
-    grid-template-columns: repeat(8, minmax(4rem, 1fr));
+    grid-template-columns: repeat(8, minmax(.2rem, 1fr));
     border: .3rem solid var(--dark-accent);
     border-radius: 0.3rem;
     align-self: center;
@@ -204,8 +213,6 @@
 
 .board-square {
     aspect-ratio: 1 / 1;
-    max-width: 8rem;
-    max-height: 8rem;
     width: 100%;
     position: relative;
     display: flex;
@@ -279,6 +286,11 @@
     user-select: none; /* Standard */
 }
 
+.moves-content > div {
+    display: flex;
+    justify-content: center;
+}
+
 @media only screen and (max-width: 640px) {
     .board-container {
     }
@@ -313,7 +325,7 @@
     
     #board {
         width: 80%;
-        grid-template-columns: repeat(8, minmax(2rem, 1fr));
+        grid-template-columns: repeat(8, minmax(.2rem, 1fr));
     }
     
     .notifications {
@@ -337,12 +349,7 @@
     .moves-content {
         width: 100%;
     }
-    
-    .moves-content > div {
-        display: flex;
-        justify-content: center;
-    }
-    
+        
     .moves {
         height: 8.6rem;
         width: 90%;
@@ -351,7 +358,7 @@
     #surrender-button {
         width: 50%;
         margin-top: 0;
-        margin-bottom: .625rem;
+        margin-bottom: 1rem;
     }
     
     .piece-row-text {
@@ -385,12 +392,108 @@
     .selected:hover {
         background-color: var(--selected-hover);
     }
+    
+    .info-box {
+        display: block;
+    }
 }
 
 @media only screen and (min-width: 641px) and (max-width: 1281px) {
-    .horizontal-children {
+    .horizontal-window-box {
         /* Plot twist!!! */
         flex-direction: column;
         overflow-y: auto;
+        gap: 2rem;
+    }
+
+    .vertical-window-box {
+        /* Plot twist!!! */
+        flex-direction: row;
+        gap: 1rem;
+        height: fit-content;
+    }
+    
+    .right-box {
+        align-items: flex-start;
+    }
+    
+    .messages {
+        font-size: 1rem;
+        padding: .2rem;
+    }
+    
+    #board-box {
+        display: inline-flex;
+        gap: 0;
+        flex-direction: column;
+        padding-top: 1.2rem;
+        padding-bottom: 1.2rem;
+    }
+    
+    #board {
+        max-width: 32rem;
+        grid-template-columns: repeat(8, minmax(.2rem, 1fr));
+    }
+
+    #chat-input-box {
+        width: 100%;
+    }
+
+    #chat-input-box > input {
+        width: 100%;
+
+        font-weight: var(--bold-font-size);
+        font-size: 1rem;
+    }
+
+    #chat-input-box > button {
+        display: none;
+    }
+    
+    .floating-box {
+        height: 50%;
+    }
+
+    .floating-box > form {
+        width: 100%;
+    }
+    
+    .floating-box > h1 {
+        font-size: 1.8rem;
+    }
+    
+    #logo {
+        height: 37%;
+    }
+    
+    #logo > img {
+        width: 75%;
+        margin: .2rem;
+    }
+    
+    .dashboard-banner > .floating-box {
+        height: auto;
+    }
+    
+    .notifications {
+        height: 5.25rem;
+    }
+
+    .notifications .move:not(:first-child) {
+        display: none;
+    }
+    
+    .move {
+        font-size: 1rem;
+    }
+    
+    .game-code {
+        font-size: 1rem;
+    }
+}
+
+@media only screen and (min-width: 1561px) {
+    #board {
+        max-height: 48rem;
     }
 }

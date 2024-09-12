@@ -47,6 +47,12 @@ html, body, #app, #app>div {
     flex-direction: column;
 }
 
+.center-children > form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 #dashboard-logo {
     margin-bottom: 4rem;
     margin-top: 1rem;
@@ -55,7 +61,9 @@ html, body, #app, #app>div {
 }
 
 .floating-box {
-    width: 26rem;
+    max-width: 26rem;
+    width: 100%;
+    height: 50%;
     border-radius: .3rem;
     border-color: #2B2B2B;
     border-width: .3rem;
@@ -118,6 +126,19 @@ html, body, #app, #app>div {
 
 .floating-box > input::placeholder {
     color: var(--placeholder-blue);
+}
+
+.dashboard-banner > form > .floating-box {
+    height: auto;
+}
+
+.dashboard-banner > .floating-box {
+    height: auto;
+}
+
+
+.info-box {
+    display: inline-block;
 }
 
 .blue-button {

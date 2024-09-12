@@ -345,23 +345,27 @@ function BoardPage({ color, boardData, client, moves, messages, username,
 
   return (
     <div className='horizontal-window-box'>
-      <div className='vertical-window-box'>
-        <LogoWindow gameCode={gameCode} />
-        <NotifyWindow isYourTurn={isYourTurn} notifications={notifications}
-          isGameOver={isGameOver}/>
+      <div className='info-box'>
+        <div className='vertical-window-box'>
+          <LogoWindow gameCode={gameCode} />
+          <NotifyWindow isYourTurn={isYourTurn} notifications={notifications}
+            isGameOver={isGameOver}/>
+        </div>
       </div>
-      <div className='vertical-window-box center-children'>
+      <div id='board-box' className='vertical-window-box center-children'>
         <Board playerColor={color} boardData={boardData} newMove={newMove}
           setNewMove={setNewMove} client={client} isGameOver={isGameOver}
           userRole={userRole} />  
         <button id='surrender-button' className='blue-button'
           onClick={resetAllVars}>Leave Match</button>
       </div>
-      <div className='vertical-window-box'>
-        <MovesWindow moves={ moves } />
-        <ChatWindow messages={messages} sendMessage={sendMessage}
-          newChatMessage={newChatMessage}
-          updateNewChatMessage={updateNewChatMessage} />
+      <div className='info-box'>
+        <div className='vertical-window-box'>
+          <MovesWindow moves={ moves } />
+          <ChatWindow messages={messages} sendMessage={sendMessage}
+            newChatMessage={newChatMessage}
+            updateNewChatMessage={updateNewChatMessage} />
+        </div>
       </div>
     </div>
   );

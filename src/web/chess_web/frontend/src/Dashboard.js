@@ -29,7 +29,7 @@ function StartGame({ setUsername, setGameCode, setClient, setIsHost}) {
   const [tempGameCode, setTempGameCode] = useState("");
 
   const maxUsernameLength = 16;
-  const joinCodeLength = 6;
+  const joinCodeLength = 5;
 
   const updateTempUsername = (e) => {
     const stripped = sanitizeInput(e.target.value);
