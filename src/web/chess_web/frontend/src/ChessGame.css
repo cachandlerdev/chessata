@@ -299,6 +299,7 @@
         /* Plot twist!!! */
         display: block;
         overflow-y: auto;
+        padding: 0;
     }
     
     .vertical-window-box {
@@ -324,7 +325,7 @@
     }
     
     #board {
-        width: 80%;
+        width: 95%;
         grid-template-columns: repeat(8, minmax(.2rem, 1fr));
     }
     
