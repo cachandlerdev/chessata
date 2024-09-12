@@ -19,7 +19,7 @@
 }
 
 .messages {
-    font-size: 1.25rem;
+    font-size: 1rem;
     width: 80%;
     height: 100%;
     
@@ -175,7 +175,7 @@
     border-radius: 5px;
     font-style: italic;
     padding: .6rem .9rem;
-    width: 75%;
+    width: 13rem;
     max-width: 20.938rem;
     margin-bottom: .625rem;
     font-size: 1.25rem;
@@ -342,7 +342,6 @@
     }
     
     .move {
-        width: 90%;
         font-size: 1rem;
         margin-bottom: .3rem
     }
