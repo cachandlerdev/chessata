@@ -17,7 +17,7 @@ export default function App() {
   
   if (shouldShowDashboard()) {
     return <Dashboard setUsername={setUsername} setGameCode={setGameCode}
-      client={client} setClient={setClient} setIsHost={setIsHost} />
+      setClient={setClient} setIsHost={setIsHost} />
   } else {
     return <ChessGame isHost={isHost} username={username} setUsername={setUsername}
       gameCode={gameCode} setGameCode={setGameCode} client={client} />

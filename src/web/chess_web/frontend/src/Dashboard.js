@@ -7,15 +7,15 @@ import './Dashboard.css';
 /**
  * Displays the dashboard from which players can host or join games.
  */
-export default function Dashboard({ setUsername, setGameCode, client, setClient, shouldStartGame, setIsHost }) {
+export default function Dashboard({ setUsername, setGameCode, setClient, setIsHost }) {
   
   return (
     <>
-    <div className='bg'>
-    </div>
+    <div className='bg'></div>
       <div className='center-children'>
-        <StartGame setUsername={setUsername} setGameCode={setGameCode}
-          setClient={setClient} setIsHost={setIsHost} />
+        <div className='dashboard-banner center-children'>
+          <StartGame setUsername={setUsername} setGameCode={setGameCode} setClient={setClient} setIsHost={setIsHost} />
+        </div>
       </div>
     </>
   );
@@ -104,8 +104,20 @@ function StartGame({ setUsername, setGameCode, setClient, setIsHost}) {
 function createSocket(setClient, gameCode, username) {
   const gameCodeEncoded = encodeURIComponent(gameCode);
   const usernameEncoded = encodeURIComponent(username);
-  const address = 'ws://127.0.0.1:8000/ws/api/' + usernameEncoded + '/' + gameCodeEncoded + '/';
-  setClient(new W3CWebSocket(address));
+  
+  var location = window.location, new_uri;
+  if (location.protocol === 'https:') {
+    new_uri = 'wss:';
+  } else {
+    new_uri = 'ws:';
+  }
+  const serverAddress = '192.168.254.155';
+  //new_uri += '//' + location.hostname + ':8000/';
+  new_uri += '//' + serverAddress + ':8000/';
+  new_uri += 'ws/api/' + usernameEncoded + '/' + gameCodeEncoded + '/';
+  console.log(new_uri);
+  const socket = new W3CWebSocket(new_uri);
+  setClient(socket);
 }
 
 /**

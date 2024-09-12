@@ -251,17 +251,4 @@ Server to client:
 }
 ```
 
-### End Of Game
-When the game is over or when one player disconnects from an in progress game, the server will send a payload like the one below.
-The `result` can either be `"white_win"`, `"black_win"`, `"stalemate"`, `"surrender"`, or `"disconnect"`.
-
-Server to client:
-```json
-{
-    "type": "end_of_game",
-    "result": "white_win",
-    "winner_id": "132fds0958gjfd",
-}
-```
-
 Once both players have left the match, all remaining spectators will be disconnected to free up the join code for future matches.

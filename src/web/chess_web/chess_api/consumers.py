@@ -4,6 +4,8 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from channels.auth import login
 
+from chess_core import game_match
+
 from . import lobby_manager
 from . import chess_manager
 
@@ -177,7 +179,7 @@ class ClientConsumer(WebsocketConsumer):
         a disconnect."""
         other_player = lobby_manager.get_other_player(self.user_id, self.game_code)
         if other_player is None:
-            print("Other player somehow disconnected without ending the match.")
+            chess_manager.delete_match(self.game_code)
             return
 
         winning_color = other_player.color

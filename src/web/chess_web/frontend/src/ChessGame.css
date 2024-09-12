@@ -1,28 +1,14 @@
 @import url('Constants.css');
 
-#root {
-    position: fixed;
-    padding: 0;
-    margin: 0;
-    
-    background-color: var(--bg-blue);
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-}
-
-.vertical-children {
+.horizontal-window-box {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 3.125rem;
 }
 
-.horizontal-children {
+.vertical-window-box {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 3.125rem;
 }
 
@@ -137,6 +123,9 @@
     height: 21.875rem;
     overflow: hidden;
     padding: .625rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 .moves {
@@ -192,7 +181,7 @@
 
 .board-container {
     width: 100%;
-    height: 100%;
+    height: 100vh;
 
     display: flex;
     justify-content: center;
@@ -201,10 +190,12 @@
 }
 
 #board {
-    height: 64rem;
-    width: 64rem;
+    aspect-ratio: 1 / 1;
+    max-height: 64rem;
+    width: 100%;
+    max-width: 64rem;
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(8, minmax(4rem, 1fr));
     border: .3rem solid var(--dark-accent);
     border-radius: 0.3rem;
     align-self: center;
@@ -212,9 +203,12 @@
 }
 
 .board-square {
-    height: 8rem;    
-    width: 8rem;
+    aspect-ratio: 1 / 1;
+    max-width: 8rem;
+    max-height: 8rem;
+    width: 100%;
     position: relative;
+    display: flex;
 }
 
 .white {
@@ -226,7 +220,7 @@
 }
 
 .white:hover {
-    background-color: var(--hover-select-accent);
+    background-color: var(--light-med-accent);
 }
 
 .black:hover {
@@ -242,8 +236,15 @@
 }
 
 .board-piece {
-    height: 75%;
-    width: 75%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-piece > img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .white-piece {
@@ -276,4 +277,120 @@
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
     user-select: none; /* Standard */
+}
+
+@media only screen and (max-width: 640px) {
+    .board-container {
+    }
+
+    .horizontal-window-box {
+        /* Plot twist!!! */
+        display: block;
+        overflow-y: auto;
+    }
+    
+    .vertical-window-box {
+        overflow-y: auto;
+        align-items: center;
+        gap: .625rem;
+    }
+    
+    #logo {
+        display: none;
+    }
+    
+    #chat {
+        display: none;
+    }
+    
+    .floating-box {
+        padding: .5rem;
+    }
+    
+    .floating-box > h1 {
+        font-size: 1.4rem;
+    }
+    
+    #board {
+        width: 80%;
+        grid-template-columns: repeat(8, minmax(2rem, 1fr));
+    }
+    
+    .notifications {
+        height: 3rem;
+    }
+    
+    .notifications .move:not(:first-child) {
+        display: none;
+    }
+    
+    #notify {
+        margin-top: 1rem;
+    }
+    
+    .move {
+        width: 90%;
+        font-size: 1rem;
+        margin-bottom: .3rem
+    }
+    
+    .moves-content {
+        width: 100%;
+    }
+    
+    .moves-content > div {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .moves {
+        height: 8.6rem;
+        width: 90%;
+    }
+    
+    #surrender-button {
+        width: 50%;
+        margin-top: 0;
+        margin-bottom: .625rem;
+    }
+    
+    .piece-row-text {
+        font-size: 0;
+    }
+    
+    .piece-column-text {
+        font-size: 0;
+    }
+
+    /* All of this has to be duplicated to prevent CSS ordering issues when
+    removing the hover white/black tiles */
+    .white:hover {
+        background-color: var(--bg-blue);
+    }
+    .black:hover {
+        background-color: var(--med-dark-blue);
+    }
+    .selected {
+        background-color: var(--selected);
+    }
+    .white {
+        background-color: var(--bg-blue);
+    }
+    .black {
+        background-color: var(--med-dark-blue);
+    }
+    .selected {
+        background-color: var(--selected);
+    }
+    .selected:hover {
+        background-color: var(--selected-hover);
+    }
+}
+
+@media only screen and (min-width: 641px) and (max-width: 1281px) {
+    .horizontal-children {
+        /* Plot twist!!! */
+        flex-direction: column;
+        overflow-y: auto;
+    }
 }

@@ -28,6 +28,7 @@ TODO: Add instructions on how to run things locally and install dependencies.
 2. Next startup the backend:
     - Navigate to `src/web/chess_web`.
     - Run `python manage.py runserver`.
+        - If you want to connect to other devices, you have to specify the ip and port (which must be open on the firewall). For example: `python manage.py runserver 192.168.254.155:8000`.
 3. Then startup the frontend:
     - Open a new terminal.
     - Navigate to `src/web/chess_web/frontend`.

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { w3cwebsocket as W3CWebSocket } from "websocket";
 import dashboard_logo from './assets/dashboard_logo.png';
 import game_logo from './assets/game_logo.png';
 
@@ -26,7 +25,9 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
 
   function setupSocket(client) {
     if (typeof client !== "undefined") {
-      client.onopen = () => {};
+      client.onopen = () => {
+        console.log('Websocket connected.');
+      };
 
       client.onmessage = (message) => {
         const dataFromServer = JSON.parse(message.data);
@@ -38,6 +39,8 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
       client.onerror = () => {
         console.log('Connection error.');
       };
+    } else {
+      console.log('Error: Socket is undefined.');
     }
   }
 
@@ -268,16 +271,21 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
 function WaitingPage({ gameCode }) {
   return (
     <>
-      <img id='dashboard-logo' src={dashboard_logo} alt="Logo" />
-      <div className='floating-box center-children'>
-        <h1>Waiting...</h1>
-        <hr />
-        <p>Send a friend your join code!</p>
-        <div className='blue-widget big-widget'>{gameCode}</div>
-      </div>
-      <div className='floating-box center-children'>
-        <div className='tip-box'>
-          The game will start when two players have joined and the board is loaded.
+      <div className='bg'></div>
+      <div className='center-children'>
+        <div className='dashboard-banner center-children'>
+          <img id='dashboard-logo' src={dashboard_logo} alt="Logo" />
+          <div className='floating-box center-children'>
+            <h1>Waiting...</h1>
+            <hr />
+            <p>Send a friend your join code!</p>
+            <div className='blue-widget big-widget'>{gameCode}</div>
+          </div>
+          <div className='floating-box center-children'>
+            <div className='tip-box'>
+              The game will start when two players have joined and the board is loaded.
+            </div>
+          </div>
         </div>
       </div>
     </>
@@ -336,8 +344,8 @@ function BoardPage({ color, boardData, client, moves, messages, username,
   }
 
   return (
-    <div className='horizontal-children'>
-      <div className='vertical-children'>
+    <div className='horizontal-window-box'>
+      <div className='vertical-window-box'>
         <LogoWindow gameCode={gameCode} />
         <NotifyWindow isYourTurn={isYourTurn} notifications={notifications}
           isGameOver={isGameOver}/>

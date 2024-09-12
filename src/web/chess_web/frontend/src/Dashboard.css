@@ -5,6 +5,11 @@
     font-family: "Crimson Text", serif;
 }
 
+html, body, #app, #app>div {
+  height: 100%;
+  background-color: var(--bg-blue);
+}
+
 
 .bg {
     position: fixed;
@@ -19,10 +24,23 @@
     background-image: url("assets/dashboard_bg.png");
     background-color: var(--bg-blue);
     background-position: center center;
-    background-repeat: repeat-y;
+    background-repeat: repeat;
+    
+    filter: blur(.5rem);
+}
+
+.dashboard-banner {
+    background-color: var(--light-blue);
+    border-left: 5px solid var(--light-med-accent);
+    border-right: 5px solid var(--light-med-accent);
+    width: 50%;
+    min-width: 46.875rem;
+    height: 110vh;
+    filter: drop-shadow(5px 5px 5px #969696);
 }
 
 .center-children {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -30,9 +48,10 @@
 }
 
 #dashboard-logo {
-    margin-top: 11rem;
-    margin-bottom: 11rem;
+    margin-bottom: 4rem;
+    margin-top: 1rem;
     z-index: 1;
+    max-width: 80%;
 }
 
 .floating-box {
@@ -179,4 +198,36 @@
 
 form {
     z-index: 1;
+}
+
+@media only screen and (max-width: 640px) {
+    #dashboard-logo {
+        width: 75%;
+        margin-top: 0;
+        margin-bottom: 5rem;
+    }
+
+    .dashboard-banner {
+        min-width: 100%;
+        background-color: transparent;
+        border-left: 0 solid var(--light-med-accent);
+        border-right: 0 solid var(--light-med-accent);
+    }
+    
+    form {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .floating-box {
+        width: 75%;
+    }
+    
+}
+
+@media only screen and (min-width: 641px) and (max-width: 1281px) {
+    .dashboard-banner {
+        min-width: 35rem;
+    }
 }
