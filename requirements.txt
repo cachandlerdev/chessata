@@ -3,3 +3,7 @@ pytest
 channels[daphne]
 selenium
 channels_redis
+psycopg2-binary
+dj-database-url
+gunicorn 
+uvicorn

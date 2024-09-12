@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import sys
+import dj_database_url
 
 from pathlib import Path
 
@@ -80,10 +81,13 @@ WSGI_APPLICATION = 'chess_web.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': BASE_DIR / 'db.sqlite3',
+    #}
+    'default': dj_database_url.config(
+        default='postgresql://postgres:postgres@localhost:5432/mysite',        
+        conn_max_age=600)
 }
 
 
