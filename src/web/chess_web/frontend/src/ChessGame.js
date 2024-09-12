@@ -45,7 +45,6 @@ export default function ChessGame({ isHost, username, setUsername, gameCode, set
   }
 
   function processServerResponse(data) {
-    console.log(data);
     switch (data["type"]) {
       case 'init':
         processInit(data);
