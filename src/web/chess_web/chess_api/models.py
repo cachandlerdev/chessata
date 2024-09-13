@@ -3,8 +3,8 @@ from django.db import models
 # Create your models here.
 
 class ChessUser(models.Model):
-    user_id = models.TextField(max_length=16, primary_key=True)
-    username = models.TextField(max_length=16)
+    user_id = models.TextField(max_length=64, primary_key=True)
+    username = models.TextField(max_length=64)
     game_code = models.ForeignKey('GameLobby', on_delete=models.CASCADE, related_name="users")
     color = models.TextField(max_length=30)
     
@@ -13,7 +13,7 @@ class ChessUser(models.Model):
 
 
 class GameLobby(models.Model):
-    game_code = models.TextField(max_length=6, primary_key=True)
+    game_code = models.TextField(max_length=50, primary_key=True)
     is_over = models.BooleanField(default=False)
     has_started = models.BooleanField(default=False)
     is_white_turn = models.BooleanField(default=True)
