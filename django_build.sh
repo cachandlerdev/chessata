@@ -6,4 +6,5 @@ set -o errexit
 pip install -r requirements.txt
 
 # Apply any outstanding database migrations
+python ./src/web/chess_web/manage.py makemigrations chess_api
 python ./src/web/chess_web/manage.py migrate
