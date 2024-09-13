@@ -13,6 +13,9 @@ def create_user(game_code, username):
     
     user_id_length = 12
     user_id = secrets.token_urlsafe(user_id_length)
+    
+    # Variable doesn't seem to always be respected by secrets.token_urlsafe
+    user_id = user_id[:user_id_length]
 
     if not chess_manager.does_match_exist(game_code):
         chess_manager.create_new_match(game_code)
