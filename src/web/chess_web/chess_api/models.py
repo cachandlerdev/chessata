@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class ChessUser(models.Model):
-    user_id = models.TextField(max_length=12, primary_key=True)
+    user_id = models.TextField(max_length=16, primary_key=True)
     username = models.TextField(max_length=16)
     game_code = models.ForeignKey('GameLobby', on_delete=models.CASCADE, related_name="users")
     color = models.TextField(max_length=30)

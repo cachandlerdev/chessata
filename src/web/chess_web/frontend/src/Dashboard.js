@@ -111,8 +111,7 @@ function createSocket(setClient, gameCode, username) {
   } else {
     new_uri = 'ws:';
   }
-  //new_uri += '//' + location.host + '/';
-  //const serverAddress = '192.168.254.155';
+  //const serverAddress = '127.0.0.1';
   //new_uri += '//' + serverAddress + ':8000/';
   const serverAddress = 'chessata-django.onrender.com/';
   new_uri += '//' + serverAddress;

@@ -82,10 +82,10 @@ WSGI_APPLICATION = 'chess_web.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    #'default': {
-    #    'ENGINE': 'django.db.backends.sqlite3',
-    #    'NAME': BASE_DIR / 'db.sqlite3',
-    #}
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
     'default': dj_database_url.config(
         default='postgresql://chessata_django:lZUpmZnowEAUijMAyJ3RJQBKEJPRfxIT@dpg-crho4988fa8c73be0mn0-a/chessata_db',        
         conn_max_age=600)
