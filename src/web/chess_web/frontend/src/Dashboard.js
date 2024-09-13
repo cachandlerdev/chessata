@@ -111,11 +111,12 @@ function createSocket(setClient, gameCode, username) {
   } else {
     new_uri = 'ws:';
   }
-  const serverAddress = '192.168.254.155';
-  //new_uri += '//' + location.hostname + ':8000/';
-  new_uri += '//' + serverAddress + ':8000/';
+  //const serverAddress = '192.168.254.155';
+  new_uri += '//' + location.host + '/';
+  //new_uri += '//' + serverAddress + ':8000/';
   new_uri += 'ws/api/' + usernameEncoded + '/' + gameCodeEncoded + '/';
   const socket = new W3CWebSocket(new_uri);
+  console.log(new_uri);
   setClient(socket);
 }
 
