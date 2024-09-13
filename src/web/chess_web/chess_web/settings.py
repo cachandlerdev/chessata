@@ -87,7 +87,7 @@ DATABASES = {
     #    'NAME': BASE_DIR / 'db.sqlite3',
     #}
     'default': dj_database_url.config(
-        default='postgresql://postgres:postgres@localhost:5432/mysite',        
+        default='postgresql://chessata_django:lZUpmZnowEAUijMAyJ3RJQBKEJPRfxIT@dpg-crho4988fa8c73be0mn0-a/chessata_db',        
         conn_max_age=600)
 }
 
