@@ -10,7 +10,8 @@ services:
     name: chessata-django
     runtime: python
     buildCommand: "./django_build.sh"
-    startCommand: "python -m gunicorn chess_web.asgi:application -k uvicorn.workers.UvicornWorker"    envVars:
+    startCommand: "python -m gunicorn chess_web.asgi:application -k uvicorn.workers.UvicornWorker"
+    envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: chessata-redis
