@@ -27,9 +27,10 @@ sys.path.append(str(SRC))
 SECRET_KEY = 'django-insecure-=qt1gkg-)spx7s0o&*(8gohv^4bbhv-)4%gmilf$6zxl8uzn4*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.254.155', 'localhost', '127.0.0.1', '[::1]']
+ALLOWED_HOSTS = ['192.168.254.155', 'localhost', '127.0.0.1', '[::1]',
+                 'chessata-django.onrender.com']
 
 
 # Application definition
@@ -138,7 +139,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+#            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [("redis://red-crhnpf3v2p9s73bdeje0", 6379)],
         }
     }
 }
