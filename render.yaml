@@ -1,20 +1,20 @@
 databases:
-  - name: chessata-redis
+  - name: chessata_db
     plan: free
-    databaseName: chessata-redis
-    user: chessata-django
+    databaseName: chessata_db
+    user: chessata_django
 
 services:
   - type: web
     plan: free
-    name: chessata-django
+    name: chessata_django
     runtime: python
     buildCommand: "./django_build.sh"
     startCommand: "python -m gunicorn chess_web.asgi:application -k uvicorn.workers.UvicornWorker"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: chessata-redis
+          name: chessata_db
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
