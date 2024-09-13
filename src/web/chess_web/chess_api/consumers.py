@@ -51,6 +51,9 @@ class ClientConsumer(WebsocketConsumer):
         )
         
         try:
+            print(f"User ID: {self.user_id}")
+            print(f"Game code: {self.game_code}")
+            print(f"Username: {self.username}")
             self.color = lobby_manager.add_user_to_match(self.user_id, 
                                                          self.game_code, 
                                                          self.username)
