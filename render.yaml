@@ -10,7 +10,7 @@ services:
     name: chessata_django
     runtime: python
     buildCommand: "./django_build.sh"
-    startCommand: "src/web/chess_web; python -m gunicorn chess_web.asgi:application -k uvicorn.workers.UvicornWorker"
+    startCommand: "cd src/web/chess_web; python -m gunicorn chess_web.asgi:application -k uvicorn.workers.UvicornWorker"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
