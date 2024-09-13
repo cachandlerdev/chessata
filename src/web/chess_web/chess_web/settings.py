@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-=qt1gkg-)spx7s0o&*(8gohv^4bbhv-)4%gmilf$6zxl8uzn4*
 DEBUG = False
 
 ALLOWED_HOSTS = ['192.168.254.155', 'localhost', '127.0.0.1', '[::1]',
-                 'chessata-django.onrender.com']
+                 'chessata-django.onrender.com', 'chessata-react.onrender.com']
 
 
 # Application definition
