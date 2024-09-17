@@ -5,9 +5,6 @@ A chess website you can use to play online with your friends!
 
 ## Screenshots
 
-[![Video Demonstration](/screenshots/video_demonstration.png)](http://www.youtube.com/watch?v=RMNxG9AhTuM "Chessata Program Demonstration")
-
-
 ![Dashboard](/screenshots/dashboard.png)
 ![Logo](/screenshots/game_desktop.png)
 
