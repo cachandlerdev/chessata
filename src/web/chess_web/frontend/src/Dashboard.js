@@ -111,10 +111,10 @@ function createSocket(setClient, gameCode, username) {
   } else {
     new_uri = 'ws:';
   }
-  //const serverAddress = '127.0.0.1';
-  //new_uri += '//' + serverAddress + ':8000/';
-  const serverAddress = 'chessata-django.onrender.com/';
-  new_uri += '//' + serverAddress;
+  const serverAddress = '127.0.0.1';
+  new_uri += '//' + serverAddress + ':8000/';
+  //const serverAddress = 'chessata-django.onrender.com/';
+  //new_uri += '//' + serverAddress;
   new_uri += 'ws/api/' + usernameEncoded + '/' + gameCodeEncoded + '/';
   const socket = new W3CWebSocket(new_uri);
   console.log(new_uri);

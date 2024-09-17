@@ -580,7 +580,7 @@ function ChatWindow({messages, sendMessage, newChatMessage, updateNewChatMessage
     <div id='chat' className='floating-box center-children'>
       <h1>Chat</h1>
       <hr />
-      <div className='messages'>
+      <div className='messages wordwrap'>
         {messages.map((message, index) => (
           <div key={index}>
             <b>{message.username}: </b>{message.message}
@@ -604,7 +604,7 @@ function MovesWindow({ moves }) {
       <h1>Moves</h1>
       <hr />
       <div className='moves'>
-        <div className='moves-content'>
+        <div className='moves-content wordwrap'>
           {moves.map((move, index) => (
             <div key={index}>
               <MoveItem move={move} />
@@ -643,7 +643,7 @@ function NotifyWindow({ isYourTurn, notifications, isGameOver }) {
     <div id='notify' className='floating-box center-children'>
       <h1>{ turnText }</h1>
       <hr></hr>
-      <div className='notifications'>
+      <div className='notifications wordwrap'>
         {notifications.map((notification, index) => (
           <div key={index} className='move move-black'>
             <b>Note: </b>{notification['message']}
