@@ -16,7 +16,7 @@ With such a rich history involving centuries of strategy refinement and academic
 Indeed, from a programming standpoint, chess is quite an interesting combination of challenges to be solved.
 The designer must consider how to programmatically represent the board and its various pieces, how to predict possible moves for each piece type, and how to determine win conditions for a given chess board.
 The task initially appears fairly simplistic, but becomes increasingly complex when he realizes that the program must be able to recognize less common moves such as *en passant* attacks from pawns, *castling* moves involving the king and his rooks, and piece *promotions*.
-And, keep in mind, this is without even considering the additional complexity introduced by the inclusion of a graphical interface, or without thinking about how the programmer might handle input from multiple players over the internet.  
+And, keep in mind, this is without even considering the additional complexity introduced by the inclusion of a graphical interface, or without thinking about how the programmer might handle input from multiple players over the internet.
 If he were to delve into those weeds, it would be incredibly easy to lose the forest for the trees upon learning about networking concepts like HTTP requests, Websockets, or internet protocols, or when thinking about how one might visually display the game board to users and dynamically update it when moves are made.
 
 As such, when I decided to begin working on this project, I had to do what every programmer does when presented with a large problem: break things down into simpler challenges that can be addressed individually, test them, and expand from there.
