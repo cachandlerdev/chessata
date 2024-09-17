@@ -48,7 +48,7 @@ Overall however, the end result was definitely worth it, and while I obviously h
 
 ## For Developers
 This is a multiplayer network-based full stack chess application that uses a React frontend to make API calls to a Django backend over the WebSockets protocol.
-We accomplish this using Django Channels and its Daphne server, and tests are run via Pytest and Selenium.
+We accomplish this using Django Channels and its Daphne server, and tests are run via Pytest.
 Redis is utilized in order to make use of channel layers and store information.
 This allows us to perform real time updates with low server overhead via JSON responses as described in the [API Documentation](api_documentation.md). 
 
