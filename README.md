@@ -92,3 +92,6 @@ This can be helpful for testing core functionality without needing to worry abou
 
 All imports in the `tests` folder need to start at `src.otherstuff`.
 This occurs due to an issue that Pytest has regarding relative imports.
+
+## Credits
+Thanks to [Wikimedia](https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces) for the chess piece artwork.
