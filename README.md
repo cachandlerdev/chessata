@@ -8,7 +8,7 @@ A chess website you can use to play online with your friends!
 ![Dashboard](/screenshots/dashboard.png)
 ![Logo](/screenshots/game_desktop.png)
 
-## Distinctiveness and Complexity
+## Background
 I've always wanted to make a Chess website.
 It's such an elegant game, this two-player ruleset with virtually infinite complexity and variability between matches without any reliance on dice rolls or other forms of randomness.
 With such a rich history involving centuries of strategy refinement and academic study, as well as an incredibly in-depth collection of moves that build upon each other, how could it not fascinate the aspiring software developer, keen to apply his recently acquired theoretical knowledge in the realm of computer science to the test?
