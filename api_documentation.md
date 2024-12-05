@@ -63,9 +63,7 @@ The first 8 entries represent black pawns, while the second set of 8 hold inform
 - `has_rook_moved`: This gets used to determine whether players can legally perform castling moves, and holds information about the various rooks' movements.
 
 ## Message Payload Format
-
 All communication is done via JSON format over WebSockets.
-- TODO: Update the documentation when you're not running on `127.0.0.1` anymore.
 
 ### Init
 When a client first connects to a server, it will do so with an address like `ws://127.0.0.1:8000/ws/api/barry/32g9y/` for a client with username `barry` trying to connect with a game code of `32g9y`.
